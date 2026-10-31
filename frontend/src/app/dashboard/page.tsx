@@ -21,14 +21,18 @@ import {
   RotateCcw,
   Bot,
   DoorClosed,
-  TrendingDown
+  TrendingDown,
+  KeyRound,
+  UserCheck
 } from "lucide-react";
 import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 
 import citData from "@/data/cit_public.json";
 import scheduleData from "@/data/schedule.json";
 
 export default function DashboardPage() {
+  const { user, switchPersona, personas } = useAuth();
   const [resetting, setResetting] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
 
@@ -80,6 +84,49 @@ export default function DashboardPage() {
           </div>
         }
       />
+
+      {/* Section 4 Four-Role Quick Switcher Banner */}
+      <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-3 font-sans">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#236B8E]/10 border border-[#236B8E]/20 text-[#1B4D68] flex items-center justify-center shrink-0">
+            <KeyRound className="w-5 h-5 text-[#236B8E]" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-slate-900">Section 4 Four-Role Access:</span>
+              <Badge variant={user.badgeVariant} className="text-[10px] font-semibold">
+                Active: {user.role}
+              </Badge>
+            </div>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              Signed in as <strong className="text-slate-800">{user.name}</strong> ({user.email}). Self-approval ban strictly enforced.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
+          {personas.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => switchPersona(p.id)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                user.id === p.id
+                  ? "bg-[#1B5270] text-white shadow-xs font-bold"
+                  : "bg-[#F0F4F8] text-slate-700 hover:bg-slate-200 border border-slate-200"
+              }`}
+            >
+              {p.role.split(" ")[0]} ({p.id})
+            </button>
+          ))}
+          <Link
+            href="/login"
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-[#1B5270] bg-[#E2EAF1] hover:bg-[#D5E2EC] border border-[#CBD9E5] transition-colors ml-auto md:ml-1"
+          >
+            <span>Full Login Portal</span>
+            <span>&rarr;</span>
+          </Link>
+        </div>
+      </div>
 
       {resetSuccess && (
         <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-between text-xs">

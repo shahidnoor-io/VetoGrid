@@ -19,7 +19,8 @@ import {
   Settings,
   HelpCircle,
   ShieldCheck,
-  UserCheck
+  UserCheck,
+  KeyRound
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
@@ -53,6 +54,28 @@ export function Sidebar() {
 
         {/* Navigation Items */}
         <div className="p-3 space-y-1.5 overflow-y-auto max-h-[calc(100vh-8rem)]">
+          {/* 0. Dedicated 4-Role Login Portal */}
+          <Link
+            href="/login"
+            className={cn(
+              "flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all border mb-1",
+              pathname === "/login"
+                ? "bg-[#1B5270] text-white border-[#1B5270] shadow-sm"
+                : "bg-white text-slate-800 border-slate-300 hover:bg-[#DEE7F0] hover:text-slate-900 shadow-2xs"
+            )}
+          >
+            <div className="flex items-center gap-2.5">
+              <KeyRound className={cn("w-4 h-4", pathname === "/login" ? "text-white" : "text-[#236B8E]")} />
+              <span>Role Login (4 Roles)</span>
+            </div>
+            <span className={cn(
+              "text-[10px] px-1.5 py-0.5 rounded font-bold",
+              pathname === "/login" ? "bg-white/20 text-white" : "bg-[#236B8E]/10 text-[#1B4D68]"
+            )}>
+              Section 4
+            </span>
+          </Link>
+
           {/* 1. Timetable */}
           <Link
             href="/timetable"
@@ -159,6 +182,21 @@ export function Sidebar() {
                   )}
                 >
                   <span>Command Center</span>
+                </Link>
+                <Link
+                  href="/login"
+                  className={cn(
+                    "flex items-center justify-between px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors",
+                    pathname === "/login"
+                      ? "bg-[#5B93B5] text-white font-semibold"
+                      : "text-slate-600 hover:bg-[#DEE7F0] hover:text-slate-900"
+                  )}
+                >
+                  <div className="flex items-center gap-2">
+                    <KeyRound className="w-3.5 h-3.5" />
+                    <span>Role Login &amp; RBAC</span>
+                  </div>
+                  <span className="text-[9px] bg-slate-200 text-slate-700 px-1 py-0.2 rounded font-semibold">4 Roles</span>
                 </Link>
                 <Link
                   href="/approvals"

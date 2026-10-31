@@ -16,6 +16,7 @@ import {
   LogOut,
   UserCheck,
   Check,
+  KeyRound,
 } from "lucide-react";
 import { useAuth, OFFICIAL_PERSONAS, Persona } from "@/lib/auth";
 
@@ -117,6 +118,17 @@ export function Header() {
           <Bell className="w-3.5 h-3.5" />
           <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white" />
         </button>
+
+        {/* Direct Link to Role Login Portal */}
+        <Link
+          href="/login"
+          title="Open Section 4 Role Login & Authentication Portal"
+          className="flex items-center gap-1.5 h-8 px-2.5 rounded-lg border border-[#236B8E]/40 bg-[#236B8E]/10 hover:bg-[#236B8E]/20 text-[#1B4D68] text-xs font-bold shadow-2xs transition-all"
+        >
+          <KeyRound className="w-3.5 h-3.5 text-[#236B8E]" />
+          <span>Role Sign-In</span>
+          <span className="text-[10px] bg-[#1B5270] text-white px-1.5 py-0.2 rounded font-semibold hidden sm:inline">4 Roles</span>
+        </Link>
 
         {/* User Persona & Role Switcher Dropdown */}
         <div className="relative" ref={dropdownRef}>
