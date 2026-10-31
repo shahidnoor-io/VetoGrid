@@ -13,13 +13,14 @@ import {
   CheckCircle2,
   Lock,
   Mail,
-  RotateCcw,
-  Sparkle,
-  ChevronDown,
+  Calendar,
   Layers,
-  ArrowUpRight,
+  ChevronRight,
+  Clock,
+  Cpu,
+  Award,
+  AlertTriangle,
   UserCheck,
-  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -27,29 +28,37 @@ import { Badge } from "@/components/ui/Badge";
 import { useAuth, DEMO_ROLES, Persona } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
-export default function DribbbleStyleLandingPage() {
+export default function ProfessionalLandingPage() {
   const router = useRouter();
   const { login } = useAuth();
 
-  // The 4 Section 4 Primary Roles
+  // Primary 4 Roles from Section 4
   const primaryFourRoles = DEMO_ROLES.slice(0, 4);
 
   // States
-  const [isCrumpled, setIsCrumpled] = useState<boolean>(false);
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  const [loadingIntro, setLoadingIntro] = useState<boolean>(true);
+  const [progress, setProgress] = useState<number>(0);
   const [selectedRole, setSelectedRole] = useState<Persona>(primaryFourRoles[0]);
   const [email, setEmail] = useState<string>(primaryFourRoles[0].email);
   const [password, setPassword] = useState<string>(primaryFourRoles[0].password || "Dean@2026");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false);
+  const [authSuccess, setAuthSuccess] = useState<boolean>(false);
 
-  // Auto-play an introductory crumple-and-reveal demonstration on initial mount
+  // Smooth Minimalist Loading Line Sequence on First Visit (~1.2s)
   useEffect(() => {
-    const timer1 = setTimeout(() => {
-      // gentle preview
-    }, 1200);
-    return () => clearTimeout(timer1);
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          setTimeout(() => setLoadingIntro(false), 200);
+          return 100;
+        }
+        return prev + 6;
+      });
+    }, 45);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleSelectRole = (role: Persona) => {
@@ -61,7 +70,7 @@ export default function DribbbleStyleLandingPage() {
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setIsSubmitting(true);
     setError("");
 
     try {
@@ -75,12 +84,12 @@ export default function DribbbleStyleLandingPage() {
       const data = await res.json();
       if (!res.ok || !data.success) {
         setError(data.message || "Invalid credentials. Please try again.");
-        setLoading(false);
+        setIsSubmitting(false);
         return;
       }
 
       await login(email, password);
-      setIsAuthenticating(true);
+      setAuthSuccess(true);
 
       // Target route based on role for optimal user experience
       let targetRoute = "/dashboard";
@@ -97,423 +106,515 @@ export default function DribbbleStyleLandingPage() {
 
       setTimeout(() => {
         router.push(targetRoute);
-      }, 700);
+      }, 600);
     } catch (err: any) {
       await login(email, password);
-      setIsAuthenticating(true);
+      setAuthSuccess(true);
       setTimeout(() => {
         router.push("/dashboard");
-      }, 700);
+      }, 600);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
+    }
+  };
+
+  const getRoleIcon = (roleId: string, className = "w-5 h-5") => {
+    switch (roleId) {
+      case "DEAN-01":
+      case "academic_dean":
+        return <ShieldCheck className={`${className} text-[#B08401]`} />;
+      case "COORD-CSE":
+      case "timetable_coordinator":
+        return <Building2 className={`${className} text-[#683B2B]`} />;
+      case "FAC-01":
+      case "faculty":
+        return <GraduationCap className={`${className} text-[#D49E8D]`} />;
+      case "CLUB-LIT-01":
+      case "student_representative":
+        return <Sparkles className={`${className} text-[#B08401]`} />;
+      default:
+        return <UserCheck className={`${className} text-[#683B2B]`} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#1A0E0A] text-[#FAF6F2] font-sans relative overflow-x-hidden select-none selection:bg-[#B08401]/30">
-      {/* Ambient background glow and paper texture */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#B08401]/10 rounded-full blur-[140px]" />
-        <div className="absolute bottom-10 left-10 w-[450px] h-[450px] bg-[#683B2B]/20 rounded-full blur-[120px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(#B08401_0.8px,transparent_0.8px)] [background-size:32px_32px] opacity-15" />
-      </div>
-
+    <div className="min-h-screen bg-[#FAF6F2] text-[#683B2B] font-sans relative selection:bg-[#B08401]/20">
       {/* ============================================================== */}
-      {/* 1. EDITORIAL TOP NAVIGATION (Matching Dribbble Video Layout)   */}
-      {/* ============================================================== */}
-      <header className="fixed top-0 left-0 right-0 z-40 px-6 sm:px-12 py-6 flex items-center justify-between border-b border-[#FAF6F2]/10 backdrop-blur-md bg-[#1A0E0A]/70">
-        {/* Left: Boxed Logo Badge */}
-        <div className="flex items-center gap-3">
-          <div className="border border-[#FAF6F2]/30 px-3 py-1.5 rounded-sm tracking-widest text-[11px] font-bold uppercase text-[#FAF6F2] flex items-center gap-2 hover:border-[#B08401] transition-colors cursor-pointer">
-            <Image
-              src="/logo.png"
-              alt="VetoGrid Logo"
-              width={20}
-              height={20}
-              priority
-              className="object-contain"
-            />
-            <span className="font-extrabold tracking-widest text-[#FAF6F2]">VETOGRID</span>
-          </div>
-        </div>
-
-        {/* Center: Editorial Monospace Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8 text-[11px] font-mono tracking-widest uppercase text-[#DED1BD]/80">
-          <button
-            onClick={() => setIsCrumpled(!isCrumpled)}
-            className="hover:text-[#B08401] transition-colors flex items-center gap-1.5"
-          >
-            <span>[01]</span>
-            <span className="font-semibold underline underline-offset-4 decoration-[#B08401]/40">
-              {isCrumpled ? "UNFOLD PAPER" : "CRUMPLE PAPER"}
-            </span>
-          </button>
-          <a href="/timetable" className="hover:text-[#B08401] transition-colors">
-            <span>[02]</span> TIMETABLE
-          </a>
-          <a href="/examinations" className="hover:text-[#B08401] transition-colors">
-            <span>[03]</span> EXAMS
-          </a>
-          <button
-            onClick={() => setShowLoginModal(true)}
-            className="hover:text-[#B08401] transition-colors text-[#B08401] font-bold"
-          >
-            <span>[04]</span> 4 ROLES
-          </button>
-        </nav>
-
-        {/* Right: Status Pill & Direct Access Button */}
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2 text-[10px] font-mono text-[#DED1BD]/70 border border-[#FAF6F2]/15 px-2.5 py-1 rounded-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#B08401] animate-pulse" />
-            <span>OR-TOOLS CP-SAT</span>
-          </div>
-
-          <button
-            onClick={() => setShowLoginModal(true)}
-            className="text-[11px] font-mono uppercase tracking-wider px-3.5 py-1.5 border border-[#B08401] text-[#B08401] hover:bg-[#B08401] hover:text-[#1A0E0A] transition-all rounded-sm font-bold flex items-center gap-1.5 shadow-sm"
-          >
-            <span>ACCESS PORTAL</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </header>
-
-      {/* ============================================================== */}
-      {/* 2. MAIN HERO SECTION WITH EDITORIAL TYPOGRAPHY & CRUMPLE EFFECT */}
-      {/* ============================================================== */}
-      <main className="relative z-10 min-h-screen flex flex-col justify-between pt-28 pb-10 px-6 sm:px-12 max-w-7xl mx-auto">
-        {/* Subtitle tag */}
-        <div className="text-center pt-4 sm:pt-6">
-          <p className="text-[10px] sm:text-xs font-mono tracking-[0.25em] uppercase text-[#DED1BD]/80">
-            AUTONOMOUS CAMPUS SCHEDULING &amp; VENUE GOVERNANCE
-          </p>
-          <p className="text-[9px] font-mono tracking-widest text-[#B08401] mt-1 uppercase">
-            CHITKARA INSTITUTE OF TECHNOLOGY · SECTION 4 RBAC
-          </p>
-        </div>
-
-        {/* Central Stage: Giant Editorial Typography & Interactive Framed Artwork */}
-        <div className="relative my-auto flex flex-col items-center justify-center py-6">
-          {/* Layer 1: Giant Background Title (Stroked Outlines in Dribbble Style) */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none z-10">
-            <motion.div
-              animate={{
-                opacity: isCrumpled ? 1 : 0.9,
-                scale: isCrumpled ? 1.05 : 1,
-              }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="text-center font-black tracking-tighter uppercase leading-[0.85]"
-            >
-              <div
-                className={cn(
-                  "text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] transition-all duration-700",
-                  isCrumpled
-                    ? "text-stroke-gold-thick"
-                    : "text-[#B08401] drop-shadow-[0_10px_35px_rgba(176,132,1,0.35)]"
-                )}
-              >
-                VETOGRID
-              </div>
-              <div
-                className={cn(
-                  "text-4xl sm:text-6xl md:text-8xl lg:text-[8.5rem] mt-1 sm:mt-2 transition-all duration-700",
-                  isCrumpled
-                    ? "text-stroke-gold-thick"
-                    : "text-stroke-gold"
-                )}
-              >
-                CAMPUS MATRIX
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Layer 2: Central Framed Visual with 3D Paper Crumple / Morph Animation */}
-          <div className="relative z-20 w-full max-w-2xl sm:max-w-3xl aspect-[16/10] sm:aspect-[16/9] flex items-center justify-center">
-            <motion.div
-              animate={
-                isCrumpled
-                  ? {
-                      scale: 0.32,
-                      rotate: 24,
-                      skewX: 12,
-                      skewY: -8,
-                      borderRadius: "45% 55% 48% 52% / 56% 45% 55% 44%",
-                      filter: "contrast(180%) brightness(85%) drop-shadow(0 25px 45px rgba(0,0,0,0.9))",
-                    }
-                  : {
-                      scale: 1,
-                      rotate: 0,
-                      skewX: 0,
-                      skewY: 0,
-                      borderRadius: "12px",
-                      filter: "contrast(105%) brightness(100%) drop-shadow(0 15px 35px rgba(0,0,0,0.6))",
-                    }
-              }
-              transition={{ duration: 0.85, ease: [0.25, 1, 0.5, 1] }}
-              className="relative w-full h-full overflow-hidden border border-[#FAF6F2]/20 shadow-2xl bg-[#28150F] cursor-pointer group"
-              onClick={() => setIsCrumpled(!isCrumpled)}
-            >
-              {/* Architectural Campus & Origami Eagle Visual */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1A0E0A] via-transparent to-[#1A0E0A]/60 z-10" />
-
-              {/* Central Geometric Eagle Motif */}
-              <div className="absolute inset-0 flex items-center justify-center p-8 z-0">
-                <div className="relative w-48 sm:w-64 md:w-80 h-48 sm:h-64 md:h-80 flex items-center justify-center transition-transform duration-700 group-hover:scale-105">
-                  <div className="absolute inset-0 rounded-full bg-[#B08401]/15 blur-2xl animate-pulse" />
-                  <Image
-                    src="/logo.png"
-                    alt="VetoGrid Origami Eagle"
-                    width={320}
-                    height={320}
-                    priority
-                    className="object-contain relative z-10 drop-shadow-2xl"
-                  />
-                </div>
-              </div>
-
-              {/* Paper Fold Lines / Creases Simulation Overlay */}
-              <div
-                className={cn(
-                  "absolute inset-0 pointer-events-none transition-opacity duration-700 z-15",
-                  isCrumpled
-                    ? "opacity-90 bg-[radial-gradient(#FAF6F2_1px,transparent_1px),linear-gradient(45deg,rgba(0,0,0,0.5)_25%,transparent_25%),linear-gradient(-45deg,rgba(255,255,255,0.2)_25%,transparent_25%)] [background-size:20px_20px,40px_40px,40px_40px]"
-                    : "opacity-0"
-                )}
-              />
-
-              {/* Interactive Hover Pill inside the artwork */}
-              <div className="absolute bottom-4 right-4 z-20">
-                <div className="bg-[#1A0E0A]/85 backdrop-blur-md border border-[#FAF6F2]/20 px-3 py-1.5 rounded text-[10px] font-mono uppercase tracking-wider text-[#DED1BD] flex items-center gap-1.5 shadow-lg group-hover:border-[#B08401] transition-colors">
-                  <RotateCcw className="w-3 h-3 text-[#B08401]" />
-                  <span>{isCrumpled ? "Click to Unfold Image" : "Click to Crumple Paper"}</span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* ============================================================== */}
-        {/* 3. BOTTOM CALL-TO-ACTION (Exact Dribbble Outline Pill Button)  */}
-        {/* ============================================================== */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-4 border-t border-[#FAF6F2]/10 z-20">
-          {/* Left Metadata */}
-          <div className="text-center sm:text-left text-[11px] font-mono text-[#DED1BD]/70">
-            <span className="text-[#B08401] font-bold">SECTION 4 COMPLIANT</span> · 0 HARD VIOLATIONS · 82 SOFT PENALTY
-          </div>
-
-          {/* Center Call to Action Pill Button (Yellow/Gold Outline matching Dribbble GET IN TOUCH) */}
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setShowLoginModal(true)}
-              className="px-8 py-3 rounded-sm border-2 border-[#B08401] text-[#B08401] hover:bg-[#B08401] hover:text-[#1A0E0A] transition-all font-mono text-xs uppercase tracking-widest font-extrabold shadow-[0_0_25px_rgba(176,132,1,0.25)] flex items-center gap-2 group"
-            >
-              <span>ACCESS 4 ROLES PLATFORM</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setIsCrumpled(!isCrumpled)}
-              className="p-3 rounded-sm border border-[#FAF6F2]/20 hover:border-[#B08401] text-[#DED1BD] hover:text-[#B08401] transition-all font-mono text-xs"
-              title="Toggle Paper Crumple Effect"
-            >
-              <RotateCcw className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Right Status */}
-          <div className="text-center sm:text-right text-[11px] font-mono text-[#DED1BD]/70 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <span>WEEK 7 ACTIVE</span>
-          </div>
-        </div>
-      </main>
-
-      {/* ============================================================== */}
-      {/* 4. SECTION 4 4-ROLE INSTITUTIONAL LOGIN PORTAL MODAL / DRAWER  */}
+      {/* 1. PROFESSIONAL MINIMALIST ENTRY PROGRESS LINE                 */}
       {/* ============================================================== */}
       <AnimatePresence>
-        {showLoginModal && (
+        {loadingIntro && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-lg"
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-50 bg-[#351B12] text-[#FAF6F2] flex flex-col items-center justify-center p-6"
           >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="w-full max-w-2xl bg-[#24130D] border border-[#B08401]/40 rounded-2xl shadow-2xl p-6 sm:p-8 text-[#FAF6F2] relative overflow-hidden max-h-[90vh] overflow-y-auto"
-            >
-              {/* Ambient Glow */}
-              <div className="absolute top-0 right-0 w-80 h-80 bg-[#B08401]/10 rounded-full blur-3xl pointer-events-none" />
+            {/* Subtle Warm Ambient Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#B08401]/15 rounded-full blur-[120px] pointer-events-none" />
 
-              {/* Close Button */}
-              <button
-                type="button"
-                onClick={() => setShowLoginModal(false)}
-                className="absolute top-5 right-5 text-[#DED1BD]/70 hover:text-[#FAF6F2] p-1.5 rounded-lg border border-transparent hover:border-[#FAF6F2]/20 transition-all"
-              >
-                <X className="w-5 h-5" />
-              </button>
+            <div className="relative z-10 w-full max-w-xs text-center space-y-6">
+              {/* VetoGrid Emblem */}
+              <div className="w-20 h-20 mx-auto rounded-2xl bg-white shadow-xl flex items-center justify-center border border-[#DED1BD] p-2">
+                <Image
+                  src="/logo.png"
+                  alt="VetoGrid Logo"
+                  width={64}
+                  height={64}
+                  priority
+                  className="object-contain"
+                />
+              </div>
 
-              {/* Header */}
-              <div className="space-y-1 mb-6 text-center sm:text-left">
-                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#B08401]/20 border border-[#B08401]/40 text-[#B08401] text-[10px] font-mono uppercase tracking-wider font-bold mb-1">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Section 4 Mandatory 4 Roles</span>
-                </div>
-                <h2 className="text-2xl font-black text-[#FAF6F2] tracking-tight">
-                  Sign In as One of 4 Roles
-                </h2>
-                <p className="text-xs text-[#DED1BD]/80">
-                  Select your institutional persona to test permissions and manage campus files.
+              <div className="space-y-1">
+                <h1 className="text-2xl font-black text-[#FAF6F2] tracking-tight">VetoGrid</h1>
+                <p className="text-[11px] text-[#DED1BD]/75 uppercase tracking-widest font-mono">
+                  Autonomous Campus Governance
                 </p>
               </div>
 
-              {/* The 4 Roles Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-6">
-                {primaryFourRoles.map((role) => {
-                  const isSelected = selectedRole.id === role.id;
-                  return (
-                    <button
-                      type="button"
-                      key={role.id}
-                      onClick={() => handleSelectRole(role)}
-                      className={cn(
-                        "p-3 rounded-xl border text-left transition-all relative flex flex-col justify-between",
-                        isSelected
-                          ? "bg-[#3A1F16] border-[#B08401] ring-2 ring-[#B08401]/50 shadow-md"
-                          : "bg-[#1E0F0A] border-[#FAF6F2]/10 hover:border-[#B08401]/40 hover:bg-[#2B170F]"
-                      )}
-                    >
-                      <div className="flex items-start justify-between gap-2 mb-1.5">
-                        <span className="font-extrabold text-xs text-[#FAF6F2] tracking-tight">
-                          {role.label}
-                        </span>
-                        <Badge
-                          variant={isSelected ? "gold" : "outline"}
-                          className="text-[9px] shrink-0 font-bold uppercase"
-                        >
-                          {role.badge}
-                        </Badge>
-                      </div>
-
-                      <div className="text-[10px] text-[#DED1BD]/70 font-mono truncate mb-2">
-                        {role.email}
-                      </div>
-
-                      <div className="text-[11px] text-[#D49E8D] line-clamp-2 leading-relaxed">
-                        {role.whatTheyCanDo}
-                      </div>
-                    </button>
-                  );
-                })}
+              {/* Minimalist Progress Line Only (as strictly requested) */}
+              <div className="w-full h-1 bg-[#4A2619] rounded-full overflow-hidden shadow-inner">
+                <div
+                  className="h-full bg-gradient-to-r from-[#B08401] via-[#D49E8D] to-[#FAF6F2] transition-all duration-100 ease-out"
+                  style={{ width: `${progress}%` }}
+                />
               </div>
 
-              {/* Zero Self-Approval Notice */}
-              <div className="bg-[#1A0E0A] border border-[#B08401]/30 rounded-xl p-3 text-[11px] text-[#DED1BD]/90 mb-5 flex items-start gap-2.5">
-                <ShieldCheck className="w-4 h-4 text-[#B08401] shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-[#FAF6F2]">Section 4 Zero Self-Approval Mandate:</strong>{" "}
-                  &ldquo;Nobody can approve their own request.&rdquo; If an approver tries to sign off on their own booking, the server rejects it with HTTP 403 Forbidden.
-                </div>
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setLoadingIntro(false)}
+                  className="text-[11px] text-[#DED1BD]/60 hover:text-white transition-colors underline underline-offset-4"
+                >
+                  Skip Intro
+                </button>
               </div>
-
-              {/* Active Credentials Form */}
-              <form onSubmit={handleLoginSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-xs font-semibold text-[#DED1BD] block mb-1">
-                      Email
-                    </label>
-                    <div className="relative">
-                      <Mail className="w-4 h-4 text-[#DED1BD]/60 absolute left-3 top-1/2 -translate-y-1/2" />
-                      <Input
-                        type="email"
-                        value={email}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                          setError("");
-                        }}
-                        className="pl-9 text-xs bg-[#1A0E0A] border-[#FAF6F2]/20 text-[#FAF6F2] focus:border-[#B08401]"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold text-[#DED1BD] block mb-1">
-                      Password
-                    </label>
-                    <div className="relative">
-                      <Lock className="w-4 h-4 text-[#DED1BD]/60 absolute left-3 top-1/2 -translate-y-1/2" />
-                      <Input
-                        type="password"
-                        value={password}
-                        onChange={(e) => {
-                          setPassword(e.target.value);
-                          setError("");
-                        }}
-                        className="pl-9 text-xs bg-[#1A0E0A] border-[#FAF6F2]/20 text-[#FAF6F2] focus:border-[#B08401]"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {error && (
-                  <div className="p-2.5 rounded-lg bg-rose-950/50 border border-rose-500/40 text-xs text-rose-200">
-                    {error}
-                  </div>
-                )}
-
-                <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
-                  <Button
-                    type="submit"
-                    variant="cit"
-                    size="md"
-                    className="w-full sm:flex-1 bg-[#B08401] hover:bg-[#8F6B01] text-[#1A0E0A] font-mono text-xs font-black tracking-wider uppercase py-2.5"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      "Authenticating..."
-                    ) : (
-                      <span className="flex items-center justify-center gap-2">
-                        <span>Sign In as {selectedRole.label}</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </span>
-                    )}
-                  </Button>
-
-                  <a
-                    href="/login"
-                    className="text-xs font-mono text-[#DED1BD]/70 hover:text-[#FAF6F2] underline underline-offset-4"
-                  >
-                    Direct Login Page →
-                  </a>
-                </div>
-              </form>
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* ============================================================== */}
-      {/* 5. AUTHENTICATING OVERLAY (Instant Seamless Routing)           */}
+      {/* 2. INSTITUTIONAL TOP NAVIGATION BAR                             */}
       {/* ============================================================== */}
-      {isAuthenticating && (
-        <div className="fixed inset-0 z-50 bg-[#1A0E0A]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-[#B08401]/20 border border-[#B08401] text-[#B08401] mx-auto flex items-center justify-center shadow-lg animate-bounce mb-4">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E8DFD5] shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          {/* Brand Mark */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-white border border-[#DED1BD] shadow-2xs flex items-center justify-center p-1 overflow-hidden">
+              <Image
+                src="/logo.png"
+                alt="VetoGrid Logo"
+                width={32}
+                height={32}
+                priority
+                className="object-contain"
+              />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-extrabold text-base tracking-tight text-[#683B2B]">
+                  VetoGrid
+                </span>
+                <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FAF3F1] text-[#B08401] border border-[#EAC8BF]">
+                  v1.0 Institutional
+                </span>
+              </div>
+              <p className="text-[11px] text-[#8C6556] hidden md:block">
+                Chitkara Institute of Technology · Timetable &amp; Venue Governance
+              </p>
+            </div>
+          </div>
+
+          {/* Center Links */}
+          <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold text-[#8C6556]">
+            <a href="/timetable" className="hover:text-[#B08401] transition-colors flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-[#B08401]" />
+              <span>Timetable Matrix</span>
+            </a>
+            <a href="/venue-bookings" className="hover:text-[#B08401] transition-colors flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[#B08401]" />
+              <span>Spectra '26 Venues</span>
+            </a>
+            <a href="/examinations" className="hover:text-[#B08401] transition-colors flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-[#B08401]" />
+              <span>Midsem Schedule</span>
+            </a>
+            <a href="/analytics" className="hover:text-[#B08401] transition-colors flex items-center gap-1.5">
+              <Cpu className="w-3.5 h-3.5 text-[#B08401]" />
+              <span>Optimization Analytics</span>
+            </a>
+          </nav>
+
+          {/* Right Status & Direct Login */}
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#FAF6F2] border border-[#E8DFD5] text-[11px] font-medium text-[#683B2B]">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Week 7 Active</span>
+            </div>
+            <a
+              href="/login"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#B08401] hover:bg-[#8F6B01] text-white text-xs font-bold shadow-xs transition-colors"
+            >
+              <span>Sign In</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </a>
+          </div>
+        </div>
+      </header>
+
+      {/* ============================================================== */}
+      {/* 3. HERO & INSTITUTIONAL 4-ROLE GATEWAY                         */}
+      {/* ============================================================== */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
+        {/* Hero Header */}
+        <div className="text-center max-w-3xl mx-auto space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF3F1] border border-[#EAC8BF] text-xs font-bold text-[#683B2B]">
+            <Award className="w-3.5 h-3.5 text-[#B08401]" />
+            <span>Autonomous Timetable Synthesis · 0 Hard Violations</span>
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl font-black text-[#683B2B] tracking-tight leading-tight">
+            Institutional Timetabling &amp; <br />
+            <span className="text-[#B08401] bg-gradient-to-r from-[#B08401] to-[#8F6B01] bg-clip-text text-transparent">
+              Venue Governance Platform
+            </span>
+          </h1>
+
+          <p className="text-sm sm:text-base text-[#8C6556] leading-relaxed max-w-2xl mx-auto">
+            Resolving complex university schedule constraints with Google OR-Tools CP-SAT,
+            enforcing Section 4 multi-role authorization hierarchies, and mitigating Spectra fest venue clashes.
+          </p>
+
+          {/* Verified Metrics Counter */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+            {[
+              { label: "Scheduled Sessions", value: "189 / 189", detail: "100% Conflict-Free" },
+              { label: "Hard Violations", value: "0", detail: "Strict Constraint Match" },
+              { label: "Midsem Exams", value: "41 / 41", detail: "Assigned & Audited" },
+              { label: "Spectra Bookings", value: "23 Approved", detail: "Score 138 / 140" },
+            ].map((stat, i) => (
+              <div
+                key={i}
+                className="bg-white border border-[#E8DFD5] rounded-xl p-3 shadow-2xs text-center"
+              >
+                <div className="text-lg sm:text-xl font-extrabold text-[#683B2B]">{stat.value}</div>
+                <div className="text-[10px] font-bold text-[#B08401] uppercase tracking-wider mt-0.5">
+                  {stat.label}
+                </div>
+                <div className="text-[10px] text-[#8C6556] mt-0.5">{stat.detail}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Section 4 Mandatory Rule Banner */}
+        <div className="bg-[#FAF3F1] border border-[#EAC8BF] rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-start gap-3.5">
+            <div className="p-2.5 rounded-xl bg-[#F0DBD4] text-[#683B2B] shrink-0">
+              <ShieldCheck className="w-5 h-5 text-[#B08401]" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-extrabold text-[#683B2B] uppercase tracking-wide">
+                  Section 4 Mandatory Governance Rule
+                </span>
+                <span className="bg-[#EAC8BF] text-[#683B2B] text-[10px] px-2 py-0.5 rounded-full font-bold">
+                  Zero Self-Approval Mandate
+                </span>
+              </div>
+              <p className="text-xs text-[#7A4B3A] mt-1 leading-relaxed">
+                <strong>&ldquo;Nobody can approve their own request.&rdquo;</strong> If an approver submits a venue booking and attempts to approve it, the system rejects the operation with <strong>HTTP 403 Forbidden</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div className="shrink-0 flex items-center gap-2">
+            <span className="text-xs font-bold text-[#683B2B] bg-white px-3 py-1.5 rounded-xl border border-[#EAC8BF] shadow-2xs">
+              4 Roles Enforced
+            </span>
+          </div>
+        </div>
+
+        {/* ============================================================== */}
+        {/* 4. THE 4 ROLES INTERACTIVE SELECTION & INSTANT LOGIN GATEWAY   */}
+        {/* ============================================================== */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column (7 Cols): 4 Section 4 Roles Cards */}
+          <div className="lg:col-span-7 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-extrabold text-[#683B2B] tracking-tight">
+                  1. Select Your Institutional Role
+                </h2>
+                <p className="text-xs text-[#8C6556]">
+                  Click any role to test platform permissions and preview role-specific features
+                </p>
+              </div>
+              <span className="text-xs font-mono text-[#B08401] font-bold">4 Official Roles</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {primaryFourRoles.map((role) => {
+                const isSelected = selectedRole.id === role.id;
+                return (
+                  <button
+                    type="button"
+                    key={role.id}
+                    onClick={() => handleSelectRole(role)}
+                    className={cn(
+                      "p-4 rounded-2xl border text-left transition-all duration-200 flex flex-col justify-between relative group",
+                      isSelected
+                        ? "bg-white border-[#B08401] ring-2 ring-[#B08401]/30 shadow-md scale-[1.01]"
+                        : "bg-white/80 border-[#E8DFD5] hover:border-[#B08401]/50 hover:bg-white hover:shadow-xs"
+                    )}
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <div className="p-2 rounded-xl bg-[#FAF6F2] border border-[#E8DFD5] group-hover:border-[#B08401]/40 transition-colors">
+                          {getRoleIcon(role.id, "w-5 h-5")}
+                        </div>
+                        <Badge
+                          variant={isSelected ? "gold" : "outline"}
+                          className="text-[10px] font-bold uppercase tracking-wider shrink-0"
+                        >
+                          {role.badge}
+                        </Badge>
+                      </div>
+
+                      <div className="font-extrabold text-sm text-[#683B2B] tracking-tight">
+                        {role.label}
+                      </div>
+
+                      <div className="text-[11px] font-mono text-[#8C6556] mt-0.5 truncate">
+                        {role.email}
+                      </div>
+
+                      <p className="text-xs text-[#683B2B]/90 mt-2.5 leading-relaxed line-clamp-3">
+                        {role.whatTheyCanDo}
+                      </p>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-[#FAF6F2] flex items-center justify-between text-[11px]">
+                      <span className="text-[#8C6556] font-medium truncate max-w-[150px]">
+                        {role.department.split("(")[0]}
+                      </span>
+                      <span
+                        className={cn(
+                          "font-bold flex items-center gap-1",
+                          isSelected ? "text-[#B08401]" : "text-[#8C6556] group-hover:text-[#683B2B]"
+                        )}
+                      >
+                        <span>{isSelected ? "Active Persona" : "Select Role"}</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Section 4 Priority Conflict Hierarchy */}
+            <div className="bg-white border border-[#E8DFD5] rounded-2xl p-4 shadow-2xs">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-[#683B2B] uppercase tracking-wide">
+                  Section 4 Room Tie-Breaker Priority
+                </span>
+                <span className="text-[10px] text-[#8C6556] font-medium">When requests clash</span>
+              </div>
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 text-center">
+                {[
+                  { rank: "P1", name: "Exams", bg: "bg-[#FAF3F1] border-[#EAC8BF] text-[#683B2B]" },
+                  { rank: "P2", name: "Classes", bg: "bg-[#FAF6F2] border-[#DED1BD] text-[#683B2B]" },
+                  { rank: "P3", name: "Institute", bg: "bg-[#FBF6EA] border-[#ECD693] text-[#745501]" },
+                  { rank: "P4", name: "Guests", bg: "bg-[#FAF6F2] border-[#DED1BD] text-[#683B2B]" },
+                  { rank: "P5", name: "Dept Events", bg: "bg-[#FAF3F1] border-[#EAC8BF] text-[#683B2B]" },
+                  { rank: "P6", name: "Clubs", bg: "bg-[#FBF6EA] border-[#ECD693] text-[#745501]" },
+                ].map((tier, idx) => (
+                  <div key={idx} className={`p-1.5 rounded-lg border text-xs font-semibold ${tier.bg}`}>
+                    <div className="text-[9px] opacity-75 font-mono">{tier.rank}</div>
+                    <div className="text-[11px] truncate mt-0.5">{tier.name}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column (5 Cols): Direct Sign-In Card */}
+          <div className="lg:col-span-5">
+            <div className="bg-white border border-[#DED1BD] rounded-3xl p-6 shadow-xl sticky top-24 space-y-5">
+              <div className="border-b border-[#FAF6F2] pb-3">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#B08401]">
+                  Step 2 · Institutional Gateway
+                </span>
+                <h3 className="text-xl font-black text-[#683B2B] tracking-tight mt-0.5">
+                  Sign In as {selectedRole.label}
+                </h3>
+                <p className="text-xs text-[#8C6556] mt-1">
+                  Credentials are automatically populated for the chosen role.
+                </p>
+              </div>
+
+              {/* Active Role Preview Card */}
+              <div className="p-3.5 rounded-xl bg-[#FAF6F2] border border-[#E8DFD5] space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-[#683B2B]">{selectedRole.name}</span>
+                  <Badge variant="gold" className="text-[10px] font-bold">
+                    {selectedRole.badge}
+                  </Badge>
+                </div>
+                <div className="text-[11px] text-[#8C6556] font-mono truncate">
+                  {selectedRole.email}
+                </div>
+                <div className="text-xs text-[#683B2B] pt-1">
+                  <strong>Permissions:</strong> {selectedRole.whatTheyCanDo}
+                </div>
+              </div>
+
+              <form onSubmit={handleLoginSubmit} className="space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-[#683B2B] block mb-1">
+                    Institutional Email
+                  </label>
+                  <div className="relative">
+                    <Mail className="w-4 h-4 text-[#8C6556] absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Input
+                      type="email"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        setError("");
+                      }}
+                      className="pl-9 text-xs bg-[#FAF6F2] border-[#DED1BD] text-[#683B2B] focus:border-[#B08401]"
+                      placeholder="user@cit.edu.in"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-[#683B2B] block mb-1">
+                    Campus Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="w-4 h-4 text-[#8C6556] absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Input
+                      type="password"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        setError("");
+                      }}
+                      className="pl-9 text-xs bg-[#FAF6F2] border-[#DED1BD] text-[#683B2B] focus:border-[#B08401]"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {error && (
+                  <div className="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-800">
+                    {error}
+                  </div>
+                )}
+
+                <Button
+                  type="submit"
+                  variant="cit"
+                  size="md"
+                  className="w-full bg-[#B08401] hover:bg-[#8F6B01] text-white font-bold text-xs py-3 shadow-xs"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    "Authenticating..."
+                  ) : (
+                    <span className="flex items-center justify-center gap-2">
+                      <span>Enter Workspace as {selectedRole.label}</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </span>
+                  )}
+                </Button>
+              </form>
+
+              <div className="pt-2 text-center text-[11px] text-[#8C6556] flex items-center justify-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#B08401]" />
+                <span>HMAC-SHA256 Authenticated · RBAC Session Token</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Feature Cards Showcase */}
+        <div className="pt-8 border-t border-[#E8DFD5]">
+          <div className="text-center max-w-xl mx-auto mb-6">
+            <h3 className="text-lg font-extrabold text-[#683B2B]">
+              Engineered for Complete Campus Operations
+            </h3>
+            <p className="text-xs text-[#8C6556] mt-0.5">
+              Three pillars ensuring mathematical correctness, seamless governance, and live transparency
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-5 rounded-2xl bg-white border border-[#E8DFD5] shadow-2xs space-y-2">
+              <div className="w-10 h-10 rounded-xl bg-[#FAF3F1] border border-[#EAC8BF] flex items-center justify-center text-[#B08401]">
+                <Cpu className="w-5 h-5" />
+              </div>
+              <h4 className="font-extrabold text-sm text-[#683B2B]">Google OR-Tools CP-SAT</h4>
+              <p className="text-xs text-[#8C6556] leading-relaxed">
+                Guaranteed zero overlapping sessions, faculty workload compliance, and room capacity enforcement across all departments.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-white border border-[#E8DFD5] shadow-2xs space-y-2">
+              <div className="w-10 h-10 rounded-xl bg-[#FBF6EA] border border-[#ECD693] flex items-center justify-center text-[#745501]">
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <h4 className="font-extrabold text-sm text-[#683B2B]">Spectra '26 Arbitration</h4>
+              <p className="text-xs text-[#8C6556] leading-relaxed">
+                Automated multi-tier priority queue resolving auditorium and festival space requests without disrupting midsem examinations.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-white border border-[#E8DFD5] shadow-2xs space-y-2">
+              <div className="w-10 h-10 rounded-xl bg-[#FAF3F1] border border-[#EAC8BF] flex items-center justify-center text-[#B08401]">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <h4 className="font-extrabold text-sm text-[#683B2B]">Zero Self-Approval Mandate</h4>
+              <p className="text-xs text-[#8C6556] leading-relaxed">
+                Strict Section 4 conflict-of-interest enforcement ensuring independent academic approval with a full audit log.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* ============================================================== */}
+      {/* 5. INSTITUTIONAL FOOTER                                        */}
+      {/* ============================================================== */}
+      <footer className="mt-16 border-t border-[#E8DFD5] bg-white py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#8C6556] gap-3">
+          <div className="flex items-center gap-2">
+            <span className="font-extrabold text-[#683B2B]">VetoGrid</span>
+            <span>·</span>
+            <span>Chitkara Institute of Technology Campus Scheduling Platform</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="font-mono text-[11px]">0 Hard Violations · Soft Penalty: 82</span>
+            <span>© 2026 Chitkara University</span>
+          </div>
+        </div>
+      </footer>
+
+      {/* Authenticating Transition Modal */}
+      {authSuccess && (
+        <div className="fixed inset-0 z-50 bg-[#351B12]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center text-[#FAF6F2]">
+          <div className="w-16 h-16 rounded-2xl bg-[#B08401]/20 border border-[#B08401] text-[#B08401] mx-auto flex items-center justify-center shadow-lg animate-bounce mb-3">
             <CheckCircle2 className="w-8 h-8" />
           </div>
           <h2 className="text-xl font-bold text-[#FAF6F2]">Access Granted</h2>
           <p className="text-xs text-[#DED1BD] mt-1 font-mono">
-            Entering workspace as <strong>{selectedRole.name}</strong> ({selectedRole.label})...
+            Opening workspace for <strong>{selectedRole.name}</strong> ({selectedRole.label})...
           </p>
         </div>
       )}
