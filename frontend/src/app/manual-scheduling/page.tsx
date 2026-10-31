@@ -17,24 +17,35 @@ import {
   Clock,
   DoorClosed,
   Users,
-  ShieldAlert
+  ShieldAlert,
+  ArrowRight,
+  Sparkles
 } from "lucide-react";
+import Link from "next/link";
 import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 
 import citData from "@/data/cit_public.json";
 import scheduleData from "@/data/schedule.json";
 
 export default function ManualSchedulingPage() {
-  const [activeRole, setActiveRole] = useState<string>("Admin");
+  const { user } = useAuth();
   const [eventName, setEventName] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("AUD-01");
   const [selectedDay, setSelectedDay] = useState("Wednesday");
   const [startPeriod, setStartPeriod] = useState(10);
   const [endPeriod, setEndPeriod] = useState(12);
   const [attendees, setAttendees] = useState(100);
-  const [priorityTier, setPriorityTier] = useState(3);
   const [submitting, setSubmitting] = useState(false);
   const [manualEvents, setManualEvents] = useState<any[]>([]);
+
+  // Automatically determine priority tier from user role
+  const priorityTier =
+    user.role === "Admin (Dean's office)"
+      ? 3
+      : user.role === "Department coordinator"
+      ? 5
+      : 6;
 
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
   const periods = [
@@ -120,14 +131,14 @@ export default function ManualSchedulingPage() {
     try {
       setSubmitting(true);
       const res = await api.createBooking({
-        event_name: eventName || `Manual ${activeRole} Event`,
+        event_name: eventName || `Manual ${user.role} Event`,
         room_id: selectedRoom,
         day: selectedDay,
         start_period: startPeriod,
         end_period: endPeriod,
         attendees: Number(attendees),
-        requested_by: `MANUAL-${activeRole.toUpperCase().replace(/\s+/g, "_")}`,
-        requester_role: activeRole,
+        requested_by: user.id,
+        requester_role: user.role,
         priority_tier: priorityTier,
       });
 
@@ -135,12 +146,12 @@ export default function ManualSchedulingPage() {
         ...prev,
         {
           id: res.booking_id || `MANUAL-${Date.now()}`,
-          name: eventName || `Manual ${activeRole} Event`,
+          name: eventName || `Manual ${user.role} Event`,
           room_id: selectedRoom,
           day: selectedDay,
           period: `P${startPeriod}-P${endPeriod}`,
           attendees,
-          role: activeRole,
+          role: user.role,
           status: "SCHEDULED",
         },
       ]);
@@ -192,35 +203,71 @@ export default function ManualSchedulingPage() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Manual Scheduling Form */}
-        <Card className="lg:col-span-2">
-          <CardHeader className="pb-3 border-b border-surface-border/50">
-            <CardTitle className="text-sm font-semibold flex items-center gap-2">
-              <Plus className="w-4 h-4 text-blue-400" />
-              Manual Event Allocation Form
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-5">
-            <form onSubmit={handleManualSchedule} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Authorized Role (Section 4)</label>
-                  <select
-                    value={activeRole}
-                    onChange={(e) => {
-                      setActiveRole(e.target.value);
-                      if (e.target.value === "Admin") setPriorityTier(3);
-                      else if (e.target.value === "Department Coordinator") setPriorityTier(5);
-                      else setPriorityTier(6);
-                    }}
-                    className="w-full h-9 rounded-lg border border-surface-border bg-surface-muted px-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  >
-                    <option value="Admin">Admin (Dean's Office) — Tier 3</option>
-                    <option value="Department Coordinator">Department Coordinator — Tier 5</option>
-                    <option value="Club Representative">Club Representative — Tier 6</option>
-                  </select>
-                </div>
+      {/* Role Authority Indicator matching Section 4 */}
+      <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-sans">
+        <div className="flex items-center gap-2.5">
+          <ShieldCheck className="w-5 h-5 text-[#236B8E] shrink-0" />
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-slate-900">Active Actor: {user.name}</span>
+              <Badge variant={user.badgeVariant} className="text-[10px] font-bold">
+                {user.role}
+              </Badge>
+            </div>
+            <p className="text-slate-500 mt-0.5">{user.whatTheyCanDo}</p>
+          </div>
+        </div>
+        <Link
+          href="/login"
+          className="text-xs text-[#1B5270] font-bold bg-[#E2EAF1] hover:bg-[#D5E2EC] px-3 py-1.5 rounded-lg border border-[#CBD9E5] transition-colors shrink-0"
+        >
+          Switch Role &rarr;
+        </Link>
+      </div>
+
+      {user.role === "Club representative" ? (
+        <Card className="p-8 bg-amber-50 border border-amber-200 text-center space-y-4">
+          <ShieldAlert className="w-10 h-10 text-amber-600 mx-auto" />
+          <div className="space-y-1">
+            <h3 className="text-sm font-bold text-amber-950">
+              Role Authority: Club Representative (Read-Only on Academic Master Schedule)
+            </h3>
+            <p className="text-xs text-amber-800 max-w-xl mx-auto leading-relaxed">
+              Per Section 4 specifications, Club Representatives submit and cancel venue requests for
+              Spectra fest and student societies through the dedicated <strong>Venue Bookings</strong> portal. Direct
+              insertion into the academic timetable is restricted to Admin, Department Coordinators, and Faculty.
+            </p>
+          </div>
+          <Link
+            href="/venue-bookings"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#1B5270] hover:bg-[#153e55] shadow-sm transition-all"
+          >
+            <span>Go to Venue Bookings Portal</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Manual Scheduling Form */}
+          <Card className="lg:col-span-2 border-slate-200 shadow-sm bg-white">
+            <CardHeader className="pb-3 border-b border-slate-100">
+              <CardTitle className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <Plus className="w-4 h-4 text-[#236B8E]" />
+                Manual Event Allocation Form
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-5">
+              <form onSubmit={handleManualSchedule} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 block mb-1">Signed-In Role (Section 4)</label>
+                    <div className="h-9 rounded-lg border border-slate-200 bg-slate-50 px-3 text-xs text-slate-800 flex items-center justify-between font-semibold">
+                      <span>{user.role}</span>
+                      <span className="text-[10px] bg-slate-200 px-1.5 py-0.5 rounded text-slate-700 font-mono">
+                        Tier {priorityTier}
+                      </span>
+                    </div>
+                  </div>
 
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-1">Event / Session Title</label>
@@ -305,7 +352,7 @@ export default function ManualSchedulingPage() {
                   <input
                     type="text"
                     disabled
-                    value={`Tier ${priorityTier} (${activeRole})`}
+                    value={`Tier ${priorityTier} (${user.role})`}
                     className="w-full h-9 rounded-lg border border-surface-border bg-surface-muted/50 px-3 text-xs text-slate-400 cursor-not-allowed"
                   />
                 </div>
@@ -383,6 +430,7 @@ export default function ManualSchedulingPage() {
           </Card>
         </div>
       </div>
+      )}
 
       {/* Manually Scheduled Events Table */}
       {manualEvents.length > 0 && (
