@@ -1,13 +1,12 @@
 """
-CampusOS AI - Independent Constraint Validator Adapter (Placeholder Architecture)
-
-CRITICAL RULE COMPLIANCE:
-This module DOES NOT create or fake the official validator.py.
-The official validator.py will be supplied in data/official/validator.py with the starter pack.
-This class will act as the application-level adapter to invoke the official validator
-and verify schedules against 100% of official ground-truth rules without fabrication.
+CampusOS AI - Independent Constraint Validator Adapter
+Directly bridges CampusOS AI with the official ground-truth validator.py.
 """
 
+import os
+import sys
+import subprocess
+import json
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel
 
@@ -17,25 +16,36 @@ class ValidationResult(BaseModel):
     violations_count: int = 0
     hard_constraint_violations: List[str] = []
     soft_constraint_penalties: Dict[str, float] = {}
-    summary: str = "Validator pending integration of official validator.py"
+    booking_score: int = 0
+    summary: str = ""
 
 
 class OfficialValidatorAdapter:
-    """
-    Adapter bridging CampusOS AI data models with the official hackathon validator.py.
-    """
-
-    def __init__(self, official_validator_path: Optional[str] = None):
-        self.official_validator_path = official_validator_path
-        self._is_official_validator_loaded = False
+    def __init__(self, validator_script_path: Optional[str] = None):
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+        self.validator_script_path = validator_script_path or os.path.join(base_dir, "validator.py")
+        self._is_official_validator_loaded = os.path.exists(self.validator_script_path)
 
     def is_loaded(self) -> bool:
         return self._is_official_validator_loaded
 
-    def validate_schedule(self, schedule_data: Dict[str, Any]) -> ValidationResult:
-        """
-        Executes validation via the official validator.py once provided in the starter pack.
-        """
-        raise NotImplementedError(
-            "Validation cannot be executed until official validator.py is placed in data/official/."
+    def validate_schedule(self, schedule_file_path: str, after_file_path: Optional[str] = None) -> ValidationResult:
+        cmd = [sys.executable, self.validator_script_path, schedule_file_path]
+        if after_file_path:
+            cmd.extend(["--after", after_file_path])
+
+        proc = subprocess.run(cmd, capture_output=True, text=True)
+        output = proc.stdout
+
+        is_valid = proc.returncode == 0
+        hard_violations = []
+        if "HARD CONSTRAINT VIOLATIONS:" in output:
+            parts = output.split("HARD CONSTRAINT VIOLATIONS:")[1].split("------------------------------------------------------------")[0]
+            hard_violations = [line.strip() for line in parts.splitlines() if line.strip() and not line.startswith("=")]
+
+        return ValidationResult(
+            is_valid=is_valid,
+            violations_count=len(hard_violations),
+            hard_constraint_violations=hard_violations,
+            summary=output
         )

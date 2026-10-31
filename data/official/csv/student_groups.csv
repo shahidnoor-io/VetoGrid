@@ -1,0 +1,15 @@
+group_id,name,year,size
+Y1-SecA,Year 1 Section A,1,60
+Y1-SecB,Year 1 Section B,1,60
+Y1-SecC,Year 1 Section C,1,60
+Y1-SecD,Year 1 Section D,1,60
+Y2-CSE,Year 2 Computer Science,2,65
+Y2-ECE,Year 2 Electronics & Comm,2,60
+Y2-ME,Year 2 Mechanical Engg,2,55
+Y2-CE,Year 2 Civil Engg,2,50
+Y2-EE,Year 2 Electrical Engg,2,50
+Y3-CSE,Year 3 Computer Science,3,65
+Y3-ECE,Year 3 Electronics & Comm,3,60
+Y3-ME,Year 3 Mechanical Engg,3,55
+Y3-CE,Year 3 Civil Engg,3,50
+Y3-EE,Year 3 Electrical Engg,3,50

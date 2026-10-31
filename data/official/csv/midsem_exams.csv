@@ -1,0 +1,42 @@
+exam_id,course_id,student_groups,duration,expected_students,suggested_day,suggested_start_period
+EXAM-01,MA101,"[""Y1-SecA"", ""Y1-SecB""]",3,120,Monday,2
+EXAM-02,MA101,"[""Y1-SecC"", ""Y1-SecD""]",3,120,Monday,6
+EXAM-03,PH101,"[""Y1-SecA"", ""Y1-SecB""]",3,120,Tuesday,2
+EXAM-04,PH101,"[""Y1-SecC"", ""Y1-SecD""]",3,120,Tuesday,6
+EXAM-05,CS101,"[""Y1-SecA"", ""Y1-SecB""]",3,120,Wednesday,2
+EXAM-06,CS101,"[""Y1-SecC"", ""Y1-SecD""]",3,120,Wednesday,6
+EXAM-07,ME101,"[""Y1-SecA"", ""Y1-SecC""]",3,120,Thursday,2
+EXAM-08,EE101,"[""Y1-SecB"", ""Y1-SecD""]",3,120,Thursday,6
+EXAM-09,HS101,"[""Y1-SecA"", ""Y1-SecB"", ""Y1-SecC"", ""Y1-SecD""]",2,240,Friday,2
+EXAM-10,CS201,"[""Y2-CSE""]",3,65,Monday,2
+EXAM-11,CS202,"[""Y2-CSE""]",3,65,Tuesday,2
+EXAM-12,CS203,"[""Y2-CSE""]",3,65,Wednesday,2
+EXAM-13,CS204,"[""Y2-CSE""]",3,65,Thursday,2
+EXAM-14,CS205,"[""Y2-CSE""]",3,65,Friday,2
+EXAM-15,EC201,"[""Y2-ECE""]",3,60,Monday,6
+EXAM-16,EC202,"[""Y2-ECE""]",3,60,Tuesday,6
+EXAM-17,EC203,"[""Y2-ECE""]",3,60,Wednesday,6
+EXAM-18,EC204,"[""Y2-ECE""]",3,60,Thursday,6
+EXAM-19,ME201,"[""Y2-ME""]",3,55,Monday,2
+EXAM-20,ME202,"[""Y2-ME""]",3,55,Tuesday,2
+EXAM-21,ME203,"[""Y2-ME""]",3,55,Wednesday,2
+EXAM-22,ME204,"[""Y2-ME""]",3,55,Thursday,2
+EXAM-23,CE201,"[""Y2-CE""]",3,50,Monday,6
+EXAM-24,CE202,"[""Y2-CE""]",3,50,Tuesday,6
+EXAM-25,CE203,"[""Y2-CE""]",3,50,Wednesday,6
+EXAM-26,EE201,"[""Y2-EE""]",3,50,Monday,2
+EXAM-27,EE202,"[""Y2-EE""]",3,50,Tuesday,2
+EXAM-28,EE203,"[""Y2-EE""]",3,50,Wednesday,2
+EXAM-29,CS301,"[""Y3-CSE""]",3,65,Monday,6
+EXAM-30,CS302,"[""Y3-CSE""]",3,65,Tuesday,6
+EXAM-31,CS303,"[""Y3-CSE""]",3,65,Wednesday,6
+EXAM-32,CS304,"[""Y3-CSE""]",3,65,Thursday,6
+EXAM-33,EC301,"[""Y3-ECE""]",3,60,Monday,2
+EXAM-34,EC302,"[""Y3-ECE""]",3,60,Tuesday,2
+EXAM-35,EC303,"[""Y3-ECE""]",3,60,Wednesday,2
+EXAM-36,ME301,"[""Y3-ME""]",3,55,Monday,6
+EXAM-37,ME302,"[""Y3-ME""]",3,55,Tuesday,6
+EXAM-38,ME303,"[""Y3-ME""]",3,55,Wednesday,6
+EXAM-39,CE301,"[""Y3-CE""]",3,50,Thursday,2
+EXAM-40,CE302,"[""Y3-CE""]",3,50,Friday,6
+EXAM-41,EE301,"[""Y3-EE""]",3,50,Friday,6

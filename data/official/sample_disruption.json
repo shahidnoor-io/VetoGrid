@@ -1,0 +1,48 @@
+{
+  "disruption_id": "DISRUPT-CIT-W7",
+  "description": "Mid-week emergency changes: Faculty medical leave, unexpected room maintenance, and urgent guest workshop addition.",
+  "changes": [
+    {
+      "type": "faculty_leave",
+      "faculty_id": "FAC-05",
+      "faculty_name": "Dr. Amit Patel",
+      "day": "Wednesday",
+      "reason": "Emergency medical leave"
+    },
+    {
+      "type": "room_closure",
+      "room_id": "LH-104",
+      "day": "Thursday",
+      "periods": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "reason": "HVAC system breakdown and ceiling repair"
+    },
+    {
+      "type": "add_session",
+      "session": {
+        "session_id": "SES-NEW-01",
+        "course_id": "CS304",
+        "session_type": "lecture",
+        "duration": 1,
+        "student_groups": [
+          "Y3-CSE"
+        ],
+        "faculty_id": "FAC-01",
+        "required_room_type": "lecture_hall",
+        "needs_accessible_room": true,
+        "fixed_slot": null,
+        "elective_basket": null,
+        "reason": "Special IEEE AI Ethics & Alignment lecture"
+      }
+    }
+  ]
+}

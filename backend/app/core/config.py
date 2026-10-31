@@ -3,12 +3,16 @@ CampusOS AI - Application Configuration
 Configured using Pydantic Settings with support for environment variables and .env files.
 """
 
+import os
 from typing import List, Union
 from pydantic import AnyHttpUrl, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    # Application Paths
+    PROJECT_ROOT: str = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    
     # Application Metadata
     APP_NAME: str = "CampusOS AI - Intelligent Campus Scheduling & Venue Management Platform"
     APP_VERSION: str = "1.0.0-alpha"

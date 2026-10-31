@@ -4,16 +4,24 @@ Aggregates versioned routes across all functional domains.
 """
 
 from fastapi import APIRouter
-from backend.app.api.routes import health
+from backend.app.api.routes import health, schedule, explain, bookings, admin, assistant
 
 api_router = APIRouter()
 
 # Core diagnostic and health route
 api_router.include_router(health.router)
 
-# Future domain routers will be plugged in as modules are completed:
-# api_router.include_router(timetable.router, prefix="/timetable", tags=["Timetable"])
-# api_router.include_router(examinations.router, prefix="/examinations", tags=["Examinations"])
-# api_router.include_router(bookings.router, prefix="/bookings", tags=["Venue Bookings"])
-# api_router.include_router(rescheduling.router, prefix="/rescheduling", tags=["Rescheduling"])
-# api_router.include_router(assistant.router, prefix="/assistant", tags=["AI Assistant"])
+# Timetable & Scheduling solver
+api_router.include_router(schedule.router)
+
+# Mathematical explainer & constraint auditing
+api_router.include_router(explain.router)
+
+# Venue bookings & RBAC approvals
+api_router.include_router(bookings.router)
+
+# Admin tools & demo reset
+api_router.include_router(admin.router)
+
+# Red-team-proof AI Assistant
+api_router.include_router(assistant.router)

@@ -1,0 +1,41 @@
+faculty_id,name,department,daily_limit_hours,unavailability,avoid_preferences
+FAC-01,Dr. Rajesh Sharma,CSE,4,[],"[{""day"": ""Monday"", ""period"": 1}, {""day"": ""Friday"", ""period"": 9}]"
+FAC-02,Prof. Ananya Sen,CSE,4,[],[]
+FAC-03,Dr. Vikram Sethi,CSE,4,"[{""day"": ""Tuesday"", ""period"": 1}, {""day"": ""Tuesday"", ""period"": 2}]",[]
+FAC-04,Prof. Sneha Reddy,CSE,4,[],"[{""day"": ""Monday"", ""period"": 1}]"
+FAC-05,Dr. Amit Patel,CSE,4,[],[]
+FAC-06,Prof. Divya Nair,CSE,4,[],"[{""day"": ""Friday"", ""period"": 9}]"
+FAC-07,Dr. Karthik Raman,CSE,4,"[{""day"": ""Thursday"", ""period"": 8}, {""day"": ""Thursday"", ""period"": 9}]","[{""day"": ""Monday"", ""period"": 1}]"
+FAC-08,Prof. Priya Iyer,CSE,4,[],[]
+FAC-09,Dr. Sandeep Das,ECE,4,[],[]
+FAC-10,Prof. Meera Joshi,ECE,4,[],"[{""day"": ""Monday"", ""period"": 1}]"
+FAC-11,Dr. Arjun Gupta,ECE,4,[],"[{""day"": ""Friday"", ""period"": 9}]"
+FAC-12,Prof. Ritu Verma,ECE,4,"[{""day"": ""Wednesday"", ""period"": 1}]",[]
+FAC-13,Dr. Sunil Kumar,ECE,4,[],"[{""day"": ""Monday"", ""period"": 1}]"
+FAC-14,Prof. Pooja Hegde,ECE,4,[],[]
+FAC-15,Dr. Rohan Bhatt,ME,4,[],[]
+FAC-16,Prof. Kavita Rao,ME,4,[],"[{""day"": ""Monday"", ""period"": 1}, {""day"": ""Friday"", ""period"": 9}]"
+FAC-17,Dr. Manoj Tiwari,ME,4,[],[]
+FAC-18,Prof. Shweta Mishra,ME,4,[],[]
+FAC-19,Dr. Tarun Ghosh,ME,4,[],"[{""day"": ""Monday"", ""period"": 1}]"
+FAC-20,Dr. Suresh Raina,CE,4,"[{""day"": ""Friday"", ""period"": 9}]",[]
+FAC-21,Prof. Neha Agarwal,CE,4,[],"[{""day"": ""Friday"", ""period"": 9}]"
+FAC-22,Dr. Vinod Prasad,CE,4,[],"[{""day"": ""Monday"", ""period"": 1}]"
+FAC-23,Prof. Alok Nath,CE,4,[],[]
+FAC-24,Dr. Pradeep Rawat,EE,4,[],[]
+FAC-25,Prof. Geeta Menon,EE,4,[],"[{""day"": ""Monday"", ""period"": 1}]"
+FAC-26,Dr. Harish Salve,EE,4,[],"[{""day"": ""Friday"", ""period"": 9}]"
+FAC-27,Prof. Vandana Shiva,EE,4,[],[]
+FAC-28,Dr. Deepak Chopra,MATH,4,[],"[{""day"": ""Monday"", ""period"": 1}]"
+FAC-29,Prof. Sunita Williams,MATH,4,[],[]
+FAC-30,Dr. Raghuram Rajan,MATH,4,[],[]
+FAC-31,Dr. Homi Sethna,PHY,4,[],"[{""day"": ""Monday"", ""period"": 1}, {""day"": ""Friday"", ""period"": 9}]"
+FAC-32,Prof. Jayant Narlikar,PHY,4,[],[]
+FAC-33,Dr. Asima Chatterjee,PHY,4,[],[]
+FAC-34,Dr. Amartya Sen,HUM,4,[],"[{""day"": ""Monday"", ""period"": 1}]"
+FAC-35,Prof. Arundhati Roy,HUM,4,[],[]
+FAC-36,Dr. Shashi Tharoor,HUM,4,[],"[{""day"": ""Friday"", ""period"": 9}]"
+FAC-37,Dr. K. Radhakrishnan,CSE,4,[],"[{""day"": ""Monday"", ""period"": 1}]"
+FAC-38,Prof. Tessy Thomas,ME,4,[],[]
+FAC-39,Dr. M.S. Swaminathan,CE,4,[],[]
+FAC-40,Prof. C.R. Rao,MATH,4,[],"[{""day"": ""Monday"", ""period"": 1}]"

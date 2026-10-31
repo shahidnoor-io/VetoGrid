@@ -1,0 +1,1774 @@
+{
+  "metadata": {
+    "generated_by": "CampusOS AI CP-SAT Engine",
+    "institution": "Chilika Institute of Technology",
+    "sessions_count": 189,
+    "exams_count": 41,
+    "booking_decisions_count": 25
+  },
+  "timetable": [
+    {
+      "session_id": "SES-FIX-01",
+      "day": "Monday",
+      "start_period": 1,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-FIX-02",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-FIX-03",
+      "day": "Wednesday",
+      "start_period": 3,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-FIX-04",
+      "day": "Thursday",
+      "start_period": 4,
+      "room_id": "LH-103"
+    },
+    {
+      "session_id": "SES-FIX-05",
+      "day": "Friday",
+      "start_period": 5,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-ELEC-01",
+      "day": "Monday",
+      "start_period": 1,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-ELEC-02",
+      "day": "Monday",
+      "start_period": 1,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-ELEC-03",
+      "day": "Monday",
+      "start_period": 1,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-ELEC-04",
+      "day": "Monday",
+      "start_period": 1,
+      "room_id": "SH-202"
+    },
+    {
+      "session_id": "SES-LAB-01",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "LAB-PHY"
+    },
+    {
+      "session_id": "SES-LAB-02",
+      "day": "Monday",
+      "start_period": 6,
+      "room_id": "LAB-PHY"
+    },
+    {
+      "session_id": "SES-LAB-03",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "LAB-CHEM"
+    },
+    {
+      "session_id": "SES-LAB-04",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "LAB-CHEM"
+    },
+    {
+      "session_id": "SES-LAB-05",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "LAB-CS1"
+    },
+    {
+      "session_id": "SES-LAB-07",
+      "day": "Monday",
+      "start_period": 6,
+      "room_id": "LAB-MECH"
+    },
+    {
+      "session_id": "SES-LAB-08",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "LAB-MECH"
+    },
+    {
+      "session_id": "SES-LAB-09",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "LAB-CS1"
+    },
+    {
+      "session_id": "SES-LAB-11",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "LAB-ECE"
+    },
+    {
+      "session_id": "SES-LAB-12",
+      "day": "Monday",
+      "start_period": 6,
+      "room_id": "LAB-ECE"
+    },
+    {
+      "session_id": "SES-LAB-13",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "LAB-MECH"
+    },
+    {
+      "session_id": "SES-LAB-14",
+      "day": "Tuesday",
+      "start_period": 6,
+      "room_id": "LAB-MECH"
+    },
+    {
+      "session_id": "SES-LAB-15",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "LAB-CIVIL"
+    },
+    {
+      "session_id": "SES-LAB-16",
+      "day": "Monday",
+      "start_period": 6,
+      "room_id": "LAB-CIVIL"
+    },
+    {
+      "session_id": "SES-LAB-17",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "LAB-ECE"
+    },
+    {
+      "session_id": "SES-LAB-18",
+      "day": "Tuesday",
+      "start_period": 6,
+      "room_id": "LAB-ECE"
+    },
+    {
+      "session_id": "SES-LAB-19",
+      "day": "Monday",
+      "start_period": 6,
+      "room_id": "LAB-CS1"
+    },
+    {
+      "session_id": "SES-LAB-21",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "LAB-ECE"
+    },
+    {
+      "session_id": "SES-LAB-22",
+      "day": "Wednesday",
+      "start_period": 6,
+      "room_id": "LAB-ECE"
+    },
+    {
+      "session_id": "SES-LAB-23",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "LAB-MECH"
+    },
+    {
+      "session_id": "SES-LAB-24",
+      "day": "Wednesday",
+      "start_period": 6,
+      "room_id": "LAB-MECH"
+    },
+    {
+      "session_id": "SES-LAB-25",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "LAB-CIVIL"
+    },
+    {
+      "session_id": "SES-LAB-26",
+      "day": "Tuesday",
+      "start_period": 6,
+      "room_id": "LAB-CIVIL"
+    },
+    {
+      "session_id": "SES-LAB-27",
+      "day": "Thursday",
+      "start_period": 2,
+      "room_id": "LAB-ECE"
+    },
+    {
+      "session_id": "SES-LAB-06",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "LAB-CS2"
+    },
+    {
+      "session_id": "SES-LAB-10",
+      "day": "Monday",
+      "start_period": 6,
+      "room_id": "LAB-CS2"
+    },
+    {
+      "session_id": "SES-LAB-20",
+      "day": "Tuesday",
+      "start_period": 6,
+      "room_id": "LAB-CS1"
+    },
+    {
+      "session_id": "SES-COMB-01",
+      "day": "Monday",
+      "start_period": 5,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-COMB-02",
+      "day": "Tuesday",
+      "start_period": 1,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-COMB-03",
+      "day": "Tuesday",
+      "start_period": 1,
+      "room_id": "LH-103"
+    },
+    {
+      "session_id": "SES-COMB-04",
+      "day": "Tuesday",
+      "start_period": 5,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-LEC-001",
+      "day": "Monday",
+      "start_period": 6,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-002",
+      "day": "Monday",
+      "start_period": 3,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-003",
+      "day": "Tuesday",
+      "start_period": 6,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-004",
+      "day": "Monday",
+      "start_period": 5,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-005",
+      "day": "Tuesday",
+      "start_period": 1,
+      "room_id": "LH-105"
+    },
+    {
+      "session_id": "SES-LEC-006",
+      "day": "Tuesday",
+      "start_period": 1,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-007",
+      "day": "Monday",
+      "start_period": 1,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-008",
+      "day": "Tuesday",
+      "start_period": 1,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-009",
+      "day": "Monday",
+      "start_period": 1,
+      "room_id": "LH-103"
+    },
+    {
+      "session_id": "SES-LEC-010",
+      "day": "Tuesday",
+      "start_period": 1,
+      "room_id": "SH-202"
+    },
+    {
+      "session_id": "SES-LEC-011",
+      "day": "Monday",
+      "start_period": 1,
+      "room_id": "LH-105"
+    },
+    {
+      "session_id": "SES-LEC-012",
+      "day": "Monday",
+      "start_period": 5,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-013",
+      "day": "Monday",
+      "start_period": 1,
+      "room_id": "LH-104"
+    },
+    {
+      "session_id": "SES-LEC-014",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-015",
+      "day": "Tuesday",
+      "start_period": 5,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-016",
+      "day": "Wednesday",
+      "start_period": 1,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-017",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-018",
+      "day": "Monday",
+      "start_period": 6,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-019",
+      "day": "Tuesday",
+      "start_period": 3,
+      "room_id": "LH-105"
+    },
+    {
+      "session_id": "SES-LEC-020",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-021",
+      "day": "Wednesday",
+      "start_period": 1,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-022",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-023",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-024",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-025",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-026",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "CR-204"
+    },
+    {
+      "session_id": "SES-LEC-027",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-LEC-028",
+      "day": "Monday",
+      "start_period": 3,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-029",
+      "day": "Tuesday",
+      "start_period": 6,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-030",
+      "day": "Tuesday",
+      "start_period": 5,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-031",
+      "day": "Wednesday",
+      "start_period": 1,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-032",
+      "day": "Monday",
+      "start_period": 7,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-033",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "LH-105"
+    },
+    {
+      "session_id": "SES-LEC-034",
+      "day": "Tuesday",
+      "start_period": 3,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-035",
+      "day": "Monday",
+      "start_period": 3,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-036",
+      "day": "Tuesday",
+      "start_period": 5,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-037",
+      "day": "Monday",
+      "start_period": 3,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-038",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "SH-202"
+    },
+    {
+      "session_id": "SES-LEC-039",
+      "day": "Monday",
+      "start_period": 3,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-LEC-040",
+      "day": "Monday",
+      "start_period": 3,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-041",
+      "day": "Monday",
+      "start_period": 3,
+      "room_id": "LH-103"
+    },
+    {
+      "session_id": "SES-LEC-042",
+      "day": "Monday",
+      "start_period": 1,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-043",
+      "day": "Wednesday",
+      "start_period": 1,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-LEC-044",
+      "day": "Tuesday",
+      "start_period": 6,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-045",
+      "day": "Wednesday",
+      "start_period": 3,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-046",
+      "day": "Wednesday",
+      "start_period": 1,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-047",
+      "day": "Tuesday",
+      "start_period": 4,
+      "room_id": "LH-105"
+    },
+    {
+      "session_id": "SES-LEC-048",
+      "day": "Tuesday",
+      "start_period": 4,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-049",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "LH-103"
+    },
+    {
+      "session_id": "SES-LEC-050",
+      "day": "Tuesday",
+      "start_period": 3,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-051",
+      "day": "Monday",
+      "start_period": 4,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-052",
+      "day": "Wednesday",
+      "start_period": 1,
+      "room_id": "SH-202"
+    },
+    {
+      "session_id": "SES-LEC-053",
+      "day": "Monday",
+      "start_period": 4,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-054",
+      "day": "Monday",
+      "start_period": 4,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-055",
+      "day": "Monday",
+      "start_period": 4,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-LEC-056",
+      "day": "Monday",
+      "start_period": 5,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-057",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-058",
+      "day": "Wednesday",
+      "start_period": 3,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-059",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-060",
+      "day": "Tuesday",
+      "start_period": 6,
+      "room_id": "SH-202"
+    },
+    {
+      "session_id": "SES-LEC-061",
+      "day": "Tuesday",
+      "start_period": 5,
+      "room_id": "LH-105"
+    },
+    {
+      "session_id": "SES-LEC-062",
+      "day": "Tuesday",
+      "start_period": 5,
+      "room_id": "SH-202"
+    },
+    {
+      "session_id": "SES-LEC-063",
+      "day": "Monday",
+      "start_period": 5,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-064",
+      "day": "Tuesday",
+      "start_period": 4,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-065",
+      "day": "Monday",
+      "start_period": 5,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-066",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-067",
+      "day": "Monday",
+      "start_period": 5,
+      "room_id": "LH-103"
+    },
+    {
+      "session_id": "SES-LEC-068",
+      "day": "Tuesday",
+      "start_period": 1,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-069",
+      "day": "Monday",
+      "start_period": 5,
+      "room_id": "LH-104"
+    },
+    {
+      "session_id": "SES-LEC-070",
+      "day": "Monday",
+      "start_period": 4,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-071",
+      "day": "Wednesday",
+      "start_period": 4,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-072",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "SH-202"
+    },
+    {
+      "session_id": "SES-LEC-073",
+      "day": "Thursday",
+      "start_period": 1,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-074",
+      "day": "Thursday",
+      "start_period": 2,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-075",
+      "day": "Thursday",
+      "start_period": 1,
+      "room_id": "LH-105"
+    },
+    {
+      "session_id": "SES-LEC-076",
+      "day": "Wednesday",
+      "start_period": 1,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-077",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-LEC-078",
+      "day": "Wednesday",
+      "start_period": 1,
+      "room_id": "CR-203"
+    },
+    {
+      "session_id": "SES-LEC-079",
+      "day": "Wednesday",
+      "start_period": 3,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-080",
+      "day": "Wednesday",
+      "start_period": 3,
+      "room_id": "SH-202"
+    },
+    {
+      "session_id": "SES-LEC-081",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-082",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-083",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "LH-103"
+    },
+    {
+      "session_id": "SES-LEC-084",
+      "day": "Wednesday",
+      "start_period": 4,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-085",
+      "day": "Thursday",
+      "start_period": 1,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-086",
+      "day": "Thursday",
+      "start_period": 2,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-087",
+      "day": "Thursday",
+      "start_period": 3,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-088",
+      "day": "Thursday",
+      "start_period": 4,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-089",
+      "day": "Wednesday",
+      "start_period": 1,
+      "room_id": "LH-105"
+    },
+    {
+      "session_id": "SES-LEC-090",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-091",
+      "day": "Thursday",
+      "start_period": 1,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-LEC-092",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-093",
+      "day": "Wednesday",
+      "start_period": 1,
+      "room_id": "LH-103"
+    },
+    {
+      "session_id": "SES-LEC-094",
+      "day": "Tuesday",
+      "start_period": 3,
+      "room_id": "SH-202"
+    },
+    {
+      "session_id": "SES-LEC-095",
+      "day": "Tuesday",
+      "start_period": 1,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-096",
+      "day": "Tuesday",
+      "start_period": 5,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-097",
+      "day": "Wednesday",
+      "start_period": 1,
+      "room_id": "LH-104"
+    },
+    {
+      "session_id": "SES-LEC-098",
+      "day": "Tuesday",
+      "start_period": 1,
+      "room_id": "CR-203"
+    },
+    {
+      "session_id": "SES-LEC-099",
+      "day": "Wednesday",
+      "start_period": 3,
+      "room_id": "LH-103"
+    },
+    {
+      "session_id": "SES-LEC-100",
+      "day": "Wednesday",
+      "start_period": 4,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-101",
+      "day": "Thursday",
+      "start_period": 2,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-102",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "CR-203"
+    },
+    {
+      "session_id": "SES-LEC-103",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "LH-105"
+    },
+    {
+      "session_id": "SES-LEC-104",
+      "day": "Wednesday",
+      "start_period": 5,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-105",
+      "day": "Wednesday",
+      "start_period": 3,
+      "room_id": "LH-104"
+    },
+    {
+      "session_id": "SES-LEC-106",
+      "day": "Wednesday",
+      "start_period": 3,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-107",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "LH-104"
+    },
+    {
+      "session_id": "SES-LEC-108",
+      "day": "Wednesday",
+      "start_period": 4,
+      "room_id": "SH-202"
+    },
+    {
+      "session_id": "SES-LEC-109",
+      "day": "Tuesday",
+      "start_period": 4,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-110",
+      "day": "Tuesday",
+      "start_period": 3,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-111",
+      "day": "Wednesday",
+      "start_period": 4,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-112",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "CR-203"
+    },
+    {
+      "session_id": "SES-LEC-113",
+      "day": "Thursday",
+      "start_period": 2,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-114",
+      "day": "Wednesday",
+      "start_period": 5,
+      "room_id": "SH-202"
+    },
+    {
+      "session_id": "SES-LEC-115",
+      "day": "Thursday",
+      "start_period": 4,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-116",
+      "day": "Thursday",
+      "start_period": 1,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-117",
+      "day": "Wednesday",
+      "start_period": 4,
+      "room_id": "LH-105"
+    },
+    {
+      "session_id": "SES-LEC-118",
+      "day": "Wednesday",
+      "start_period": 3,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-119",
+      "day": "Wednesday",
+      "start_period": 4,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-LEC-120",
+      "day": "Wednesday",
+      "start_period": 4,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-121",
+      "day": "Wednesday",
+      "start_period": 4,
+      "room_id": "LH-103"
+    },
+    {
+      "session_id": "SES-LEC-122",
+      "day": "Thursday",
+      "start_period": 3,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-123",
+      "day": "Tuesday",
+      "start_period": 3,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-124",
+      "day": "Tuesday",
+      "start_period": 4,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-125",
+      "day": "Wednesday",
+      "start_period": 3,
+      "room_id": "LH-105"
+    },
+    {
+      "session_id": "SES-LEC-126",
+      "day": "Tuesday",
+      "start_period": 3,
+      "room_id": "CR-204"
+    },
+    {
+      "session_id": "SES-LEC-127",
+      "day": "Thursday",
+      "start_period": 3,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-128",
+      "day": "Thursday",
+      "start_period": 1,
+      "room_id": "SH-202"
+    },
+    {
+      "session_id": "SES-LEC-129",
+      "day": "Wednesday",
+      "start_period": 4,
+      "room_id": "LH-104"
+    },
+    {
+      "session_id": "SES-LEC-130",
+      "day": "Wednesday",
+      "start_period": 5,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-131",
+      "day": "Wednesday",
+      "start_period": 5,
+      "room_id": "LH-105"
+    },
+    {
+      "session_id": "SES-LEC-132",
+      "day": "Wednesday",
+      "start_period": 4,
+      "room_id": "CR-203"
+    },
+    {
+      "session_id": "SES-LEC-133",
+      "day": "Wednesday",
+      "start_period": 5,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-134",
+      "day": "Thursday",
+      "start_period": 2,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-135",
+      "day": "Wednesday",
+      "start_period": 5,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-136",
+      "day": "Thursday",
+      "start_period": 2,
+      "room_id": "LH-105"
+    },
+    {
+      "session_id": "SES-LEC-137",
+      "day": "Tuesday",
+      "start_period": 6,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-LEC-138",
+      "day": "Thursday",
+      "start_period": 1,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-139",
+      "day": "Thursday",
+      "start_period": 4,
+      "room_id": "LT-101"
+    },
+    {
+      "session_id": "SES-LEC-140",
+      "day": "Tuesday",
+      "start_period": 4,
+      "room_id": "CR-203"
+    },
+    {
+      "session_id": "SES-LEC-141",
+      "day": "Thursday",
+      "start_period": 4,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-LEC-142",
+      "day": "Friday",
+      "start_period": 1,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-143",
+      "day": "Friday",
+      "start_period": 2,
+      "room_id": "AUD-01"
+    },
+    {
+      "session_id": "SES-LEC-144",
+      "day": "Friday",
+      "start_period": 3,
+      "room_id": "SH-201"
+    },
+    {
+      "session_id": "SES-LEC-145",
+      "day": "Friday",
+      "start_period": 1,
+      "room_id": "LH-105"
+    },
+    {
+      "session_id": "SES-LEC-146",
+      "day": "Friday",
+      "start_period": 1,
+      "room_id": "CR-201"
+    },
+    {
+      "session_id": "SES-LEC-147",
+      "day": "Thursday",
+      "start_period": 2,
+      "room_id": "LH-102"
+    },
+    {
+      "session_id": "SES-LEC-148",
+      "day": "Thursday",
+      "start_period": 1,
+      "room_id": "CR-202"
+    },
+    {
+      "session_id": "SES-LEC-149",
+      "day": "Friday",
+      "start_period": 1,
+      "room_id": "AUD-01"
+    }
+  ],
+  "exams": [
+    {
+      "exam_id": "EXAM-01",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "AUD-01",
+      "effective_capacity": 250,
+      "expected_students": 120
+    },
+    {
+      "exam_id": "EXAM-02",
+      "day": "Monday",
+      "start_period": 6,
+      "room_id": "AUD-01",
+      "effective_capacity": 250,
+      "expected_students": 120
+    },
+    {
+      "exam_id": "EXAM-03",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "AUD-01",
+      "effective_capacity": 250,
+      "expected_students": 120
+    },
+    {
+      "exam_id": "EXAM-04",
+      "day": "Tuesday",
+      "start_period": 6,
+      "room_id": "AUD-01",
+      "effective_capacity": 250,
+      "expected_students": 120
+    },
+    {
+      "exam_id": "EXAM-05",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "AUD-01",
+      "effective_capacity": 250,
+      "expected_students": 120
+    },
+    {
+      "exam_id": "EXAM-06",
+      "day": "Wednesday",
+      "start_period": 6,
+      "room_id": "AUD-01",
+      "effective_capacity": 250,
+      "expected_students": 120
+    },
+    {
+      "exam_id": "EXAM-07",
+      "day": "Thursday",
+      "start_period": 2,
+      "room_id": "AUD-01",
+      "effective_capacity": 250,
+      "expected_students": 120
+    },
+    {
+      "exam_id": "EXAM-08",
+      "day": "Thursday",
+      "start_period": 6,
+      "room_id": "AUD-01",
+      "effective_capacity": 250,
+      "expected_students": 120
+    },
+    {
+      "exam_id": "EXAM-09",
+      "day": "Friday",
+      "start_period": 2,
+      "room_id": "AUD-01",
+      "effective_capacity": 250,
+      "expected_students": 240
+    },
+    {
+      "exam_id": "EXAM-10",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "LT-101",
+      "effective_capacity": 160,
+      "expected_students": 65
+    },
+    {
+      "exam_id": "EXAM-11",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "LT-101",
+      "effective_capacity": 160,
+      "expected_students": 65
+    },
+    {
+      "exam_id": "EXAM-12",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "LT-101",
+      "effective_capacity": 160,
+      "expected_students": 65
+    },
+    {
+      "exam_id": "EXAM-13",
+      "day": "Thursday",
+      "start_period": 2,
+      "room_id": "LT-101",
+      "effective_capacity": 160,
+      "expected_students": 65
+    },
+    {
+      "exam_id": "EXAM-14",
+      "day": "Friday",
+      "start_period": 2,
+      "room_id": "LT-101",
+      "effective_capacity": 160,
+      "expected_students": 65
+    },
+    {
+      "exam_id": "EXAM-15",
+      "day": "Monday",
+      "start_period": 6,
+      "room_id": "LT-101",
+      "effective_capacity": 160,
+      "expected_students": 60
+    },
+    {
+      "exam_id": "EXAM-16",
+      "day": "Tuesday",
+      "start_period": 6,
+      "room_id": "LT-101",
+      "effective_capacity": 160,
+      "expected_students": 60
+    },
+    {
+      "exam_id": "EXAM-17",
+      "day": "Wednesday",
+      "start_period": 6,
+      "room_id": "LT-101",
+      "effective_capacity": 160,
+      "expected_students": 60
+    },
+    {
+      "exam_id": "EXAM-18",
+      "day": "Thursday",
+      "start_period": 6,
+      "room_id": "LT-101",
+      "effective_capacity": 160,
+      "expected_students": 60
+    },
+    {
+      "exam_id": "EXAM-19",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "SH-201",
+      "effective_capacity": 75,
+      "expected_students": 55
+    },
+    {
+      "exam_id": "EXAM-20",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "SH-201",
+      "effective_capacity": 75,
+      "expected_students": 55
+    },
+    {
+      "exam_id": "EXAM-21",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "SH-201",
+      "effective_capacity": 75,
+      "expected_students": 55
+    },
+    {
+      "exam_id": "EXAM-22",
+      "day": "Thursday",
+      "start_period": 2,
+      "room_id": "SH-201",
+      "effective_capacity": 75,
+      "expected_students": 55
+    },
+    {
+      "exam_id": "EXAM-23",
+      "day": "Monday",
+      "start_period": 6,
+      "room_id": "SH-201",
+      "effective_capacity": 75,
+      "expected_students": 50
+    },
+    {
+      "exam_id": "EXAM-24",
+      "day": "Tuesday",
+      "start_period": 6,
+      "room_id": "SH-201",
+      "effective_capacity": 75,
+      "expected_students": 50
+    },
+    {
+      "exam_id": "EXAM-25",
+      "day": "Wednesday",
+      "start_period": 6,
+      "room_id": "SH-201",
+      "effective_capacity": 75,
+      "expected_students": 50
+    },
+    {
+      "exam_id": "EXAM-26",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "SH-202",
+      "effective_capacity": 70,
+      "expected_students": 50
+    },
+    {
+      "exam_id": "EXAM-27",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "SH-202",
+      "effective_capacity": 70,
+      "expected_students": 50
+    },
+    {
+      "exam_id": "EXAM-28",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "SH-202",
+      "effective_capacity": 70,
+      "expected_students": 50
+    },
+    {
+      "exam_id": "EXAM-29",
+      "day": "Monday",
+      "start_period": 6,
+      "room_id": "SH-202",
+      "effective_capacity": 70,
+      "expected_students": 65
+    },
+    {
+      "exam_id": "EXAM-30",
+      "day": "Tuesday",
+      "start_period": 6,
+      "room_id": "SH-202",
+      "effective_capacity": 70,
+      "expected_students": 65
+    },
+    {
+      "exam_id": "EXAM-31",
+      "day": "Wednesday",
+      "start_period": 6,
+      "room_id": "SH-202",
+      "effective_capacity": 70,
+      "expected_students": 65
+    },
+    {
+      "exam_id": "EXAM-32",
+      "day": "Thursday",
+      "start_period": 6,
+      "room_id": "SH-201",
+      "effective_capacity": 75,
+      "expected_students": 65
+    },
+    {
+      "exam_id": "EXAM-33",
+      "day": "Monday",
+      "start_period": 2,
+      "room_id": "OAT-01",
+      "effective_capacity": 300,
+      "expected_students": 60
+    },
+    {
+      "exam_id": "EXAM-34",
+      "day": "Tuesday",
+      "start_period": 2,
+      "room_id": "OAT-01",
+      "effective_capacity": 300,
+      "expected_students": 60
+    },
+    {
+      "exam_id": "EXAM-35",
+      "day": "Wednesday",
+      "start_period": 2,
+      "room_id": "OAT-01",
+      "effective_capacity": 300,
+      "expected_students": 60
+    },
+    {
+      "exam_id": "EXAM-36",
+      "day": "Monday",
+      "start_period": 6,
+      "room_id": "OAT-01",
+      "effective_capacity": 300,
+      "expected_students": 55
+    },
+    {
+      "exam_id": "EXAM-37",
+      "day": "Tuesday",
+      "start_period": 6,
+      "room_id": "OAT-01",
+      "effective_capacity": 300,
+      "expected_students": 55
+    },
+    {
+      "exam_id": "EXAM-38",
+      "day": "Wednesday",
+      "start_period": 6,
+      "room_id": "OAT-01",
+      "effective_capacity": 300,
+      "expected_students": 55
+    },
+    {
+      "exam_id": "EXAM-39",
+      "day": "Thursday",
+      "start_period": 2,
+      "room_id": "SH-202",
+      "effective_capacity": 70,
+      "expected_students": 50
+    },
+    {
+      "exam_id": "EXAM-40",
+      "day": "Friday",
+      "start_period": 6,
+      "room_id": "AUD-01",
+      "effective_capacity": 250,
+      "expected_students": 50
+    },
+    {
+      "exam_id": "EXAM-41",
+      "day": "Friday",
+      "start_period": 6,
+      "room_id": "LT-101",
+      "effective_capacity": 160,
+      "expected_students": 50
+    }
+  ],
+  "booking_decisions": [
+    {
+      "booking_id": "REQ-01",
+      "decision": "approved",
+      "day": "Wednesday",
+      "start_period": 10,
+      "end_period": 13,
+      "room_id": "AUD-01",
+      "reason": "Approved for institute_event. Venue AUD-01 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-02",
+      "decision": "approved",
+      "day": "Thursday",
+      "start_period": 10,
+      "end_period": 13,
+      "room_id": "OAT-01",
+      "reason": "Approved for institute_event. Venue OAT-01 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-03",
+      "decision": "approved",
+      "day": "Friday",
+      "start_period": 10,
+      "end_period": 13,
+      "room_id": "AUD-01",
+      "reason": "Approved for institute_event. Venue AUD-01 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-04",
+      "decision": "rejected",
+      "reason": "Clash with regular class SES-LEC-029 in LT-101 on Tuesday P6",
+      "alternatives": [
+        {
+          "day": "Tuesday",
+          "start_period": 10,
+          "end_period": 11,
+          "room_id": "AUD-01",
+          "capacity": 500
+        },
+        {
+          "day": "Tuesday",
+          "start_period": 10,
+          "end_period": 11,
+          "room_id": "LT-101",
+          "capacity": 320
+        },
+        {
+          "day": "Tuesday",
+          "start_period": 10,
+          "end_period": 11,
+          "room_id": "SH-201",
+          "capacity": 150
+        }
+      ]
+    },
+    {
+      "booking_id": "REQ-05",
+      "decision": "approved",
+      "day": "Wednesday",
+      "start_period": 6,
+      "end_period": 7,
+      "room_id": "SH-201",
+      "reason": "Approved for guest_lecture. Venue SH-201 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-06",
+      "decision": "approved",
+      "day": "Thursday",
+      "start_period": 7,
+      "end_period": 8,
+      "room_id": "SH-202",
+      "reason": "Approved for guest_lecture. Venue SH-202 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-07",
+      "decision": "approved",
+      "day": "Wednesday",
+      "start_period": 10,
+      "end_period": 12,
+      "room_id": "LAB-CS1",
+      "reason": "Approved for department_event. Venue LAB-CS1 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-08",
+      "decision": "approved",
+      "day": "Thursday",
+      "start_period": 10,
+      "end_period": 12,
+      "room_id": "LAB-ECE",
+      "reason": "Approved for department_event. Venue LAB-ECE confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-09",
+      "decision": "approved",
+      "day": "Friday",
+      "start_period": 6,
+      "end_period": 8,
+      "room_id": "LAB-CIVIL",
+      "reason": "Approved for department_event. Venue LAB-CIVIL confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-10",
+      "decision": "rejected",
+      "reason": "Clash with regular class SES-LEC-018 in SH-201 on Monday P6; Clash with regular class SES-LEC-032 in SH-201 on Monday P7",
+      "alternatives": [
+        {
+          "day": "Monday",
+          "start_period": 10,
+          "end_period": 11,
+          "room_id": "LAB-PHY",
+          "capacity": 75
+        },
+        {
+          "day": "Monday",
+          "start_period": 10,
+          "end_period": 11,
+          "room_id": "LAB-CHEM",
+          "capacity": 75
+        },
+        {
+          "day": "Monday",
+          "start_period": 6,
+          "end_period": 7,
+          "room_id": "LAB-CHEM",
+          "capacity": 75
+        }
+      ]
+    },
+    {
+      "booking_id": "REQ-11",
+      "decision": "approved",
+      "day": "Monday",
+      "start_period": 10,
+      "end_period": 12,
+      "room_id": "OAT-01",
+      "reason": "Approved for club_event. Venue OAT-01 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-12",
+      "decision": "approved",
+      "day": "Tuesday",
+      "start_period": 10,
+      "end_period": 12,
+      "room_id": "AUD-01",
+      "reason": "Approved for club_event. Venue AUD-01 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-13",
+      "decision": "approved",
+      "day": "Thursday",
+      "start_period": 10,
+      "end_period": 13,
+      "room_id": "LAB-CS2",
+      "reason": "Approved for club_event. Venue LAB-CS2 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-14",
+      "decision": "approved",
+      "day": "Wednesday",
+      "start_period": 6,
+      "end_period": 8,
+      "room_id": "SH-202",
+      "reason": "Approved for club_event. Venue SH-202 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-15",
+      "decision": "rejected",
+      "reason": "Clash with regular class SES-LEC-044 in SH-201 on Tuesday P6",
+      "alternatives": [
+        {
+          "day": "Tuesday",
+          "start_period": 10,
+          "end_period": 13,
+          "room_id": "LAB-PHY",
+          "capacity": 75
+        },
+        {
+          "day": "Tuesday",
+          "start_period": 6,
+          "end_period": 9,
+          "room_id": "LAB-PHY",
+          "capacity": 75
+        },
+        {
+          "day": "Tuesday",
+          "start_period": 10,
+          "end_period": 13,
+          "room_id": "LAB-CHEM",
+          "capacity": 75
+        }
+      ]
+    },
+    {
+      "booking_id": "REQ-16",
+      "decision": "approved",
+      "day": "Friday",
+      "start_period": 10,
+      "end_period": 13,
+      "room_id": "OAT-01",
+      "reason": "Approved for club_event. Venue OAT-01 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-17",
+      "decision": "approved",
+      "day": "Monday",
+      "start_period": 6,
+      "end_period": 8,
+      "room_id": "LH-102",
+      "reason": "Approved for club_event. Venue LH-102 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-18",
+      "decision": "approved",
+      "day": "Wednesday",
+      "start_period": 7,
+      "end_period": 9,
+      "room_id": "OAT-01",
+      "reason": "Approved for club_event. Venue OAT-01 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-19",
+      "decision": "rejected",
+      "reason": "Clash with regular class SES-LAB-20 in LAB-CS1 on Tuesday P7; Clash with regular class SES-LAB-20 in LAB-CS1 on Tuesday P8",
+      "alternatives": [
+        {
+          "day": "Tuesday",
+          "start_period": 10,
+          "end_period": 12,
+          "room_id": "LAB-PHY",
+          "capacity": 75
+        },
+        {
+          "day": "Tuesday",
+          "start_period": 7,
+          "end_period": 9,
+          "room_id": "LAB-PHY",
+          "capacity": 75
+        },
+        {
+          "day": "Tuesday",
+          "start_period": 10,
+          "end_period": 12,
+          "room_id": "LAB-CHEM",
+          "capacity": 75
+        }
+      ]
+    },
+    {
+      "booking_id": "REQ-20",
+      "decision": "approved",
+      "day": "Thursday",
+      "start_period": 6,
+      "end_period": 8,
+      "room_id": "CR-201",
+      "reason": "Approved for club_event. Venue CR-201 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-21",
+      "decision": "approved",
+      "day": "Monday",
+      "start_period": 10,
+      "end_period": 12,
+      "room_id": "LAB-MECH",
+      "reason": "Approved for club_event. Venue LAB-MECH confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-22",
+      "decision": "approved",
+      "day": "Thursday",
+      "start_period": 6,
+      "end_period": 7,
+      "room_id": "LH-103",
+      "reason": "Approved for club_event. Venue LH-103 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-23",
+      "decision": "approved",
+      "day": "Friday",
+      "start_period": 6,
+      "end_period": 7,
+      "room_id": "CR-202",
+      "reason": "Approved for club_event. Venue CR-202 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-24",
+      "decision": "approved",
+      "day": "Wednesday",
+      "start_period": 10,
+      "end_period": 13,
+      "room_id": "OAT-01",
+      "reason": "Approved for club_event. Venue OAT-01 confirmed with adequate capacity."
+    },
+    {
+      "booking_id": "REQ-25",
+      "decision": "cancelled",
+      "reason": "Cancelled by organizer"
+    }
+  ]
+}

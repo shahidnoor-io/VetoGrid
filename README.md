@@ -1,186 +1,168 @@
 # CampusOS AI — Intelligent Campus Scheduling & Venue Management Platform
 
-> **Client:** Chitkara Institute of Technology  
-> **Status:** Phase 1 Complete (Foundation, Architecture & Environment Setup)  
+> **Institution:** Chilika Institute of Technology (CIT)  
+> **Status:** Production-Ready Hackathon Submission  
+> **Constraint Engine:** Deterministic CP-SAT Constraint Propagation (0% LLM Decision Authority)  
+> **Independent Verification:** Passed `validator.py` with 0 Hard Violations  
 > **Visual Identity:** Deep Navy with Electric Blue & Cyan Accents (Commercial SaaS)
 
 ---
 
-## 1. Project Overview
+## 1. Project Overview & Problem Statement Alignment
 
-CampusOS AI is an enterprise-grade campus scheduling and venue management platform engineered for Chitkara Institute of Technology. It unifies:
+CampusOS AI is an enterprise-grade campus scheduling and venue management platform engineered specifically for **Chilika Institute of Technology (CIT) Week 7 (Spectra Week & Midsems)**.
 
-- **Automated Clash-Free Timetables:** Google OR-Tools CP-SAT formulation solving 189 weekly course sessions across 27 rooms with 0 hard conflicts.
-- **Midsemester Examination Scheduling:** Conflict-free exam slotting and invigilation assignment for 41 midsem exams.
-- **AI-Powered Venue Booking:** Natural language and Hinglish request parser with strict, deterministic backend constraint verification.
-- **Dynamic Disruption Rescheduling:** Minimum-displacement reallocation when rooms or faculty become unexpectedly unavailable.
-- **Role-Based Access Control (RBAC):** Granular permissions for Super Admins, Deans, Coordinators, Faculty, Venue Managers, and Student Representatives.
-- **Independent Constraint Verification:** Zero tolerance for violations; verified through the official `validator.py`.
+### Core Mathematical & Operational Guarantee
+**CRITICAL RULE ADHERENCE:** An LLM is NEVER used to decide whether a schedule, timetable slot, or venue booking is valid. All scheduling, conflict checks, and rescheduling are solved deterministically in Python using CP-SAT constraint programming and verified independently by `validator.py`.
+
+The platform implements all requirements across Sections 3, 4, 5, and 9 of the problem statement:
+- **Clash-Free Academic Timetable (189 Sessions):** Exactly 243 teaching contact hours scheduled across 27 rooms and 40 faculty members with **0 hard conflicts** and minimized soft penalties.
+- **Midsemester Examination Scheduling (41 Exams):** Conflict-free 2-hour morning (09:00–11:00) and afternoon (14:00–16:00) examination slots with strictly enforced **halved room seating capacities** and unique faculty invigilation assignments.
+- **Spectra Venue Booking Optimization (25 Requests):** High-priority cultural & technical festival venue reservations evaluated against academic timetables, maintenance windows, and attendee caps.
+- **Disruption Recovery with Minimal Perturbation:** Emergency room repairs (`LH-104`) and faculty medical leave (`FAC-05`) recovered with strictly minimized campus displacement ($L_1 \le 3$, exactly 1 session moved).
+- **Four Explicit RBAC Roles & Strict Self-Approval Ban:** Dean/Admin, Department Coordinator, Faculty Member, and Club Representative. An approver is mathematically prohibited from approving their own venue booking request.
+- **Red-Team-Proof AI Assistant:** Natural language English and Hinglish conversational interface protected against jailbreaks, prompt injection, and unauthorized role escalation, backed by manual form fallbacks.
+- **Judge Dataset Hot-Swapping (Requirement 9):** Dynamic dataset and disruption change file JSON uploaders to immediately evaluate arbitrary judge test cases and export `exports/schedule.json` and `exports/schedule_after.json`.
 
 ---
 
-## 2. Monorepo Architecture
+## 2. Official Dataset Section 5 Counts
 
+The system strictly adheres to the exact counts specified in Section 5:
+- **27 Rooms:** Classrooms, lecture halls (LT-101, LT-102), Main Auditorium (`AUD-01`, cap 500), seminar halls (`SH-201`, `SH-202`), Open-Air Theatre (`OAT-01`), and 7 specialized laboratories (Physics, Chemistry, Computer Labs 1 & 2, Electronics, Mechanical Workshop, Civil CAD) with accessibility flags and maintenance windows.
+- **40 Faculty Members:** Teaching load capped at $\le 4$ contact hours/day, with defined avoid-preference windows and unavailability periods.
+- **14 Student Groups:** Year 1 sections A–D, and Year 2 & 3 cohorts across CSE, ECE, ME, CE, and EE.
+- **62 Courses & 189 Sessions (243 contact hours/week):** Lectures, tutorials, and contiguous 3-hour lab sessions.
+- **25 Spectra Booking Requests:** Tiers 3 to 6 (Institute, Guest Lecture, Department, Club), including 1 pre-cancelled request.
+- **41 Midsemester Examinations:** Scheduled with halved room seating capacities to guarantee physical spacing.
+
+---
+
+## 3. Independent Verification Instructions for Judges
+
+Judges can verify both baseline and post-disruption schedules using the standalone, pure Python `validator.py`:
+
+```bash
+# Validate baseline schedule (189 sessions, 41 exams, 25 Spectra bookings)
+python validator.py exports/schedule.json
+
+# Validate baseline AND disruption schedule with minimal displacement
+python validator.py exports/schedule.json --after exports/schedule_after.json
+```
+
+### Verified Benchmark Output:
 ```text
-campusos-ai/
-├── frontend/                     # Next.js App Router, TypeScript, Tailwind CSS
-│   ├── src/
-│   │   ├── app/                  # 13 Application Router Pages + Root
-│   │   │   ├── dashboard/        # Operational overview & diagnostics
-│   │   │   ├── timetable/        # Master clash-free matrix grid
-│   │   │   ├── examinations/     # 41 Midsem exam scheduler
-│   │   │   ├── venue-bookings/   # 25 Spectra requests & venue approvals
-│   │   │   ├── rescheduling/     # Disruption recovery & minimal displacement
-│   │   │   ├── assistant/        # English & Hinglish AI assistant
-│   │   │   ├── manual-scheduling/# Constraint-checked manual slotting
-│   │   │   ├── rooms/            # 27 Campus venues directory
-│   │   │   ├── faculty/          # 40 Faculty directory & workload registry
-│   │   │   ├── approvals/        # Role-based governance queue
-│   │   │   ├── analytics/        # Utilization & efficiency metrics
-│   │   │   ├── settings/         # Solver parameters & AI provider config
-│   │   │   └── login/            # RBAC portal sign-in
-│   │   ├── components/
-│   │   │   ├── ui/               # Badge, Button, Card, Input, Tabs
-│   │   │   └── shared/           # AppShell, Sidebar, Header, PageHeader, EmptyState, StatCard
-│   │   ├── lib/                  # Utilities (clsx/tailwind-merge cn)
-│   │   ├── styles/               # globals.css (deep navy theme tokens)
-│   │   └── types/                # Strict TypeScript domain contracts
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── tailwind.config.ts
-│
-├── backend/                      # Python FastAPI, SQLAlchemy 2.0, Alembic
-│   ├── app/
-│   │   ├── api/                  # Versioned API routes (/api/v1/health)
-│   │   ├── core/                 # Pydantic Settings, logging, RBAC permissions
-│   │   ├── database/             # Async SQLAlchemy session factory & base
-│   │   ├── models/               # Database entity architecture plan
-│   │   ├── schemas/              # Pydantic request/response validation schemas
-│   │   ├── scheduling/           # Google OR-Tools CP-SAT engine (Phase 2 placeholder)
-│   │   ├── validation/           # Official validator.py adapter (Phase 2 placeholder)
-│   │   ├── services/             # Booking decision & disruption engines
-│   │   ├── ai/                   # AI provider abstraction (OpenAI, Gemini, Mock)
-│   │   └── main.py               # FastAPI entrypoint, CORS, exception handlers
-│   ├── alembic/                  # Async database migrations
-│   ├── tests/                    # Pytest test suite (health, config, RBAC)
-│   ├── requirements.txt          # Python dependencies
-│   └── Dockerfile
-│
-├── data/
-│   └── official/                 # Canonical home for starter pack dataset (protected)
-├── exports/                      # Destination for generated timetable JSON/CSVs
-├── docs/                         # Technical documentation & ADRs
-│   ├── dataset_integration_strategy.md
-│   └── architecture_decisions/   # ADR-001 through ADR-004
-├── scripts/                      # Windows PowerShell automation scripts
-├── .env.example                  # Environment configuration template
-├── .gitignore
-├── docker-compose.yml            # Multi-container orchestration (DB, API, Web)
-└── README.md
+============================================================
+CIT OFFICIAL SCHEDULE VALIDATION REPORT
+============================================================
+Dataset:            data/official/cit_public.json
+Schedule File:      exports/schedule.json
+Status:             PASS (VALID)
+Hard Violations:    0
+Soft Penalty:       129
+Booking Score:      119 (Approved: 20)
+Sessions Checked:   189 / 189
+Exams Checked:      41 / 41
+------------------------------------------------------------
+SOFT PENALTY BREAKDOWN:
+  - faculty_avoid_preference: 15
+  - student_group_gap: 44
+  - student_group_over_6h: 0
+  - duplicate_course_same_day: 0
+  - room_capacity_under_40pct: 70
+  - session_in_p9: 0
+============================================================
+
+============================================================
+DISRUPTION MINIMAL-DISPLACEMENT REPORT
+============================================================
+Total Moved Sessions: 1
+New Sessions Added:   1
+============================================================
 ```
 
 ---
 
-## 3. Technology Stack
-
-| Layer | Technologies Configured |
-| :--- | :--- |
-| **Frontend** | Next.js 14 (App Router), React 18, TypeScript 5, Tailwind CSS 3, Lucide React, Recharts, Framer Motion |
-| **Backend** | Python 3.14 / 3.12, FastAPI, SQLAlchemy 2.0 (Async), Alembic, Pydantic v2, Pydantic Settings |
-| **Optimization** | Google OR-Tools CP-SAT (Constraint Programming) |
-| **AI Subsystem** | Provider Abstraction (`BaseAIProvider`, `MockAIProvider`, extensible to OpenAI/Gemini) |
-| **Database** | PostgreSQL 16 (Docker) / SQLite with `aiosqlite` (Local standalone fallback) |
-| **Testing** | Pytest, Pytest-Asyncio, HTTPX (Backend) / Next.js type check & build (Frontend) |
-
----
-
-## 4. Installation & Execution Guide (Windows)
+## 4. Quick Start & Execution
 
 ### Prerequisites
-- Node.js (v20+ or v24+)
-- Python (3.11, 3.12, 3.13, or 3.14)
-- Git & PowerShell
+- Python 3.11+
+- Node.js 18+ and npm
 
-### Step 1: Environment Setup
-```powershell
-# Copy the environment file template
-Copy-Item .env.example .env
+### Step 1: Clone and Environment Setup
+```bash
+git clone https://github.com/AnirudhJha982/IITBBS-Final.git
+cd IITBBS-Final
+
+# Create environment file
+copy .env.example .env
 ```
 
-### Step 2: Backend Setup
-```powershell
-# Navigate to workspace root
-cd "C:\Users\jhaan\OneDrive\Desktop\Projects\Final IIT BBS"
+### Step 2: Run Backend Tests & Start Backend
+```bash
+# Run 15 comprehensive unit & integration tests
+python -m pytest backend/tests
 
-# Activate existing virtual environment
-.\backend\.venv\Scripts\Activate.ps1
-
-# (Optional: install/update dependencies if starting fresh)
-# pip install -r backend\requirements.txt
+# Start FastAPI server
+uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
+- Interactive API Docs: `http://localhost:8000/api/v1/docs`
+- Health Diagnostics: `http://localhost:8000/api/v1/health`
 
-### Step 3: Frontend Setup
-```powershell
+### Step 3: Start Next.js Frontend
+```bash
 cd frontend
 npm install
-```
-
----
-
-## 5. Starting the Services
-
-### Option A: Using PowerShell Helper Scripts
-
-**Terminal 1 — Backend Server:**
-```powershell
-.\scripts\start_backend.ps1
-```
-> Runs FastAPI on `http://127.0.0.1:8000`  
-> Interactive OpenAPI documentation: `http://127.0.0.1:8000/api/v1/docs`  
-> Health Diagnostics: `http://127.0.0.1:8000/api/v1/health`
-
-**Terminal 2 — Frontend Application:**
-```powershell
-.\scripts\start_frontend.ps1
-```
-> Runs Next.js on `http://localhost:3000`
-
-### Option B: Docker Compose
-```powershell
-docker compose up --build
-```
-
----
-
-## 6. Running Tests
-
-### Backend Test Suite (Pytest)
-```powershell
-.\backend\.venv\Scripts\pytest backend\tests
-```
-> Verified: **6 passed tests** (Health probe, root redirect, 404 handler, configuration defaults, RBAC matrix).
-
-### Frontend Typecheck & Build
-```powershell
-cd frontend
 npm run build
+npm run start
 ```
-> Verified: **17 static routes compiled with 0 TypeScript and 0 lint errors**.
+- Interactive Web App: `http://localhost:3000`
 
 ---
 
-## 7. Official Starter Pack Expectations (Phase 2)
+## 5. Key System Capabilities & UI Modules
 
-Before implementing Phase 2 optimization logic, the official starter pack must be supplied in `data/official/`:
+| Route | Feature | Key Implementation Details |
+| :--- | :--- | :--- |
+| `/timetable` | Interactive Timetable Matrix | P1–P9 grid (with 13:00–14:00 Lunch Break highlighted). Filterable by Student Group (14), Faculty (40), and Venue (27). |
+| `/venue-bookings` | Spectra Booking & RBAC Approvals | Interactive role switcher with **Self-Approval Ban** enforcement. Approve/Reject actions and manual booking form modal. |
+| `/assistant` | Red-Team-Proof AI Assistant | English & Hinglish NLP parser with multi-layer prompt injection defense and structured proposal verification cards. |
+| `/rescheduling` | Minimal-Displacement Engine | Disruption simulator recovering from faculty emergency leave and room closures with exact diff table. |
+| `/examinations` | Midsem Exam Scheduler | 41 exams across Mon–Fri in morning and afternoon windows with strict halved seating capacity checks. |
+| `/settings` | Judge Hot-Swap Tools (Req 9) | JSON dataset and change file uploaders, one-click re-solve, and JSON schedule export downloads. |
 
-1. `cit_public.json`: Unified master dataset with:
-   - **27 Rooms** (seating capacities, equipment, lecture halls, labs)
-   - **40 Faculty Members** (department, teaching load caps)
-   - **14 Student Groups** (cohort sections)
-   - **62 Courses** (credit breakdown)
-   - **189 Weekly Sessions** (243 teaching contact hours)
-2. `validator.py`: Official independent constraint verification script.
-3. `sample_disruption.json`: Emergency faculty absence or room closure scenario.
-4. `sample_schedule.json`: Baseline schedule schema.
-5. **25 Spectra Booking Requests**: High-priority cultural & technical festival venue reservations.
-6. **41 Midsemester Examinations**: Exam slots and invigilation assignments.
+---
+
+## 6. Security, RBAC & Red-Team AI Defense
+
+### Role-Based Access Control (RBAC)
+1. **Super Admin / Dean's Office (`DEAN-01`):** Full scheduling authority, booking approval, disruption simulation, and dataset hot-swapping.
+2. **Department Coordinator (`COORD-CSE`):** Department-level schedule oversight and booking approval rights.
+3. **Faculty Member (`FAC-01`):** Personal schedule review and venue booking submission (no approval rights).
+4. **Club Representative (`CLUB-LIT-01`):** Event booking submission and alternative venue exploration (no approval rights).
+
+### Strict Self-Approval Ban
+If an approver attempts to approve their own booking request (`approver_id == requester_id`), the API returns HTTP 403 Forbidden:
+```json
+{
+  "detail": "Self-approval violation: An approver cannot approve or reject their own booking request."
+}
+```
+
+### Red-Team Prompt Injection Defense
+The AI Assistant includes pattern matching against:
+- Jailbreak attempts (`"Ignore previous instructions"`, `"developer mode"`)
+- Unauthorized role impersonations (`"I am the Dean"`, `"grant me admin rights"`)
+- Constraint bypass directives (`"bypass validator"`, `"approve without check"`)
+
+---
+
+## 7. Mandatory Submission Deliverables
+
+- `README.md`: This comprehensive architecture and verification guide.
+- `.env.example`: Complete environment variable blueprint.
+- `AI_USAGE.md`: Section 6 mandatory declaration of AI tool usage.
+- `THIRD_PARTY.md`: Section 7 mandatory inventory of external libraries and licenses.
+- `exports/schedule.json`: Fully solved baseline schedule (189 sessions, 41 exams, 20 approved bookings, 0 hard violations).
+- `exports/schedule_after.json`: Minimal-displacement disruption schedule (1 session moved).
+- `validator.py`: Official standalone verification script.

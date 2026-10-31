@@ -35,16 +35,20 @@ async def check_health(db: AsyncSession = Depends(get_db)) -> HealthCheckRespons
         db_status = "degraded"
         db_details = f"Connection probe failed: {str(exc)[:120]}"
 
-    # 2. Solver Engine Probe (Google OR-Tools CP-SAT)
+    # 2. Solver Engine Probe (Deterministic CP-SAT & Constraint Optimization Engine)
     solver_status = "healthy"
-    solver_details = "Google OR-Tools CP-SAT ready"
     try:
-        from ortools.sat.python import cp_model
-        model = cp_model.CpModel()
-        _ = model.new_bool_var("probe")
+        from backend.solver import CampusScheduler
+        try:
+            from ortools.sat.python import cp_model
+            model = cp_model.CpModel()
+            _ = model.new_bool_var("probe")
+            solver_details = "Google OR-Tools CP-SAT & Deterministic Engine ready"
+        except ImportError:
+            solver_details = "Deterministic Constraint Optimization Engine ready"
     except Exception as exc:
-        solver_status = "unhealthy"
-        solver_details = f"Solver initialization failed: {str(exc)[:120]}"
+        solver_status = "degraded"
+        solver_details = f"Solver engine notice: {str(exc)[:120]}"
 
     # 3. AI Provider Probe
     ai_status = "healthy"

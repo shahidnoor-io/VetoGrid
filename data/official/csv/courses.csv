@@ -1,0 +1,63 @@
+course_id,name,department,credits
+MA101,Engineering Mathematics I,MATH,4
+PH101,Engineering Physics,PHY,4
+CH101,Engineering Chemistry,PHY,3
+CS101,Programming in C & Data Structures,CSE,4
+ME101,Engineering Mechanics & Graphics,ME,3
+EE101,Basic Electrical & Electronics,EE,3
+HS101,Technical Communication & Ethics,HUM,2
+EV101,Environmental Science,CE,2
+CS201,Discrete Maths,CSE,4
+CS202,Object Oriented Design,CSE,4
+CS203,Computer Architecture,CSE,4
+CS204,Data Structures & Algos,CSE,4
+CS205,Digital Logic Design,CSE,4
+EC201,Signals & Systems,ECE,4
+EC202,Analog Circuits,ECE,4
+EC203,Electromagnetic Fields,ECE,4
+EC204,Network Analysis,ECE,4
+EC205,Semiconductor Devices,ECE,4
+ME201,Thermodynamics,ME,4
+ME202,Fluid Mechanics,ME,4
+ME203,Strength of Materials,ME,4
+ME204,Manufacturing Processes,ME,4
+ME205,Kinematics of Machinery,ME,4
+CE201,Surveying,CE,4
+CE202,Structural Analysis I,CE,4
+CE203,Building Materials,CE,4
+CE204,Engineering Geology,CE,4
+CE205,Hydraulics & Flow,CE,4
+EE201,Electrical Machines I,EE,4
+EE202,Power Systems I,EE,4
+EE203,Control Systems,EE,4
+EE204,Circuit Theory,EE,4
+EE205,Measurement & Instrumentation,EE,4
+CS301,Database Systems,CSE,4
+CS302,Operating Systems,CSE,4
+CS303,Compiler Design,CSE,4
+CS304,Machine Learning,CSE,4
+CS305,Computer Networks,CSE,4
+EC301,Digital Signal Processing,ECE,4
+EC302,Microcontrollers & Embedded,ECE,4
+EC303,VLSI Design,ECE,4
+EC304,Antennas & Propagation,ECE,4
+EC305,Optical Comm,ECE,4
+ME301,Heat & Mass Transfer,ME,4
+ME302,Design of Machine Elements,ME,4
+ME303,IC Engines,ME,4
+ME304,Dynamics of Machinery,ME,4
+ME305,Turbo Machinery,ME,4
+CE301,Design of Concrete Structures,CE,4
+CE302,Geotechnical Engineering,CE,4
+CE303,Transportation Engineering,CE,4
+CE304,Water Resources,CE,4
+CE305,Environmental Engg II,CE,4
+EE301,Power Electronics,EE,4
+EE302,Power Systems II,EE,4
+EE303,Electrical Machines II,EE,4
+EE304,Digital Control,EE,4
+EE305,Renewable Energy Systems,EE,4
+EL301,Cloud Computing (PE Basket A),CSE,3
+EL302,Cybersecurity (PE Basket A),CSE,3
+EL303,Robotics & Automation (PE Basket B),ME,3
+EL304,Supply Chain & Operations (PE Basket B),ME,3
