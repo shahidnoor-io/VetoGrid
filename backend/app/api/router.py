@@ -4,9 +4,12 @@ Aggregates versioned routes across all functional domains.
 """
 
 from fastapi import APIRouter
-from backend.app.api.routes import health, schedule, explain, bookings, admin, assistant
+from backend.app.api.routes import health, schedule, explain, bookings, admin, assistant, auth
 
 api_router = APIRouter()
+
+# Authentication & RBAC Session Token Management
+api_router.include_router(auth.router)
 
 # Core diagnostic and health route
 api_router.include_router(health.router)

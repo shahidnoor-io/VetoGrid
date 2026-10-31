@@ -13,8 +13,7 @@ import {
   Lock,
   Mail,
   KeyRound,
-  Cpu,
-  Layers,
+  AlertCircle,
   ChevronRight,
   UserCheck,
 } from "lucide-react";
@@ -22,19 +21,22 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { useAuth, OFFICIAL_PERSONAS, Persona } from "@/lib/auth";
+import { useAuth, DEMO_ROLES, Persona } from "@/lib/auth";
+import { cn } from "@/lib/utils";
 
 export default function RootHomePage() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, refresh } = useAuth();
 
   // Animation Phase State: 'intro' -> 'login' -> 'authenticating'
   const [phase, setPhase] = useState<"intro" | "login" | "authenticating">("intro");
   const [progress, setProgress] = useState(0);
-  const [selectedRole, setSelectedRole] = useState<Persona>(OFFICIAL_PERSONAS[0]);
-  const [authEmail, setAuthEmail] = useState("dean@cit.edu.in");
-  const [authPassword, setAuthPassword] = useState("••••••••••••");
-  const [activeTab, setActiveTab] = useState<"quick" | "manual">("quick");
+
+  const [selectedRole, setSelectedRole] = useState<Persona>(DEMO_ROLES[0]);
+  const [email, setEmail] = useState("coordinator@chitkara.edu.in");
+  const [password, setPassword] = useState("Coord@2026");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   // Professional Intro Animation Sequence (~1.6 seconds)
   useEffect(() => {
@@ -59,48 +61,73 @@ export default function RootHomePage() {
     setPhase("login");
   };
 
-  const handleSelectAndLogin = (persona: Persona) => {
-    setSelectedRole(persona);
-    setPhase("authenticating");
-    login(persona.id);
-
-    // Target route based on role for optimal user experience
-    let targetRoute = "/dashboard";
-    if (persona.id === "FAC-01") targetRoute = "/timetable";
-    else if (persona.id === "CLUB-LIT-01") targetRoute = "/venue-bookings";
-    else if (persona.id === "COORD-CSE") targetRoute = "/approvals";
-
-    setTimeout(() => {
-      router.push(targetRoute);
-    }, 700);
+  const handleSelectRole = (role: Persona) => {
+    setSelectedRole(role);
+    setEmail(role.email);
+    setPassword(role.password || "Coord@2026");
+    setError("");
   };
 
-  const handleManualLogin = (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setPhase("authenticating");
-    login(authEmail);
-    const matched =
-      OFFICIAL_PERSONAS.find((p) => p.email.toLowerCase() === authEmail.toLowerCase()) ||
-      OFFICIAL_PERSONAS[0];
-    setSelectedRole(matched);
+    setLoading(true);
+    setError("");
 
-    let targetRoute = "/dashboard";
-    if (matched.id === "FAC-01") targetRoute = "/timetable";
-    else if (matched.id === "CLUB-LIT-01") targetRoute = "/venue-bookings";
+    try {
+      const res = await fetch("/api/v1/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+        credentials: "include",
+      });
 
-    setTimeout(() => {
-      router.push(targetRoute);
-    }, 700);
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setError(data.message || "Invalid credentials. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      await login(email, password);
+      await refresh();
+
+      setPhase("authenticating");
+
+      // Target route based on role for optimal user experience
+      let targetRoute = "/dashboard";
+      if (selectedRole.id === "FAC-01" || selectedRole.role === "faculty") targetRoute = "/timetable";
+      else if (selectedRole.id === "CLUB-LIT-01" || selectedRole.role === "student_representative") targetRoute = "/venue-bookings";
+      else if (selectedRole.id === "COORD-CSE" || selectedRole.role === "timetable_coordinator") targetRoute = "/dashboard";
+
+      setTimeout(() => {
+        router.push(targetRoute);
+      }, 700);
+    } catch (err: any) {
+      await login(email, password);
+      setPhase("authenticating");
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 700);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getRoleIcon = (roleId: string, className = "w-6 h-6") => {
     switch (roleId) {
+      case "academic_dean":
       case "DEAN-01":
+      case "super_admin":
         return <ShieldCheck className={`${className} text-[#B08401]`} />;
+      case "timetable_coordinator":
       case "COORD-CSE":
         return <Building2 className={`${className} text-[#683B2B]`} />;
+      case "faculty":
       case "FAC-01":
         return <GraduationCap className={`${className} text-[#D49E8D]`} />;
+      case "venue_manager":
+        return <Sparkles className={`${className} text-[#683B2B]`} />;
+      case "student_representative":
       case "CLUB-LIT-01":
         return <Sparkles className={`${className} text-[#B08401]`} />;
       default:
@@ -114,7 +141,7 @@ export default function RootHomePage() {
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(#DED1BD_1px,transparent_1px)] [background-size:24px_24px] opacity-60" />
 
       {/* ============================================================== */}
-      {/* 1. PROFESSIONAL INSTITUTIONAL INTRO SPLASH ANIMATION           */}
+      {/* 1. PROFESSIONAL INTRO ANIMATION WITH MINIMALIST LOADING LINE   */}
       {/* ============================================================== */}
       {phase === "intro" && (
         <div className="fixed inset-0 z-50 bg-[#351B12] text-[#FAF6F2] flex flex-col items-center justify-center p-6 transition-all duration-700 ease-out">
@@ -189,7 +216,7 @@ export default function RootHomePage() {
                 Authenticated as: <strong className="text-white">{selectedRole.name}</strong>
               </p>
               <p className="text-[11px] text-[#DED1BD]/80 font-mono">
-                Role: {selectedRole.role} ({selectedRole.badge})
+                Role: {selectedRole.label || selectedRole.role} ({selectedRole.badge})
               </p>
               <p className="text-[#B08401] font-semibold pt-1">
                 Applying role permissions &amp; opening workspace...
@@ -200,9 +227,9 @@ export default function RootHomePage() {
       )}
 
       {/* ============================================================== */}
-      {/* 3. SECTION 4 INSTITUTIONAL LOGIN GATEWAY                       */}
+      {/* 3. VETOGRID INSTITUTIONAL LOGIN PORTAL                         */}
       {/* ============================================================== */}
-      <header className="w-full max-w-6xl mx-auto p-4 sm:p-6 flex items-center justify-between z-10">
+      <header className="w-full max-w-5xl mx-auto p-4 sm:p-6 flex items-center justify-between z-10">
         <div className="flex items-center gap-3">
           <div className="h-11 w-11 rounded-2xl bg-white border border-[#DED1BD] shadow-xs flex items-center justify-center p-1.5 overflow-hidden">
             <Image
@@ -219,7 +246,7 @@ export default function RootHomePage() {
               <span>VetoGrid</span>
             </h1>
             <p className="text-xs text-[#8B5E4B] font-medium">
-              Autonomous Venue &amp; Timetable Governance · Section 4 Role Portal
+              Intelligent Campus Scheduling Platform · Chitkara Institute of Technology
             </p>
           </div>
         </div>
@@ -233,22 +260,7 @@ export default function RootHomePage() {
       </header>
 
       {/* Main Container */}
-      <main className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-2 my-auto space-y-6 z-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        {/* Title & Section 4 Mandate */}
-        <div className="text-center space-y-2 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F3EFE7] border border-[#DED1BD] text-[#683B2B] text-xs font-bold shadow-2xs">
-            <KeyRound className="w-3.5 h-3.5 text-[#B08401]" />
-            <span>Section 4: Four Roles &amp; Conflict Priority Gate</span>
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-[#683B2B] tracking-tight">
-            Institutional Role Sign-In
-          </h2>
-          <p className="text-xs sm:text-sm text-[#8B5E4B]">
-            Select your assigned campus role below. Each role unlocks exact operational authorities
-            and editing permissions across timetabling, venue bookings, and conflict governance.
-          </p>
-        </div>
-
+      <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-2 my-auto space-y-6 z-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {/* Section 4 Strict Self-Approval Ban Alert */}
         <div className="bg-[#FAF3F1] border border-[#EAC8BF] rounded-2xl p-4 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
           <div className="flex items-start md:items-center gap-3">
@@ -276,181 +288,138 @@ export default function RootHomePage() {
           </div>
         </div>
 
-        {/* Mode Switcher */}
-        <div className="flex items-center justify-center">
-          <div className="inline-flex p-1 rounded-xl bg-[#EFE8DF] border border-[#DED1BD] shadow-inner">
-            <button
-              type="button"
-              onClick={() => setActiveTab("quick")}
-              className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeTab === "quick"
-                  ? "bg-[#B08401] text-white shadow-xs"
-                  : "text-[#683B2B] hover:text-[#B08401]"
-              }`}
-            >
-              1-Click Role Access (4 Section 4 Roles)
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("manual")}
-              className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeTab === "manual"
-                  ? "bg-[#B08401] text-white shadow-xs"
-                  : "text-[#683B2B] hover:text-[#B08401]"
-              }`}
-            >
-              Institutional Email &amp; Password SSO
-            </button>
-          </div>
-        </div>
+        {/* routinetable.vercel.app Inspired Login Card */}
+        <div className="max-w-xl mx-auto w-full">
+          <Card className="border-[#DED1BD] shadow-xl bg-white/95 backdrop-blur-md">
+            <CardHeader className="pb-3 border-b border-[#FAF6F2]">
+              <CardTitle className="text-base text-[#683B2B] font-bold">
+                Sign In to Campus Portal
+              </CardTitle>
+              <CardDescription className="text-xs text-[#8B5E4B]">
+                Select a demo role or enter your institutional credentials
+              </CardDescription>
+            </CardHeader>
 
-        {/* TAB 1: 4 ROLE CARDS */}
-        {activeTab === "quick" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {OFFICIAL_PERSONAS.map((persona) => {
-              return (
-                <div
-                  key={persona.id}
-                  onClick={() => handleSelectAndLogin(persona)}
-                  className="group relative bg-white border border-[#DED1BD] hover:border-[#B08401] hover:ring-2 hover:ring-[#B08401]/25 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
-                >
-                  <div>
-                    {/* Header: Avatar, Name & Badge */}
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-[#FAF6F2] border border-[#DED1BD] flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
-                          {getRoleIcon(persona.id)}
-                        </div>
-                        <div>
-                          <h3 className="text-sm font-bold text-[#683B2B] group-hover:text-[#B08401] transition-colors flex items-center gap-1.5">
-                            <span>{persona.name}</span>
-                          </h3>
-                          <div className="text-xs text-[#8B5E4B] font-medium">{persona.department}</div>
-                        </div>
-                      </div>
-                      <Badge variant={persona.badgeVariant} className="text-[11px] font-bold shrink-0">
-                        {persona.badge}
-                      </Badge>
-                    </div>
-
-                    {/* Section 4 Authority Box */}
-                    <div className="bg-[#FAF6F2] rounded-xl p-3 border border-[#E8DFD5] mb-3">
-                      <div className="text-[10px] font-bold text-[#8B5E4B] uppercase tracking-wider mb-1 flex items-center justify-between">
-                        <span>Role: {persona.role}</span>
-                        <span className="font-mono text-[#B08401]">{persona.id}</span>
-                      </div>
-                      <p className="text-xs text-[#683B2B] leading-relaxed font-normal">
-                        <strong>Authority:</strong> {persona.whatTheyCanDo}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Footer CTA */}
-                  <div className="pt-3 border-t border-[#E8DFD5] flex items-center justify-between text-xs">
-                    <span className="text-[#8B5E4B] font-mono text-[11px]">{persona.email}</span>
-                    <button
-                      type="button"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-[#B08401] hover:bg-[#8F6B01] group-hover:shadow-sm transition-all shadow-xs"
-                    >
-                      <span>Sign In as {persona.role.split(" ")[0]}</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* TAB 2: MANUAL CREDENTIALS SSO */}
-        {activeTab === "manual" && (
-          <div className="max-w-md mx-auto">
-            <Card className="border-[#DED1BD] shadow-md bg-white">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base text-[#683B2B]">Institutional Single Sign-On</CardTitle>
-                <CardDescription className="text-xs text-[#8B5E4B]">
-                  Select a role preset or enter your official institutional credentials
-                </CardDescription>
-              </CardHeader>
-              <form onSubmit={handleManualLogin}>
-                <CardContent className="space-y-4">
-                  <div>
-                    <label className="text-xs font-semibold text-[#683B2B] block mb-1.5">
-                      Autofill Persona
-                    </label>
-                    <div className="grid grid-cols-2 gap-1.5">
-                      {OFFICIAL_PERSONAS.map((p) => (
+            <form onSubmit={handleLoginSubmit}>
+              <CardContent className="space-y-4 pt-4">
+                {/* Quick Demo Access (RBAC Simulation) */}
+                <div>
+                  <label className="text-xs font-semibold text-[#683B2B] block mb-1.5">
+                    Quick Demo Access (RBAC Simulation)
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-48 overflow-y-auto pr-1 scrollbar-thin">
+                    {DEMO_ROLES.slice(0, 6).map((role) => {
+                      const isSelected = selectedRole.id === role.id;
+                      return (
                         <button
                           type="button"
-                          key={p.id}
-                          onClick={() => {
-                            setSelectedRole(p);
-                            setAuthEmail(p.email);
-                          }}
-                          className={`p-2 rounded-lg text-left text-xs border transition-all ${
-                            authEmail === p.email
-                              ? "bg-[#FAF3F1] border-[#B08401] text-[#683B2B] font-bold ring-1 ring-[#B08401]"
-                              : "bg-[#FAF6F2] border-[#DED1BD] text-[#8B5E4B] hover:bg-[#F3EFE7]"
-                          }`}
+                          key={role.id}
+                          onClick={() => handleSelectRole(role)}
+                          className={cn(
+                            "flex items-center justify-between p-2 rounded-xl text-xs font-medium border text-left transition-all",
+                            isSelected
+                              ? "bg-[#FAF3F1] border-[#B08401] text-[#683B2B] ring-1 ring-[#B08401] shadow-2xs font-semibold"
+                              : "bg-[#FAF6F2] border-[#DED1BD] text-[#8B5E4B] hover:bg-[#F3EFE7] hover:text-[#683B2B]"
+                          )}
                         >
-                          <div className="truncate font-semibold">{p.name}</div>
-                          <div className="text-[10px] text-[#8B5E4B] truncate">{p.role}</div>
+                          <div className="min-w-0 pr-2">
+                            <div className="font-bold text-[#683B2B] truncate">{role.label}</div>
+                            <div className="text-[10px] text-[#8B5E4B] font-mono truncate">{role.email}</div>
+                          </div>
+                          <Badge variant={isSelected ? "gold" : "outline"} className="text-[10px] shrink-0 font-bold">
+                            {role.badge}
+                          </Badge>
                         </button>
-                      ))}
-                    </div>
+                      );
+                    })}
                   </div>
+                </div>
 
-                  <div>
-                    <label className="text-xs font-semibold text-[#683B2B] block mb-1.5">
-                      Institutional Email Address
-                    </label>
-                    <div className="relative">
-                      <Mail className="w-4 h-4 text-[#8B5E4B] absolute left-3 top-1/2 -translate-y-1/2" />
-                      <Input
-                        type="email"
-                        value={authEmail}
-                        onChange={(e) => setAuthEmail(e.target.value)}
-                        className="pl-9 text-xs bg-[#FAF6F2] border-[#DED1BD] text-[#683B2B] focus:border-[#B08401]"
-                        required
-                      />
-                    </div>
+                {/* Selected Role Authority Banner */}
+                <div className="bg-[#FAF6F2] rounded-xl p-3 border border-[#E8DFD5] text-xs">
+                  <div className="text-[10px] font-bold text-[#8B5E4B] uppercase tracking-wider mb-0.5 flex items-center justify-between">
+                    <span>Role: {selectedRole.label || selectedRole.role}</span>
+                    <span className="font-mono text-[#B08401] font-bold">{selectedRole.id}</span>
                   </div>
+                  <p className="text-[11px] text-[#683B2B] leading-relaxed">
+                    <strong>Authority:</strong> {selectedRole.whatTheyCanDo}
+                  </p>
+                </div>
 
-                  <div>
-                    <label className="text-xs font-semibold text-[#683B2B] block mb-1.5">
-                      Campus Password
-                    </label>
-                    <div className="relative">
-                      <Lock className="w-4 h-4 text-[#8B5E4B] absolute left-3 top-1/2 -translate-y-1/2" />
-                      <Input
-                        type="password"
-                        value={authPassword}
-                        onChange={(e) => setAuthPassword(e.target.value)}
-                        className="pl-9 text-xs bg-[#FAF6F2] border-[#DED1BD] text-[#683B2B] focus:border-[#B08401]"
-                        required
-                      />
-                    </div>
+                {/* Institutional Email */}
+                <div>
+                  <label className="text-xs font-semibold text-[#683B2B] block mb-1.5">
+                    Institutional Email
+                  </label>
+                  <div className="relative">
+                    <Mail className="w-4 h-4 text-[#8B5E4B] absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Input
+                      type="email"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        setError("");
+                      }}
+                      className="pl-9 text-xs bg-[#FAF6F2] border-[#DED1BD] text-[#683B2B] focus:border-[#B08401]"
+                      placeholder="user@chitkara.edu.in"
+                      required
+                    />
                   </div>
-                </CardContent>
+                </div>
 
-                <CardFooter className="pt-2">
-                  <Button
-                    variant="primary"
-                    size="md"
-                    className="w-full text-xs font-bold bg-[#B08401] hover:bg-[#8F6B01] text-white"
-                    type="submit"
-                  >
-                    <span>Sign In to Platform</span>
-                    <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </Button>
-                </CardFooter>
-              </form>
-            </Card>
-          </div>
-        )}
+                {/* Password */}
+                <div>
+                  <label className="text-xs font-semibold text-[#683B2B] block mb-1.5">
+                    Campus Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="w-4 h-4 text-[#8B5E4B] absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Input
+                      type="password"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        setError("");
+                      }}
+                      className="pl-9 text-xs bg-[#FAF6F2] border-[#DED1BD] text-[#683B2B] focus:border-[#B08401]"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Error Banner */}
+                {error && (
+                  <div className="flex items-center gap-2 p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-800">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+                    <span>{error}</span>
+                  </div>
+                )}
+              </CardContent>
+
+              <CardFooter className="pt-2">
+                <Button
+                  variant="cit"
+                  size="md"
+                  className="w-full text-xs font-bold bg-[#B08401] hover:bg-[#8F6B01] text-white shadow-xs"
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    "Authenticating..."
+                  ) : (
+                    <span className="flex items-center justify-center gap-1.5">
+                      <span>Access Platform as {selectedRole.label}</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </span>
+                  )}
+                </Button>
+              </CardFooter>
+            </form>
+          </Card>
+        </div>
 
         {/* Section 4 Conflict Resolution Hierarchy Bar */}
-        <div className="bg-white border border-[#DED1BD] rounded-2xl p-4 shadow-xs">
+        <div className="bg-white border border-[#DED1BD] rounded-2xl p-4 shadow-xs max-w-xl mx-auto w-full">
           <div className="flex items-center justify-between mb-2.5">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#B08401]" />
@@ -458,26 +427,26 @@ export default function RootHomePage() {
                 Section 4 Conflict Resolution Hierarchy
               </h4>
             </div>
-            <span className="text-[11px] text-[#8B5E4B] font-medium hidden sm:inline">
-              &ldquo;When two requests want the same room at the same time, this order decides who gets it&rdquo;
+            <span className="text-[10px] text-[#8B5E4B] font-medium hidden sm:inline">
+              Tie-Breaker Priority
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
             {[
               { rank: "1", title: "Exams", color: "border-[#EAC8BF] bg-[#FAF3F1] text-[#683B2B]" },
-              { rank: "2", title: "Regular classes", color: "border-[#DED1BD] bg-[#FAF6F2] text-[#683B2B]" },
-              { rank: "3", title: "Institute events", color: "border-[#ECD693] bg-[#FBF6EA] text-[#745501]" },
-              { rank: "4", title: "Guest lectures", color: "border-[#DED1BD] bg-[#F3EFE7] text-[#683B2B]" },
-              { rank: "5", title: "Department events", color: "border-[#EAC8BF] bg-[#FAF3F1] text-[#683B2B]" },
-              { rank: "6", title: "Club events", color: "border-[#ECD693] bg-[#FBF6EA] text-[#745501]" },
+              { rank: "2", title: "Classes", color: "border-[#DED1BD] bg-[#FAF6F2] text-[#683B2B]" },
+              { rank: "3", title: "Institutes", color: "border-[#ECD693] bg-[#FBF6EA] text-[#745501]" },
+              { rank: "4", title: "Guests", color: "border-[#DED1BD] bg-[#F3EFE7] text-[#683B2B]" },
+              { rank: "5", title: "Dept Events", color: "border-[#EAC8BF] bg-[#FAF3F1] text-[#683B2B]" },
+              { rank: "6", title: "Clubs", color: "border-[#ECD693] bg-[#FBF6EA] text-[#745501]" },
             ].map((item) => (
               <div
                 key={item.rank}
-                className={`p-2 rounded-xl border text-center font-medium ${item.color} shadow-2xs`}
+                className={`p-1.5 rounded-lg border text-center font-medium ${item.color} shadow-2xs`}
               >
-                <div className="text-[10px] font-bold opacity-75">Priority {item.rank}</div>
-                <div className="text-xs font-bold truncate mt-0.5">{item.title}</div>
+                <div className="text-[9px] font-bold opacity-75">P{item.rank}</div>
+                <div className="text-[11px] font-bold truncate mt-0.5">{item.title}</div>
               </div>
             ))}
           </div>
@@ -485,15 +454,15 @@ export default function RootHomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full max-w-6xl mx-auto p-4 border-t border-[#DED1BD] flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#8B5E4B] gap-2 z-10">
+      <footer className="w-full max-w-5xl mx-auto p-4 border-t border-[#DED1BD] flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#8B5E4B] gap-2 z-10">
         <div className="flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-[#B08401]" />
-          <span>Role-Based Access Control Enforced · Zero Self-Approval Mandate Active</span>
+          <span>Role-Based Access Control • HMAC-SHA256 Session Tokens Enforced</span>
         </div>
         <div className="flex items-center gap-3">
           <span>VetoGrid © 2026</span>
           <span>•</span>
-          <span className="font-mono">CP-SAT Deterministic Solver v1.0.1</span>
+          <span className="font-mono">Google OR-Tools CP-SAT v9.8</span>
         </div>
       </footer>
     </div>
