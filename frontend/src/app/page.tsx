@@ -31,21 +31,12 @@ export default function RootHomePage() {
   // Animation Phase State: 'intro' -> 'login' -> 'authenticating'
   const [phase, setPhase] = useState<"intro" | "login" | "authenticating">("intro");
   const [progress, setProgress] = useState(0);
-  const [stepIndex, setStepIndex] = useState(0);
   const [selectedRole, setSelectedRole] = useState<Persona>(OFFICIAL_PERSONAS[0]);
   const [authEmail, setAuthEmail] = useState("dean@cit.edu.in");
   const [authPassword, setAuthPassword] = useState("••••••••••••");
   const [activeTab, setActiveTab] = useState<"quick" | "manual">("quick");
 
-  const introSteps = [
-    "Initializing Google OR-Tools CP-SAT Solver v9.8...",
-    "Loading Section 4 Four-Role Access Matrix (Admin, Coordinator, Faculty, Club Rep)...",
-    "Enforcing Zero Self-Approval Mandate (HTTP 403 Forbidden)...",
-    "Calibrating 6-Tier Conflict Resolution Hierarchy...",
-    "VetoGrid Autonomous Governance & Timetable Gateway Ready.",
-  ];
-
-  // Professional Intro Animation Sequence (~1.8 seconds)
+  // Professional Intro Animation Sequence (~1.6 seconds)
   useEffect(() => {
     if (phase !== "intro") return;
 
@@ -56,13 +47,7 @@ export default function RootHomePage() {
           setTimeout(() => setPhase("login"), 250);
           return 100;
         }
-        const next = prev + 5;
-        const newStep = Math.min(
-          Math.floor((next / 100) * introSteps.length),
-          introSteps.length - 1
-        );
-        setStepIndex(newStep);
-        return next;
+        return prev + 5;
       });
     }, 70);
 
@@ -162,34 +147,15 @@ export default function RootHomePage() {
               <p className="text-xs sm:text-sm text-[#DED1BD] font-medium tracking-wide">
                 Autonomous Campus Scheduling &amp; Venue Governance Platform
               </p>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[#FAF6F2] text-[11px] font-mono border border-white/20">
-                <Cpu className="w-3.5 h-3.5 text-[#B08401]" />
-                <span>Google OR-Tools CP-SAT Engine · Section 4 RBAC</span>
-              </div>
             </div>
 
-            {/* Terminal Live Initialization Sequence */}
-            <div className="bg-[#24120C]/80 border border-[#683B2B]/70 rounded-xl p-4 text-left font-mono text-xs space-y-2.5 backdrop-blur-md shadow-2xl">
-              <div className="flex items-center justify-between text-[11px] text-[#DED1BD] border-b border-[#683B2B]/50 pb-2">
-                <span className="flex items-center gap-1.5 text-[#B08401] font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-[#B08401] animate-pulse" />
-                  System Initialization
-                </span>
-                <span className="font-bold text-[#FAF6F2]">{progress}%</span>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="w-full h-1.5 bg-[#4A2619] rounded-full overflow-hidden">
+            {/* Loading Line Only */}
+            <div className="w-full max-w-sm mx-auto pt-2">
+              <div className="w-full h-1.5 bg-[#4A2619] rounded-full overflow-hidden shadow-inner">
                 <div
                   className="h-full bg-gradient-to-r from-[#B08401] via-[#D49E8D] to-[#FAF6F2] transition-all duration-150 ease-out"
                   style={{ width: `${progress}%` }}
                 />
-              </div>
-
-              {/* Status Line */}
-              <div className="text-[11px] text-[#FAF6F2] truncate h-4 flex items-center gap-2">
-                <span className="text-[#B08401]">›</span>
-                <span className="text-[#DED1BD]">{introSteps[stepIndex]}</span>
               </div>
             </div>
 
@@ -198,7 +164,7 @@ export default function RootHomePage() {
               <button
                 type="button"
                 onClick={handleSkipIntro}
-                className="text-xs text-[#DED1BD]/80 hover:text-[#FAF6F2] transition-colors underline underline-offset-4 flex items-center gap-1 mx-auto"
+                className="text-xs text-[#DED1BD]/70 hover:text-[#FAF6F2] transition-colors underline underline-offset-4 flex items-center gap-1 mx-auto"
               >
                 <span>Skip Intro &amp; Go to Login</span>
                 <ChevronRight className="w-3.5 h-3.5" />
