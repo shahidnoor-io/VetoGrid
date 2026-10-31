@@ -42,7 +42,12 @@ class Settings(BaseSettings):
 
     # Database Configuration
     # Defaults to local SQLite for immediate standalone execution; switches to PostgreSQL via env var
-    DATABASE_URL: str = "sqlite+aiosqlite:///./campusos_local.db"
+    # On Vercel serverless environment, use /tmp which is the writable directory
+    DATABASE_URL: str = (
+        "sqlite+aiosqlite:////tmp/campusos_local.db"
+        if os.environ.get("VERCEL")
+        else "sqlite+aiosqlite:///./campusos_local.db"
+    )
     DATABASE_ECHO: bool = False
     DB_POOL_SIZE: int = 10
     DB_MAX_OVERFLOW: int = 20

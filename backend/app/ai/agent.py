@@ -14,9 +14,22 @@ from pydantic import BaseModel, Field
 from backend.app.ai.guardrails import AIGuardrailEngine
 from backend.app.core.config import settings
 
-DATASET_PATH = os.path.join(settings.PROJECT_ROOT, "data", "official", "cit_public.json")
-EXPORTS_DIR = os.path.join(settings.PROJECT_ROOT, "exports")
-SCHEDULE_PATH = os.path.join(EXPORTS_DIR, "schedule.json")
+def _resolve_path(rel_path: str) -> str:
+    candidates = [
+        os.path.join(settings.PROJECT_ROOT, rel_path),
+        os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), rel_path),
+        os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), rel_path),
+        os.path.join(os.getcwd(), rel_path),
+    ]
+    for c in candidates:
+        if os.path.exists(c):
+            return c
+    return candidates[0]
+
+DATASET_PATH = _resolve_path(os.path.join("data", "official", "cit_public.json"))
+EXPORTS_DIR = _resolve_path("exports")
+SCHEDULE_PATH = _resolve_path(os.path.join("exports", "schedule.json"))
+
 
 
 class BookingProposal(BaseModel):
