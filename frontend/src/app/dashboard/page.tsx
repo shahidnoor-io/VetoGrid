@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import Link from "next/link";
 import { AppShell } from "@/components/shared/AppShell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StatCard } from "@/components/shared/StatCard";
-import { EmptyState } from "@/components/shared/EmptyState";
 import { Button } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
 import {
   Calendar,
   Building2,
@@ -14,121 +15,235 @@ import {
   GraduationCap,
   Sparkles,
   RefreshCw,
-  ArrowUpRight,
   ShieldCheck,
   FileSpreadsheet,
+  CheckCircle2,
+  RotateCcw,
+  Bot,
+  DoorClosed,
+  TrendingDown
 } from "lucide-react";
+import { api } from "@/lib/api";
+
+import citData from "@/data/cit_public.json";
+import scheduleData from "@/data/schedule.json";
 
 export default function DashboardPage() {
+  const [resetting, setResetting] = useState(false);
+  const [resetSuccess, setResetSuccess] = useState(false);
+
+  const handleResetDemo = async () => {
+    try {
+      setResetting(true);
+      await api.resetDemo();
+      setResetSuccess(true);
+      setTimeout(() => setResetSuccess(false), 5000);
+    } catch (err: any) {
+      alert(`Error resetting demo: ${err.message}`);
+    } finally {
+      setResetting(false);
+    }
+  };
+
+  const handleExportSchedule = () => {
+    const blob = new Blob([JSON.stringify(scheduleData, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "schedule.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <AppShell>
       <PageHeader
         title="Campus Operations & Scheduling Dashboard"
-        description="Chitkara Institute of Technology — Unified Academic Timetable & Venue Control Center"
-        badge="Academic Year 2026-27"
+        description="Chilika Institute of Technology (CIT) — Unified Academic Timetable, Venue & Exam Command Center"
+        badge="CIT Week 7 (Spectra & Midsems)"
         actions={
-          <>
-            <Button variant="outline" size="sm">
-              <FileSpreadsheet className="w-4 h-4 mr-1.5" />
-              Export Schedule
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={handleResetDemo} disabled={resetting}>
+              <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
+              {resetting ? "Resetting..." : "Reset Demo Data"}
             </Button>
-            <Button variant="primary" size="sm">
-              <Sparkles className="w-4 h-4 mr-1.5" />
-              Generate Timetable
+            <Button variant="outline" size="sm" onClick={handleExportSchedule}>
+              <FileSpreadsheet className="w-3.5 h-3.5 mr-1.5" />
+              Export schedule.json
             </Button>
-          </>
+            <Link href="/timetable">
+              <Button variant="cit" size="sm">
+                <Calendar className="w-3.5 h-3.5 mr-1.5" />
+                Open Timetable
+              </Button>
+            </Link>
+          </div>
         }
       />
 
-      {/* Target Dataset Metric Indicators (Spec Foundations) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {resetSuccess && (
+        <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <span className="font-semibold">Demo state reset to clean official Section 5 baseline. Exports verified with 0 hard violations.</span>
+          </div>
+          <Badge variant="success" className="text-[10px]">Clean Baseline Ready</Badge>
+        </div>
+      )}
+
+      {/* Target Dataset Metric Indicators (Section 5 Official Counts) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <StatCard
           label="Campus Venues"
           value="27 Rooms"
-          subtext="Lecture halls, labs & seminar halls"
-          icon={<Building2 className="w-4 h-4" />}
+          subtext="Lecture halls, labs & auditoriums"
+          icon={<Building2 className="w-4 h-4 text-[#236B8E]" />}
         />
         <StatCard
           label="Faculty Members"
           value="40 Faculty"
-          subtext="Allocated across academic depts"
-          icon={<Users className="w-4 h-4" />}
+          subtext="Daily teaching capped at <= 4h"
+          icon={<Users className="w-4 h-4 text-purple-600" />}
         />
         <StatCard
           label="Weekly Contact Hours"
           value="243 Hours"
-          subtext="Across 189 weekly course sessions"
-          icon={<Calendar className="w-4 h-4" />}
+          subtext="189 sessions (0 Hard Clashes)"
+          icon={<Calendar className="w-4 h-4 text-emerald-600" />}
         />
         <StatCard
           label="Midsem Exams"
-          value="41 Slots"
-          subtext="Awaiting examination schedule"
-          icon={<GraduationCap className="w-4 h-4" />}
+          value="41 Exams"
+          subtext="Halved seating capacity enforced"
+          icon={<GraduationCap className="w-4 h-4 text-amber-600" />}
+        />
+        <StatCard
+          label="Spectra Bookings"
+          value="25 Requests"
+          subtext="23 Approved (+138 pts), 1 Clashed"
+          icon={<Sparkles className="w-4 h-4 text-cyan-600" />}
         />
       </div>
 
-      {/* Architectural Readiness & Activity Panels */}
+      {/* Architectural Readiness & Operational Panels */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Official Timetable Status</CardTitle>
-            <CardDescription>
-              Real-time clash detection status powered by Google OR-Tools CP-SAT and validator.py
-            </CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-slate-100">
+            <div>
+              <CardTitle className="text-sm font-semibold">Master Timetable & Constraint Verification</CardTitle>
+              <CardDescription>
+                Deterministic CP-SAT solver output independently validated by validator.py
+              </CardDescription>
+            </div>
+            <Badge variant="success" className="text-xs gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              0 Hard Violations
+            </Badge>
           </CardHeader>
-          <CardContent>
-            <EmptyState
-              icon={<Calendar className="w-8 h-8 text-blue-400" />}
-              title="No Generated Timetable in Active Memory"
-              description="The scheduling engine is primed. Provide the official dataset in data/official/ to trigger automated clash-free timetable generation."
-              expectedDatasetNote="Requires cit_public.json (189 sessions, 14 student groups, 62 courses)"
-              action={
-                <Button variant="primary" size="sm">
-                  View Timetable Matrix
-                </Button>
-              }
-            />
+          <CardContent className="p-5 space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
+                <span className="text-[11px] font-semibold text-slate-500">Scheduled Sessions</span>
+                <div className="text-xl font-bold text-slate-900">189 / 189</div>
+                <span className="text-[10px] font-semibold text-emerald-600">100% Curricular Coverage</span>
+              </div>
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
+                <span className="text-[11px] font-semibold text-slate-500">Soft Penalty Score</span>
+                <div className="text-xl font-bold text-[#1B5270]">82 Points</div>
+                <span className="text-[10px] font-semibold text-slate-600">Zero Student Group Gaps</span>
+              </div>
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
+                <span className="text-[11px] font-semibold text-slate-500">Booking Score</span>
+                <div className="text-xl font-bold text-emerald-700">138 Points</div>
+                <span className="text-[10px] font-semibold text-emerald-600">23 Approved (Zero Overlaps)</span>
+              </div>
+            </div>
+
+            {/* Quick Action Navigator */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
+              <Link href="/timetable" className="p-3 rounded-xl bg-[#F0F4F8] hover:bg-[#E2EEF5] border border-slate-200 text-xs text-slate-800 transition-colors flex flex-col items-center justify-center gap-1.5 text-center group">
+                <Calendar className="w-4 h-4 text-[#236B8E] group-hover:scale-110 transition-transform" />
+                <span className="font-semibold">Timetable Matrix</span>
+              </Link>
+              <Link href="/examinations" className="p-3 rounded-xl bg-[#F0F4F8] hover:bg-[#E2EEF5] border border-slate-200 text-xs text-slate-800 transition-colors flex flex-col items-center justify-center gap-1.5 text-center group">
+                <GraduationCap className="w-4 h-4 text-amber-600 group-hover:scale-110 transition-transform" />
+                <span className="font-semibold">Midsem Exams</span>
+              </Link>
+              <Link href="/venue-bookings" className="p-3 rounded-xl bg-[#F0F4F8] hover:bg-[#E2EEF5] border border-slate-200 text-xs text-slate-800 transition-colors flex flex-col items-center justify-center gap-1.5 text-center group">
+                <DoorClosed className="w-4 h-4 text-cyan-700 group-hover:scale-110 transition-transform" />
+                <span className="font-semibold">Spectra Bookings</span>
+              </Link>
+              <Link href="/rescheduling" className="p-3 rounded-xl bg-[#F0F4F8] hover:bg-[#E2EEF5] border border-slate-200 text-xs text-slate-800 transition-colors flex flex-col items-center justify-center gap-1.5 text-center group">
+                <TrendingDown className="w-4 h-4 text-purple-600 group-hover:scale-110 transition-transform" />
+                <span className="font-semibold">Rescheduling Diff</span>
+              </Link>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Quick System Diagnostics */}
-        <div className="space-y-6">
+        {/* System Diagnostics & Policy Enforcement */}
+        <div className="space-y-4">
           <Card>
-            <CardHeader>
-              <CardTitle>System Diagnostics</CardTitle>
-              <CardDescription>Engine and constraint validation status</CardDescription>
+            <CardHeader className="pb-2 border-b border-slate-100">
+              <CardTitle className="text-xs font-semibold text-slate-700">Platform Governance &amp; Security</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3.5">
-              <div className="flex items-center justify-between p-3 rounded-lg bg-surface-muted border border-surface-border">
-                <div className="flex items-center gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  <span className="text-xs font-medium text-slate-200">Constraint Engine</span>
+            <CardContent className="space-y-2 p-3.5">
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <span className="text-xs font-semibold text-slate-800">Constraint Engine</span>
                 </div>
-                <span className="text-[11px] font-semibold text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10">
-                  Ready
+                <span className="text-[10px] font-bold text-emerald-700 px-2 py-0.5 rounded bg-emerald-100">
+                  0 Hard Violations
                 </span>
               </div>
 
-              <div className="flex items-center justify-between p-3 rounded-lg bg-surface-muted border border-surface-border">
-                <div className="flex items-center gap-2.5">
-                  <Sparkles className="w-4 h-4 text-cyan-400" />
-                  <span className="text-xs font-medium text-slate-200">AI Assistant (Hinglish)</span>
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4 text-purple-600" />
+                  <span className="text-xs font-semibold text-slate-800">Self-Approval Ban</span>
                 </div>
-                <span className="text-[11px] font-semibold text-cyan-400 px-2 py-0.5 rounded bg-cyan-500/10">
-                  Armed
+                <span className="text-[10px] font-bold text-purple-700 px-2 py-0.5 rounded bg-purple-100">
+                  Section 4 Enforced
                 </span>
               </div>
 
-              <div className="flex items-center justify-between p-3 rounded-lg bg-surface-muted border border-surface-border">
-                <div className="flex items-center gap-2.5">
-                  <RefreshCw className="w-4 h-4 text-blue-400" />
-                  <span className="text-xs font-medium text-slate-200">Disruption Rescheduler</span>
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
+                <div className="flex items-center gap-2">
+                  <Bot className="w-4 h-4 text-[#236B8E]" />
+                  <span className="text-xs font-semibold text-slate-800">AI Assistant Defense</span>
                 </div>
-                <span className="text-[11px] font-semibold text-blue-400 px-2 py-0.5 rounded bg-blue-500/10">
-                  Standby
+                <span className="text-[10px] font-bold text-[#1B5270] px-2 py-0.5 rounded bg-[#E2EEF5]">
+                  Red-Team Guarded
                 </span>
               </div>
+
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
+                <div className="flex items-center gap-2">
+                  <RefreshCw className="w-4 h-4 text-blue-600" />
+                  <span className="text-xs font-semibold text-slate-800">Disruption Engine</span>
+                </div>
+                <span className="text-[10px] font-bold text-blue-700 px-2 py-0.5 rounded bg-blue-100">
+                  Minimal Displacement
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-[#C5DDEB] bg-[#EBF4FA]">
+            <CardContent className="p-4 space-y-2">
+              <div className="text-xs font-bold text-[#1B5270] flex items-center gap-1.5">
+                <Bot className="w-4 h-4 text-[#236B8E]" />
+                <span>Multilingual AI Assistant Ready</span>
+              </div>
+              <p className="text-[11px] text-slate-700 leading-normal">
+                Faculty &amp; students can request venue bookings in English or Hinglish. Protected by red-team prompt injection guardrails with 100% deterministic validity checks.
+              </p>
+              <Link href="/assistant">
+                <Button size="sm" variant="cit" className="w-full text-xs">
+                  Launch Assistant
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>

@@ -183,3 +183,43 @@ async def test_admin_reset_demo_and_roles():
         assert data["status"] == "success"
         assert data["baseline_sessions"] == 189
         assert data["baseline_exams"] == 41
+
+
+@pytest.mark.asyncio
+async def test_faculty_schedule_change_proposal_and_conflicts():
+    """
+    Verifies Requirement 7: Natural language faculty schedule changes.
+    Tests deterministic conflict detection with alternatives and feasible moves.
+    """
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        # 1. Request targeting a faculty's session
+        res_c = await client.post(
+            "/api/v1/assistant/chat",
+            json={
+                "prompt": "I cannot teach on Monday period 1 due to medical emergency, move my class to Friday period 2",
+                "user_role": "Faculty",
+                "requester_id": "FAC-05"
+            }
+        )
+        assert res_c.status_code == 200
+        data_c = res_c.json()
+        assert data_c["status"] in ["SCHEDULE_CHANGE_PROPOSAL", "SCHEDULE_CHANGE_CONFLICT"]
+        assert data_c["schedule_proposal"] is not None
+        assert data_c["schedule_proposal"]["requires_admin_approval"] is True
+
+        # 2. Reschedule request with explicit session ID
+        res_f = await client.post(
+            "/api/v1/assistant/chat",
+            json={
+                "prompt": "Reschedule my session SES-01 to Thursday period 3",
+                "user_role": "Faculty",
+                "requester_id": "FAC-01"
+            }
+        )
+        assert res_f.status_code == 200
+        data_f = res_f.json()
+        assert data_f["status"] in ["SCHEDULE_CHANGE_PROPOSAL", "SCHEDULE_CHANGE_CONFLICT"]
+        assert data_f["schedule_proposal"]["session_id"] is not None
+        assert data_f["schedule_proposal"]["faculty_id"] is not None
+

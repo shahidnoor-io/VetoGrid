@@ -2,20 +2,22 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "secondary" | "success" | "warning" | "danger" | "cyan" | "purple" | "blue" | "outline";
+  variant?: "default" | "secondary" | "success" | "warning" | "danger" | "cyan" | "purple" | "blue" | "outline" | "cit" | "accessible";
 }
 
 export function Badge({ className, variant = "default", ...props }: BadgeProps) {
   const variantStyles = {
-    default: "bg-surface-elevated text-slate-300 border-surface-border",
-    secondary: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    success: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    warning: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    danger: "bg-rose-500/10 text-rose-400 border-rose-500/20",
-    cyan: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-    purple: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-    blue: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    outline: "text-slate-400 border-surface-border",
+    default: "bg-slate-100 text-slate-700 border-slate-200",
+    secondary: "bg-[#E2EEF5] text-[#1B5270] border-[#C5DDEB]",
+    cit: "bg-[#E2EEF5] text-[#1B5270] border-[#C5DDEB]",
+    accessible: "bg-[#E8F5E9] text-[#1B5E20] border-[#C8E6C9]",
+    success: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    warning: "bg-amber-50 text-amber-800 border-amber-200",
+    danger: "bg-rose-50 text-rose-700 border-rose-200",
+    cyan: "bg-cyan-50 text-cyan-700 border-cyan-200",
+    purple: "bg-purple-50 text-purple-700 border-purple-200",
+    blue: "bg-blue-50 text-blue-700 border-blue-200",
+    outline: "text-slate-600 border-slate-200 bg-white",
   };
 
   return (

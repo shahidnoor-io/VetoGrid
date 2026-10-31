@@ -11,16 +11,15 @@ import { Badge } from "@/components/ui/Badge";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("coordinator@chitkara.edu.in");
+  const [email, setEmail] = useState("coordinator@cit.edu.in");
   const [password, setPassword] = useState("••••••••••••");
   const [selectedRole, setSelectedRole] = useState("timetable_coordinator");
 
   const roles = [
-    { id: "timetable_coordinator", name: "Timetable Coordinator", badge: "Primary Actor" },
-    { id: "academic_dean", name: "Academic Dean", badge: "Approver" },
-    { id: "faculty", name: "Faculty Member", badge: "Instructor" },
-    { id: "venue_manager", name: "Venue Manager", badge: "Spectra" },
-    { id: "student_representative", name: "Student Rep", badge: "Viewer" },
+    { id: "dean", name: "Dean of Academic Affairs", badge: "Super Admin", email: "dean@cit.edu.in" },
+    { id: "coordinator", name: "Department Coordinator (CSE)", badge: "Coordinator", email: "coordinator.cse@cit.edu.in" },
+    { id: "faculty", name: "Faculty Member", badge: "Faculty", email: "fac01@cit.edu.in" },
+    { id: "club_rep", name: "Club Representative (Spectra)", badge: "Student Club", email: "club.lit@cit.edu.in" },
   ];
 
   const handleLogin = (e: React.FormEvent) => {
@@ -41,7 +40,7 @@ export default function LoginPage() {
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white">CampusOS AI</h1>
           <p className="text-xs text-slate-400">
-            Intelligent Campus Scheduling Platform · Chitkara Institute of Technology
+            Intelligent Campus Scheduling Platform · Chilika Institute of Technology (CIT)
           </p>
         </div>
 
@@ -67,7 +66,7 @@ export default function LoginPage() {
                       key={r.id}
                       onClick={() => {
                         setSelectedRole(r.id);
-                        setEmail(`${r.id}@chitkara.edu.in`);
+                        setEmail(r.email);
                       }}
                       className={`flex items-center justify-between p-2 rounded-lg text-xs font-medium border text-left transition-colors ${
                         selectedRole === r.id

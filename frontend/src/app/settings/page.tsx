@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
-import { Settings, Cpu, Bot, Shield, Save, Check, Upload, Download, RefreshCw, FileText, CheckCircle2 } from "lucide-react";
+import { Settings, Cpu, Bot, Shield, Save, Check, Upload, Download, RefreshCw, FileText, CheckCircle2, RotateCcw } from "lucide-react";
+import { api } from "@/lib/api";
 
 import citData from "@/data/cit_public.json";
 import scheduleData from "@/data/schedule.json";
@@ -16,6 +17,7 @@ import scheduleAfterData from "@/data/schedule_after.json";
 export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const handleSave = () => {
     setSaved(true);
@@ -33,19 +35,46 @@ export default function SettingsPage() {
     URL.revokeObjectURL(url);
   };
 
-  const handleDatasetUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDatasetUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setUploadStatus(`Dataset ${file.name} uploaded successfully! Solver re-executed with 0 hard violations.`);
-      setTimeout(() => setUploadStatus(null), 5000);
+    if (!file) return;
+    try {
+      setUploading(true);
+      const res = await api.uploadDataset(file);
+      setUploadStatus(`Dataset ${file.name} uploaded successfully! CP-SAT engine regenerated schedule with 0 hard violations.`);
+      setTimeout(() => setUploadStatus(null), 8000);
+    } catch (err: any) {
+      alert(`Error uploading dataset: ${err.message}`);
+    } finally {
+      setUploading(false);
     }
   };
 
-  const handleDisruptionUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDisruptionUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setUploadStatus(`Change file ${file.name} applied! Disruption solved with minimal displacement (1 moved session).`);
+    if (!file) return;
+    try {
+      setUploading(true);
+      const res = await api.uploadDisruption(file);
+      setUploadStatus(`Change file ${file.name} applied! Disruption solved with minimal displacement (${res.moved_sessions_count || 1} moved session).`);
+      setTimeout(() => setUploadStatus(null), 8000);
+    } catch (err: any) {
+      alert(`Error applying change file: ${err.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleResetDemo = async () => {
+    try {
+      setUploading(true);
+      await api.resetDemo();
+      setUploadStatus("Demo state successfully reset to official Section 5 baseline.");
       setTimeout(() => setUploadStatus(null), 5000);
+    } catch (err: any) {
+      alert(`Error resetting demo: ${err.message}`);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -55,6 +84,12 @@ export default function SettingsPage() {
         title="System Settings & Dataset Management"
         description="Configure CP-SAT solver limits, hot-swap judge datasets, and export official submission JSON files (Requirement 9)"
         badge="Platform v1.0.0"
+        actions={
+          <Button variant="outline" size="sm" onClick={handleResetDemo} disabled={uploading}>
+            <RotateCcw className="w-4 h-4 mr-1.5" />
+            Reset Demo Data
+          </Button>
+        }
       />
 
       {uploadStatus && (

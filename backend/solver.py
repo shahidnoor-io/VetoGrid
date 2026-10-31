@@ -74,6 +74,9 @@ class CampusScheduler:
                     if rtype not in ["classroom", "lecture_hall", "seminar_hall"]:
                         continue
             valid.append(r["room_id"])
+
+        # Sort candidate rooms by capacity ascending to minimize wasted seat capacity
+        valid.sort(key=lambda rid: self.rooms_by_id[rid]["capacity"])
         return valid
 
     def _is_faculty_available(self, fac_id: str, day: str, periods: List[int]) -> bool:
@@ -115,6 +118,7 @@ class CampusScheduler:
         fac_hours: Dict[Tuple[str, str], int] = {}
         group_hours: Dict[Tuple[str, str], int] = {}
         group_courses: Dict[Tuple[str, str, str], int] = {}
+        group_periods: Dict[Tuple[str, str], List[int]] = {}
 
         assignments: Dict[str, Dict[str, Any]] = {}
 
@@ -140,6 +144,7 @@ class CampusScheduler:
                 fac_hours[(day, s["faculty_id"])] = fac_hours.get((day, s["faculty_id"]), 0) + dur
             for g in s.get("student_groups", []):
                 group_hours[(day, g)] = group_hours.get((day, g), 0) + dur
+                group_periods.setdefault((day, g), []).extend(periods)
                 group_courses[(day, g, s["course_id"])] = group_courses.get((day, g, s["course_id"]), 0) + 1
 
         # PHASE 2: Elective Baskets (Synchronize all sessions in each basket to same day & period)
@@ -211,6 +216,7 @@ class CampusScheduler:
                                 fac_hours[(day, b_s["faculty_id"])] = fac_hours.get((day, b_s["faculty_id"]), 0) + dur
                             for g in b_s.get("student_groups", []):
                                 group_hours[(day, g)] = group_hours.get((day, g), 0) + dur
+                                group_periods.setdefault((day, g), []).extend(periods)
                         slotted = True
 
         # PHASE 3: 3-Hour Labs (Duration 3, strict slots P2-P4 or P6-P8, specialized lab rooms)
@@ -266,6 +272,18 @@ class CampusScheduler:
                                 if av.get("day") == day and av.get("period") in periods:
                                     penalty += 5
 
+                        # Check group gaps delta
+                        for g in groups:
+                            curr_p = group_periods.get((day, g), [])
+                            if curr_p:
+                                union_p = sorted(list(set(curr_p + periods)))
+                                for i in range(len(union_p) - 1):
+                                    p1, p2 = union_p[i], union_p[i+1]
+                                    if p2 - p1 > 1:
+                                        if p1 == 5 and p2 == 6:
+                                            continue
+                                        penalty += (p2 - p1 - 1) * 2
+
                         if penalty < min_penalty:
                             min_penalty = penalty
                             best_slot = (day, start_p, r_id)
@@ -290,6 +308,7 @@ class CampusScheduler:
                     fac_hours[(day, fac_id)] = fac_hours.get((day, fac_id), 0) + dur
                 for g in groups:
                     group_hours[(day, g)] = group_hours.get((day, g), 0) + dur
+                    group_periods.setdefault((day, g), []).extend(periods)
                     group_courses[(day, g, s["course_id"])] = group_courses.get((day, g, s["course_id"]), 0) + 1
             else:
                 print(f"Warning: Could not slot lab {sid}")
@@ -304,6 +323,7 @@ class CampusScheduler:
             fac_id = s.get("faculty_id")
             groups = s.get("student_groups", [])
             valid_rooms = self._get_valid_rooms_for_session(s)
+            total_students = sum(self.groups_by_id[g]["size"] for g in groups)
             dur = 1
 
             best_slot = None
@@ -341,27 +361,38 @@ class CampusScheduler:
 
                         # Calculate Soft Penalty
                         penalty = 0
-                        # 1. Faculty avoid preferences
+                        # 1. Faculty avoid preferences (weight 5)
                         faculty = self.faculty_by_id.get(fac_id)
                         if faculty:
                             for av in faculty.get("avoid_preferences", []):
                                 if av.get("day") == day and av.get("period") == start_p:
                                     penalty += 5
 
-                        # 2. Avoid duplicate course on same day
+                        # 2. Avoid duplicate course on same day (weight 3)
                         for g in groups:
                             if group_courses.get((day, g, s["course_id"]), 0) > 0:
                                 penalty += 3
 
-                        # 3. Avoid P9 (17:00)
+                        # 3. Avoid P9 (17:00) (weight 2)
                         if start_p == 9:
                             penalty += 2
 
-                        # 4. Room utilization < 40%
+                        # 4. Room utilization < 40% (weight 1)
                         room = self.rooms_by_id[r_id]
-                        total_size = sum(self.groups_by_id[g]["size"] for g in groups)
-                        if room["capacity"] > 0 and (total_size / room["capacity"]) < 0.40:
+                        if room["capacity"] > 0 and (total_students / room["capacity"]) < 0.40:
                             penalty += 1
+
+                        # 5. Student group gaps (weight 2 per hour gap)
+                        for g in groups:
+                            curr_p = group_periods.get((day, g), [])
+                            if curr_p:
+                                union_p = sorted(list(set(curr_p + [start_p])))
+                                for i in range(len(union_p) - 1):
+                                    p1, p2 = union_p[i], union_p[i+1]
+                                    if p2 - p1 > 1:
+                                        if p1 == 5 and p2 == 6:
+                                            continue
+                                        penalty += (p2 - p1 - 1) * 2
 
                         if penalty < min_penalty:
                             min_penalty = penalty
@@ -387,6 +418,7 @@ class CampusScheduler:
                     fac_hours[(day, fac_id)] = fac_hours.get((day, fac_id), 0) + dur
                 for g in groups:
                     group_hours[(day, g)] = group_hours.get((day, g), 0) + dur
+                    group_periods.setdefault((day, g), []).append(start_p)
                     group_courses[(day, g, s["course_id"])] = group_courses.get((day, g, s["course_id"]), 0) + 1
             else:
                 print(f"Warning: Could not slot lecture {sid}")

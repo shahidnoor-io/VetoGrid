@@ -1,157 +1,240 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
   Calendar,
-  GraduationCap,
+  Building2,
+  Sparkles,
+  SlidersHorizontal,
+  Bot,
+  ChevronDown,
+  ChevronRight,
   DoorClosed,
   RefreshCw,
-  Bot,
-  Sliders,
-  Building2,
-  Users,
   CheckSquare,
+  GraduationCap,
   BarChart3,
   Settings,
-  LogIn,
-  Layers,
-  ChevronRight,
+  HelpCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/Badge";
-
-interface NavLinkItem {
-  name: string;
-  href: string;
-  icon: React.ElementType;
-  badge?: string;
-}
-
-interface NavGroup {
-  group: string;
-  items: NavLinkItem[];
-}
-
-const navigationGroups: NavGroup[] = [
-  {
-    group: "Overview & Schedule",
-    items: [
-      { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-      { name: "Timetable Matrix", href: "/timetable", icon: Calendar },
-      { name: "Examinations", href: "/examinations", icon: GraduationCap },
-    ],
-  },
-  {
-    group: "Operations & Booking",
-    items: [
-      { name: "Venue Bookings", href: "/venue-bookings", icon: DoorClosed, badge: "Spectra" },
-      { name: "Rescheduling", href: "/rescheduling", icon: RefreshCw },
-      { name: "Manual Scheduling", href: "/manual-scheduling", icon: Sliders },
-      { name: "Approvals", href: "/approvals", icon: CheckSquare },
-    ],
-  },
-  {
-    group: "Campus Resources",
-    items: [
-      { name: "Rooms & Venues", href: "/rooms", icon: Building2 },
-      { name: "Faculty Directory", href: "/faculty", icon: Users },
-    ],
-  },
-  {
-    group: "Intelligence & Insights",
-    items: [
-      { name: "AI Assistant", href: "/assistant", icon: Bot, badge: "Hinglish" },
-      { name: "Analytics", href: "/analytics", icon: BarChart3 },
-    ],
-  },
-  {
-    group: "System",
-    items: [
-      { name: "Settings", href: "/settings", icon: Settings },
-      { name: "Campus Login", href: "/login", icon: LogIn },
-    ],
-  },
-];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [spectraOpen, setSpectraOpen] = useState(true);
+  const [adminOpen, setAdminOpen] = useState(true);
+
+  const isVenueDirectoryActive = pathname === "/rooms" || pathname === "/";
+  const isTimetableActive = pathname === "/timetable";
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 w-64 border-r border-surface-border bg-navy-900 flex flex-col">
-      {/* Brand Header */}
-      <div className="h-16 flex items-center px-6 border-b border-surface-border gap-3">
-        <div className="h-8 w-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
-          <Layers className="w-5 h-5" />
+    <aside className="fixed inset-y-0 left-0 z-40 w-64 border-r border-[#D9E3EC] bg-[#EBF1F6] flex flex-col justify-between font-sans">
+      <div className="flex flex-col">
+        {/* Brand Header */}
+        <div className="h-16 flex items-center px-4 gap-3 border-b border-[#DCE5EE]">
+          <div className="h-9 w-9 rounded-full bg-[#1B4D68] flex items-center justify-center text-white font-bold text-xs tracking-wider shadow-sm shrink-0">
+            CIT
+          </div>
+          <div className="min-w-0">
+            <span className="font-bold text-xs text-slate-900 leading-tight block">
+              CIT Venue Manager
+            </span>
+            <span className="text-[11px] text-slate-600 leading-tight block font-medium">
+              &amp; Timetable System
+            </span>
+          </div>
         </div>
-        <div>
-          <span className="font-bold text-sm tracking-tight text-white block">CampusOS AI</span>
-          <span className="text-[10px] text-slate-400 block font-medium">Chitkara University</span>
+
+        {/* Navigation Items */}
+        <div className="p-3 space-y-1.5 overflow-y-auto max-h-[calc(100vh-8rem)]">
+          {/* 1. Timetable */}
+          <Link
+            href="/timetable"
+            className={cn(
+              "flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-all",
+              isTimetableActive
+                ? "bg-[#5B93B5] text-white shadow-sm font-semibold"
+                : "text-slate-700 hover:bg-[#DEE7F0] hover:text-slate-900"
+            )}
+          >
+            <Calendar className={cn("w-4 h-4", isTimetableActive ? "text-white" : "text-slate-600")} />
+            <span>Timetable</span>
+          </Link>
+
+          {/* 2. Venue Directory */}
+          <Link
+            href="/rooms"
+            className={cn(
+              "flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-all",
+              isVenueDirectoryActive
+                ? "bg-[#5B93B5] text-white shadow-sm font-semibold"
+                : "text-slate-700 hover:bg-[#DEE7F0] hover:text-slate-900"
+            )}
+          >
+            <Building2 className={cn("w-4 h-4", isVenueDirectoryActive ? "text-white" : "text-slate-600")} />
+            <span>Venue Directory</span>
+          </Link>
+
+          {/* 3. Spectra Fest (Collapsible) */}
+          <div className="space-y-0.5 pt-1">
+            <button
+              type="button"
+              onClick={() => setSpectraOpen(!spectraOpen)}
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-[#DEE7F0] transition-colors"
+            >
+              <div className="flex items-center gap-2.5">
+                <Sparkles className="w-4 h-4 text-amber-600" />
+                <span>Spectra Fest</span>
+              </div>
+              {spectraOpen ? (
+                <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+              ) : (
+                <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+              )}
+            </button>
+
+            {spectraOpen && (
+              <div className="pl-6 space-y-0.5 pt-0.5">
+                <Link
+                  href="/venue-bookings"
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors",
+                    pathname === "/venue-bookings"
+                      ? "bg-[#5B93B5] text-white font-semibold"
+                      : "text-slate-600 hover:bg-[#DEE7F0] hover:text-slate-900"
+                  )}
+                >
+                  <DoorClosed className="w-3.5 h-3.5" />
+                  <span>Venue Bookings</span>
+                </Link>
+                <Link
+                  href="/rescheduling"
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors",
+                    pathname === "/rescheduling"
+                      ? "bg-[#5B93B5] text-white font-semibold"
+                      : "text-slate-600 hover:bg-[#DEE7F0] hover:text-slate-900"
+                  )}
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Disruption Recovery</span>
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* 4. Admin Panels (Collapsible) */}
+          <div className="space-y-0.5 pt-1">
+            <button
+              type="button"
+              onClick={() => setAdminOpen(!adminOpen)}
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-[#DEE7F0] transition-colors"
+            >
+              <div className="flex items-center gap-2.5">
+                <SlidersHorizontal className="w-4 h-4 text-slate-600" />
+                <span>Admin Panels</span>
+              </div>
+              {adminOpen ? (
+                <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+              ) : (
+                <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+              )}
+            </button>
+
+            {adminOpen && (
+              <div className="pl-6 space-y-0.5 pt-0.5">
+                <Link
+                  href="/dashboard"
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors",
+                    pathname === "/dashboard"
+                      ? "bg-[#5B93B5] text-white font-semibold"
+                      : "text-slate-600 hover:bg-[#DEE7F0] hover:text-slate-900"
+                  )}
+                >
+                  <span>Command Center</span>
+                </Link>
+                <Link
+                  href="/approvals"
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors",
+                    pathname === "/approvals"
+                      ? "bg-[#5B93B5] text-white font-semibold"
+                      : "text-slate-600 hover:bg-[#DEE7F0] hover:text-slate-900"
+                  )}
+                >
+                  <CheckSquare className="w-3.5 h-3.5" />
+                  <span>Approvals Queue</span>
+                </Link>
+                <Link
+                  href="/manual-scheduling"
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors",
+                    pathname === "/manual-scheduling"
+                      ? "bg-[#5B93B5] text-white font-semibold"
+                      : "text-slate-600 hover:bg-[#DEE7F0] hover:text-slate-900"
+                  )}
+                >
+                  <span>Manual Workbench</span>
+                </Link>
+                <Link
+                  href="/examinations"
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors",
+                    pathname === "/examinations"
+                      ? "bg-[#5B93B5] text-white font-semibold"
+                      : "text-slate-600 hover:bg-[#DEE7F0] hover:text-slate-900"
+                  )}
+                >
+                  <GraduationCap className="w-3.5 h-3.5" />
+                  <span>Examinations (41)</span>
+                </Link>
+                <Link
+                  href="/analytics"
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors",
+                    pathname === "/analytics"
+                      ? "bg-[#5B93B5] text-white font-semibold"
+                      : "text-slate-600 hover:bg-[#DEE7F0] hover:text-slate-900"
+                  )}
+                >
+                  <BarChart3 className="w-3.5 h-3.5" />
+                  <span>Analytics</span>
+                </Link>
+                <Link
+                  href="/settings"
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors",
+                    pathname === "/settings"
+                      ? "bg-[#5B93B5] text-white font-semibold"
+                      : "text-slate-600 hover:bg-[#DEE7F0] hover:text-slate-900"
+                  )}
+                >
+                  <Settings className="w-3.5 h-3.5" />
+                  <span>Settings &amp; Hot-Swap</span>
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Navigation Sections */}
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-        {navigationGroups.map((group) => (
-          <div key={group.group}>
-            <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
-              {group.group}
-            </p>
-            <div className="space-y-0.5">
-              {group.items.map((item) => {
-                const isActive = pathname === item.href;
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={cn(
-                      "flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all group",
-                      isActive
-                        ? "bg-blue-600/15 text-blue-400 border border-blue-500/20 font-semibold"
-                        : "text-slate-400 hover:text-slate-200 hover:bg-surface-elevated/70"
-                    )}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <Icon
-                        className={cn(
-                          "w-4 h-4 transition-colors",
-                          isActive ? "text-blue-400" : "text-slate-400 group-hover:text-slate-200"
-                        )}
-                      />
-                      <span>{item.name}</span>
-                    </div>
-                    {item.badge ? (
-                      <Badge variant="cyan" className="text-[10px] py-0 px-1.5 h-4">
-                        {item.badge}
-                      </Badge>
-                    ) : isActive ? (
-                      <ChevronRight className="w-3.5 h-3.5 text-blue-400" />
-                    ) : null}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Footer / Actor Status */}
-      <div className="p-4 border-t border-surface-border bg-surface-muted/30">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-full bg-blue-600/30 border border-blue-500/40 flex items-center justify-center text-xs font-bold text-blue-300">
-              CU
-            </div>
-            <div className="text-left">
-              <p className="text-xs font-medium text-slate-200 leading-none">Coordinator Portal</p>
-              <p className="text-[10px] text-slate-400 leading-tight mt-1">Chitkara Inst. Tech</p>
-            </div>
-          </div>
-          <span className="h-2 w-2 rounded-full bg-emerald-400 ring-4 ring-emerald-400/20" title="System Online" />
-        </div>
+      {/* Bottom AI Chat Assistance Link */}
+      <div className="p-3 border-t border-[#DCE5EE]">
+        <Link
+          href="/assistant"
+          className={cn(
+            "flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-xl text-xs font-semibold transition-all shadow-sm",
+            pathname === "/assistant"
+              ? "bg-[#1B5270] text-white"
+              : "bg-[#DDE9F2] text-[#1B5270] hover:bg-[#D0E0EC]"
+          )}
+        >
+          <Bot className="w-4 h-4" />
+          <span>AI Chat Assistance</span>
+        </Link>
       </div>
     </aside>
   );

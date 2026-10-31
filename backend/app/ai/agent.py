@@ -37,10 +37,25 @@ class BookingProposal(BaseModel):
     manual_fallback_available: bool = True
 
 
+class ScheduleChangeProposal(BaseModel):
+    faculty_id: str
+    faculty_name: str
+    session_id: str
+    course_id: str
+    course_name: str
+    original_slot: Dict[str, Any]
+    proposed_slot: Dict[str, Any]
+    is_valid: bool
+    conflict_reason: Optional[str] = None
+    suggested_alternatives: List[Dict[str, Any]] = Field(default_factory=list)
+    requires_admin_approval: bool = True
+
+
 class AgentResponse(BaseModel):
-    status: str  # "SUCCESS", "CONFLICT_WITH_ALTERNATIVES", "SECURITY_VIOLATION", "CLARIFICATION_NEEDED"
+    status: str  # "SUCCESS", "CONFLICT_WITH_ALTERNATIVES", "SECURITY_VIOLATION", "SCHEDULE_CHANGE_PROPOSAL", "SCHEDULE_CHANGE_CONFLICT", "CLARIFICATION_NEEDED"
     message: str
     proposal: Optional[BookingProposal] = None
+    schedule_proposal: Optional[ScheduleChangeProposal] = None
     security_violations: List[str] = Field(default_factory=list)
 
 
@@ -121,6 +136,16 @@ class CampusAIAgent:
             )
 
         text = prompt.lower()
+
+        # Check if query is a Faculty Schedule Change Request (Requirement 7)
+        schedule_change_keywords = [
+            "reschedule", "move my", "move class", "shift class", "cannot teach",
+            "can't teach", "nahi padha sakta", "leave on", "chhutti", "chutti",
+            "unavailability", "shift my lecture", "extra session", "change my slot",
+            "move lecture", "relocate session"
+        ]
+        if any(kw in text for kw in schedule_change_keywords):
+            return cls.process_faculty_schedule_change(prompt, user_role, requester_id)
 
         # 2. Extract Day
         day = "Monday"
@@ -289,6 +314,239 @@ class CampusAIAgent:
                 status="CONFLICT_WITH_ALTERNATIVES",
                 message=f"Conflict detected: {conflict_reason} See suggested alternatives or adjust in manual booking form.",
                 proposal=proposal
+            )
+
+    @classmethod
+    def process_faculty_schedule_change(
+        cls,
+        prompt: str,
+        user_role: str = "Faculty",
+        requester_id: str = "FAC-01"
+    ) -> AgentResponse:
+        """
+        Handles natural language requests from faculty to reschedule classes or report unavailability.
+        Deterministically verifies all hard constraints before generating a proposal for Admin approval.
+        """
+        text = prompt.lower()
+        data = cls.load_dataset()
+        sched = cls.load_schedule()
+
+        # 1. Resolve Faculty
+        faculty_id = requester_id if requester_id.startswith("FAC-") else "FAC-01"
+        fac_match = re.search(r"\b(FAC-\d{1,2})\b", prompt, re.IGNORECASE)
+        if fac_match:
+            faculty_id = fac_match.group(1).upper()
+        else:
+            for f in data.get("faculty", []):
+                name_parts = f.get("name", "").lower().split()
+                if any(p in text for p in name_parts if len(p) > 2):
+                    faculty_id = f.get("faculty_id")
+                    break
+
+        fac_def = next((f for f in data.get("faculty", []) if f.get("faculty_id") == faculty_id), {})
+        faculty_name = fac_def.get("name", f"Faculty {faculty_id}")
+
+        # 2. Resolve Session to Move
+        timetable = sched.get("timetable", [])
+        fac_session_ids = {s["session_id"] for s in data.get("sessions", []) if s.get("faculty_id") == faculty_id}
+        fac_scheduled = [e for e in timetable if e.get("session_id") in fac_session_ids]
+
+        source_day = None
+        for kw, target_day in cls.DAY_MAP.items():
+            if f"on {kw}" in text or f"from {kw}" in text or f"{kw} class" in text or f"{kw} ka" in text or f"{kw} ko" in text:
+                source_day = target_day
+                break
+
+        target_session_entry = None
+        ses_match = re.search(r"\b(SES-[A-Z0-9_-]+)\b", prompt, re.IGNORECASE)
+        if ses_match:
+            sid = ses_match.group(1).upper()
+            target_session_entry = next((e for e in fac_scheduled if e.get("session_id") == sid), None)
+
+        if not target_session_entry:
+            course_match = re.search(r"\b([A-Z]{2,4}\d{3})\b", prompt, re.IGNORECASE)
+            if course_match:
+                cid = course_match.group(1).upper()
+                c_sessions = {s["session_id"] for s in data.get("sessions", []) if s.get("course_id") == cid and s.get("faculty_id") == faculty_id}
+                target_session_entry = next((e for e in fac_scheduled if e.get("session_id") in c_sessions), None)
+
+        if not target_session_entry and source_day:
+            target_session_entry = next((e for e in fac_scheduled if e.get("day") == source_day), None)
+
+        if not target_session_entry and fac_scheduled:
+            target_session_entry = fac_scheduled[0]
+
+        if not target_session_entry:
+            return AgentResponse(
+                status="CLARIFICATION_NEEDED",
+                message=f"Could not identify a scheduled class for Faculty {faculty_name} ({faculty_id}). Please specify the course code or session ID."
+            )
+
+        sid = target_session_entry["session_id"]
+        ses_def = next((s for s in data.get("sessions", []) if s.get("session_id") == sid), {})
+        course_def = next((c for c in data.get("courses", []) if c.get("course_id") == ses_def.get("course_id")), {})
+        course_id = course_def.get("course_id", ses_def.get("course_id", "Course"))
+        course_name = course_def.get("name", "Academic Lecture")
+        dur = ses_def.get("duration", 1)
+        orig_day = target_session_entry["day"]
+        orig_period = target_session_entry["start_period"]
+        orig_room = target_session_entry["room_id"]
+        groups = ses_def.get("student_groups", [])
+
+        # 3. Resolve Target Day & Target Period
+        target_day = "Friday"
+        for kw, target_d in cls.DAY_MAP.items():
+            if f"to {kw}" in text or f"on {kw}" in text:
+                target_day = target_d
+                break
+            elif kw in text and target_d != source_day:
+                target_day = target_d
+
+        target_period = 6  # default afternoon (14:00)
+        if "morning" in text or "subah" in text or "9 am" in text or "10 am" in text:
+            target_period = 2
+        elif "afternoon" in text or "dopahar" in text or "2 pm" in text or "14:00" in text:
+            target_period = 6
+        elif "evening" in text or "sham" in text or "4 pm" in text:
+            target_period = 8
+
+        # 4. Deterministic Constraint Checks
+        conflict_reasons = []
+        target_periods = list(range(target_period, target_period + dur))
+
+        # A. Lunch restriction
+        if 5 in target_periods and 6 in target_periods:
+            conflict_reasons.append("Sessions cannot cross the 13:00-14:00 lunch break.")
+
+        # B. Faculty unavailability
+        for u in fac_def.get("unavailability", []):
+            if u.get("day") == target_day and u.get("period") in target_periods:
+                conflict_reasons.append(f"Faculty {faculty_name} has unavailability scheduled on {target_day} P{u.get('period')}.")
+
+        # C. Faculty daily limit (<= 4h)
+        target_day_fac_hours = sum(
+            next((s.get("duration", 1) for s in data.get("sessions", []) if s.get("session_id") == e["session_id"]), 1)
+            for e in timetable
+            if e.get("day") == target_day and e.get("session_id") in fac_session_ids and e.get("session_id") != sid
+        )
+        if target_day_fac_hours + dur > fac_def.get("daily_limit_hours", 4):
+            conflict_reasons.append(f"Faculty daily workload limit exceeded on {target_day} ({target_day_fac_hours + dur}h > 4h limit).")
+
+        # D. Faculty overlap
+        for e in timetable:
+            if e.get("session_id") == sid: continue
+            if e.get("day") == target_day and e.get("session_id") in fac_session_ids:
+                e_sess = next((s for s in data.get("sessions", []) if s.get("session_id") == e["session_id"]), {})
+                e_pers = range(e["start_period"], e["start_period"] + e_sess.get("duration", 1))
+                if any(p in target_periods for p in e_pers):
+                    conflict_reasons.append(f"Faculty {faculty_name} is already teaching session {e['session_id']} on {target_day} P{e['start_period']}.")
+
+        # E. Student group overlaps
+        for g in groups:
+            for e in timetable:
+                if e.get("session_id") == sid: continue
+                if e.get("day") == target_day:
+                    e_sess = next((s for s in data.get("sessions", []) if s.get("session_id") == e["session_id"]), {})
+                    if g in e_sess.get("student_groups", []):
+                        e_pers = range(e["start_period"], e["start_period"] + e_sess.get("duration", 1))
+                        if any(p in target_periods for p in e_pers):
+                            conflict_reasons.append(f"Student cohort {g} has a conflicting class ({e_sess.get('course_id')}) in {e.get('room_id')} on {target_day} P{e.get('start_period')}.")
+
+        # F. Find valid room
+        target_room = orig_room
+        req_type = ses_def.get("required_room_type")
+        size = sum(next((gr["size"] for gr in data.get("student_groups", []) if gr["group_id"] == g), 50) for g in groups)
+
+        candidate_rooms = [
+            r for r in data.get("rooms", [])
+            if r["capacity"] >= size and (not req_type or r.get("type") == req_type or (req_type == "lecture_hall" and r.get("type") in ["lecture_hall", "auditorium"]))
+        ]
+        free_room = None
+        for cr in candidate_rooms:
+            crid = cr["room_id"]
+            maint_clash = any(
+                m.get("day") == target_day and set(range(m.get("start_period", 1), m.get("end_period", 1) + 1)).intersection(target_periods)
+                for m in cr.get("maintenance", [])
+            )
+            if maint_clash: continue
+            occ = any(
+                e.get("room_id") == crid and e.get("day") == target_day and
+                set(range(e.get("start_period", 1), e.get("start_period", 1) + next((s.get("duration", 1) for s in data.get("sessions", []) if s.get("session_id") == e["session_id"]), 1))).intersection(target_periods)
+                for e in timetable if e.get("session_id") != sid
+            )
+            if not occ:
+                free_room = crid
+                break
+
+        if not free_room:
+            conflict_reasons.append(f"No suitable room with capacity >= {size} and type '{req_type or 'classroom'}' is free on {target_day} P{target_period}.")
+        else:
+            target_room = free_room
+
+        is_valid = len(conflict_reasons) == 0
+
+        # Compute alternatives if conflicted
+        alternatives = []
+        if not is_valid:
+            for cand_day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]:
+                if len(alternatives) >= 3: break
+                for cand_p in [2, 3, 4, 6, 7, 8]:
+                    if len(alternatives) >= 3: break
+                    cand_pers = list(range(cand_p, cand_p + dur))
+                    if 5 in cand_pers and 6 in cand_pers: continue
+                    if any(u.get("day") == cand_day and u.get("period") in cand_pers for u in fac_def.get("unavailability", [])): continue
+
+                    group_busy = False
+                    for g in groups:
+                        for e in timetable:
+                            if e.get("session_id") == sid: continue
+                            if e.get("day") == cand_day:
+                                e_s = next((s for s in data.get("sessions", []) if s.get("session_id") == e["session_id"]), {})
+                                if g in e_s.get("student_groups", []):
+                                    if set(range(e["start_period"], e["start_period"] + e_s.get("duration", 1))).intersection(cand_pers):
+                                        group_busy = True; break
+                        if group_busy: break
+                    if group_busy: continue
+
+                    found_r = None
+                    for cr in candidate_rooms:
+                        crid = cr["room_id"]
+                        if not any(e.get("room_id") == crid and e.get("day") == cand_day and set(range(e.get("start_period", 1), e.get("start_period", 1) + 1)).intersection(cand_pers) for e in timetable if e.get("session_id") != sid):
+                            found_r = crid; break
+                    if found_r:
+                        alternatives.append({
+                            "day": cand_day,
+                            "start_period": cand_p,
+                            "end_period": cand_p + dur - 1,
+                            "room_id": found_r,
+                            "time": f"{cls.PERIOD_TIMES.get(cand_p, ('08:00', '09:00'))[0]} - {cls.PERIOD_TIMES.get(cand_p + dur - 1, ('17:00', '18:00'))[1]}"
+                        })
+
+        sched_proposal = ScheduleChangeProposal(
+            faculty_id=faculty_id,
+            faculty_name=faculty_name,
+            session_id=sid,
+            course_id=course_id,
+            course_name=course_name,
+            original_slot={"day": orig_day, "start_period": orig_period, "room_id": orig_room},
+            proposed_slot={"day": target_day, "start_period": target_period, "room_id": target_room},
+            is_valid=is_valid,
+            conflict_reason="; ".join(conflict_reasons) if conflict_reasons else None,
+            suggested_alternatives=alternatives,
+            requires_admin_approval=True
+        )
+
+        if is_valid:
+            return AgentResponse(
+                status="SCHEDULE_CHANGE_PROPOSAL",
+                message=f"Schedule change verified: {course_id} ({sid}) taught by {faculty_name} can be relocated from {orig_day} P{orig_period} ({orig_room}) to {target_day} P{target_period} ({target_room}). Zero conflicts detected. Admin approval required to commit.",
+                schedule_proposal=sched_proposal
+            )
+        else:
+            return AgentResponse(
+                status="SCHEDULE_CHANGE_CONFLICT",
+                message=f"Target slot unavailable: {'; '.join(conflict_reasons)}. See alternative feasible slots below.",
+                schedule_proposal=sched_proposal
             )
 
     @classmethod

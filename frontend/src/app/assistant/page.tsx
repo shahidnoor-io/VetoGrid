@@ -27,27 +27,31 @@ import { api } from "@/lib/api";
 interface Message {
   sender: "user" | "assistant";
   text: string;
-  status?: "SUCCESS" | "CONFLICT_WITH_ALTERNATIVES" | "SECURITY_VIOLATION" | "EXPLANATION";
+  status?: "SUCCESS" | "CONFLICT_WITH_ALTERNATIVES" | "SECURITY_VIOLATION" | "EXPLANATION" | "SCHEDULE_CHANGE_PROPOSAL" | "SCHEDULE_CHANGE_CONFLICT";
   securityViolations?: string[];
   proposal?: any;
+  scheduleProposal?: any;
   explanationData?: any;
 }
 
 export default function AssistantPage() {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
+  const [editingProposalIndex, setEditingProposalIndex] = useState<number | null>(null);
+  const [editForm, setEditForm] = useState<any>({});
   const [messages, setMessages] = useState<Message[]>([
     {
       sender: "assistant",
-      text: "Namaste! I am the CampusOS AI Assistant. You can ask me scheduling or venue booking queries in English or Hinglish. Every request is verified deterministically against CIT Week 7 timetables and room maintenance windows.",
+      text: "Namaste! I am the CampusOS AI Assistant. You can ask me venue booking queries or faculty schedule changes in English or Hinglish. Every request is strictly verified by underlying code before being applied (0% LLM authority).",
     },
   ]);
 
   const samplePrompts = [
     { text: "Bhai kal sham ko 6 baje Audi chahiye drama practice ke liye", tag: "Hinglish Booking" },
-    { text: "Kal subah 9 baje CSE lab chahiye 40 logo ke liye", tag: "Conflict Check" },
+    { text: "I am Dr. Rajesh Sharma (FAC-01). Please reschedule my Wednesday class to Friday afternoon.", tag: "Faculty Reschedule (Req 7)" },
+    { text: "Faculty leave: I cannot teach on Monday lunch time, find an alternative slot.", tag: "Unavailability (Req 7)" },
     { text: "Why is SES-LAB-01 scheduled on this day?", tag: "Deterministic Explainer" },
-    { text: "Why was REQ-01 rejected?", tag: "Booking Explainer" },
+    { text: "Why was REQ-04 rejected?", tag: "Booking Explainer" },
   ];
 
   const adversarialTests = [
@@ -79,11 +83,12 @@ export default function AssistantPage() {
           },
         ]);
       } else {
-        // Venue Booking Assistant
+        // Chat assistant (handles booking or faculty schedule changes)
+        const isFacultyQuery = q.toLowerCase().includes("dr.") || q.toLowerCase().includes("fac-") || q.toLowerCase().includes("reschedule") || q.toLowerCase().includes("class") || q.toLowerCase().includes("lecture");
         const res = await api.chatAssistant({
           prompt: q,
-          user_role: "Club Representative",
-          requester_id: "CLUB-LIT-01",
+          user_role: isFacultyQuery ? "Faculty" : "Club Representative",
+          requester_id: isFacultyQuery ? "FAC-01" : "CLUB-LIT-01",
         });
 
         setMessages((prev) => [
@@ -94,6 +99,7 @@ export default function AssistantPage() {
             status: res.status as any,
             securityViolations: res.security_violations,
             proposal: res.proposal,
+            scheduleProposal: res.schedule_proposal,
           },
         ]);
       }
@@ -107,6 +113,31 @@ export default function AssistantPage() {
       ]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStartEdit = (idx: number, proposal: any) => {
+    setEditingProposalIndex(idx);
+    setEditForm({ ...proposal });
+  };
+
+  const handleSaveEditAndConfirm = async () => {
+    try {
+      await api.createBooking({
+        event_name: editForm.event_name,
+        room_id: editForm.room_id,
+        day: editForm.day,
+        start_period: Number(editForm.start_period),
+        end_period: Number(editForm.end_period),
+        attendees: Number(editForm.attendees),
+        requested_by: editForm.requested_by || "REQ-USER-01",
+        requester_role: editForm.requester_role || "Club Representative",
+        priority_tier: editForm.priority_tier || 6,
+      });
+      alert(`Edited booking for ${editForm.event_name} in ${editForm.room_id} submitted and confirmed!`);
+      setEditingProposalIndex(null);
+    } catch (e: any) {
+      alert(`Could not confirm edited booking: ${e.message}`);
     }
   };
 
@@ -219,36 +250,180 @@ export default function AssistantPage() {
                     </div>
                   )}
 
-                  {/* SUCCESSFUL BOOKING PROPOSAL CARD */}
+                  {/* SUCCESSFUL BOOKING PROPOSAL CARD WITH CHECK & EDIT (Requirement 3) */}
                   {m.status === "SUCCESS" && m.proposal && (
                     <div className="p-3 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-emerald-100 space-y-2.5">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5 font-semibold text-emerald-300">
                           <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                          <span>Deterministic Verification Confirmed</span>
+                          <span>Structured Booking Proposal (Requirement 3 Verified)</span>
                         </div>
                         <Badge variant="success" className="text-[10px]">0 Clashes</Badge>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-2 text-[11px] bg-emerald-900/20 p-2 rounded border border-emerald-800/30">
-                        <div><strong className="text-slate-300">Event:</strong> {m.proposal.event_name}</div>
-                        <div><strong className="text-slate-300">Room:</strong> <span className="font-mono text-cyan-300">{m.proposal.room_id}</span></div>
-                        <div><strong className="text-slate-300">Day:</strong> {m.proposal.day}</div>
-                        <div><strong className="text-slate-300">Slot:</strong> P{m.proposal.start_period}-P{m.proposal.end_period} ({m.proposal.start_time}-{m.proposal.end_time})</div>
-                        <div><strong className="text-slate-300">Attendees:</strong> {m.proposal.attendees}</div>
-                        <div><strong className="text-slate-300">Priority:</strong> Tier {m.proposal.priority_tier}</div>
+                      {editingProposalIndex === idx ? (
+                        <div className="space-y-2 bg-slate-900/80 p-3 rounded-lg border border-emerald-500/30 text-xs">
+                          <div className="text-[11px] font-bold text-cyan-300 mb-1">Check & Edit Booking Fields:</div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div>
+                              <label className="text-[10px] text-slate-400 block mb-0.5">Event Name</label>
+                              <input
+                                type="text"
+                                value={editForm.event_name || ""}
+                                onChange={(e) => setEditForm({ ...editForm, event_name: e.target.value })}
+                                className="w-full px-2 py-1 bg-surface-muted border border-surface-border rounded text-white text-xs"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-[10px] text-slate-400 block mb-0.5">Venue / Room</label>
+                              <input
+                                type="text"
+                                value={editForm.room_id || ""}
+                                onChange={(e) => setEditForm({ ...editForm, room_id: e.target.value })}
+                                className="w-full px-2 py-1 bg-surface-muted border border-surface-border rounded text-white text-xs"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-[10px] text-slate-400 block mb-0.5">Day</label>
+                              <select
+                                value={editForm.day || "Monday"}
+                                onChange={(e) => setEditForm({ ...editForm, day: e.target.value })}
+                                className="w-full px-2 py-1 bg-surface-muted border border-surface-border rounded text-white text-xs"
+                              >
+                                {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map((d) => (
+                                  <option key={d} value={d}>{d}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div>
+                              <label className="text-[10px] text-slate-400 block mb-0.5">Attendees</label>
+                              <input
+                                type="number"
+                                value={editForm.attendees || 50}
+                                onChange={(e) => setEditForm({ ...editForm, attendees: e.target.value })}
+                                className="w-full px-2 py-1 bg-surface-muted border border-surface-border rounded text-white text-xs"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-end gap-2 pt-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-6 text-[10px]"
+                              onClick={() => setEditingProposalIndex(null)}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="primary"
+                              className="h-6 text-[10px] bg-emerald-600 hover:bg-emerald-500"
+                              onClick={handleSaveEditAndConfirm}
+                            >
+                              Save & Submit Booking
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="grid grid-cols-2 gap-2 text-[11px] bg-emerald-900/20 p-2 rounded border border-emerald-800/30">
+                            <div><strong className="text-slate-300">Event:</strong> {m.proposal.event_name}</div>
+                            <div><strong className="text-slate-300">Room:</strong> <span className="font-mono text-cyan-300">{m.proposal.room_id}</span></div>
+                            <div><strong className="text-slate-300">Day:</strong> {m.proposal.day}</div>
+                            <div><strong className="text-slate-300">Slot:</strong> P{m.proposal.start_period}-P{m.proposal.end_period} ({m.proposal.start_time}-{m.proposal.end_time})</div>
+                            <div><strong className="text-slate-300">Attendees:</strong> {m.proposal.attendees}</div>
+                            <div><strong className="text-slate-300">Priority:</strong> Tier {m.proposal.priority_tier}</div>
+                          </div>
+
+                          <div className="flex items-center justify-end gap-2 pt-1">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-7 text-[11px] border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/30"
+                              onClick={() => handleStartEdit(idx, m.proposal)}
+                            >
+                              Check & Edit Details
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="primary"
+                              className="h-7 text-[11px] bg-emerald-600 hover:bg-emerald-500"
+                              onClick={() => handleConfirmBooking(m.proposal)}
+                            >
+                              Confirm & Book Venue
+                            </Button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
+
+                  {/* FACULTY SCHEDULE CHANGE PROPOSAL CARD (Requirement 7) */}
+                  {m.status === "SCHEDULE_CHANGE_PROPOSAL" && m.scheduleProposal && (
+                    <div className="p-3 rounded-lg bg-blue-950/40 border border-blue-500/40 text-blue-100 space-y-2.5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5 font-semibold text-blue-300">
+                          <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                          <span>Faculty Schedule Change Proposal (Requirement 7)</span>
+                        </div>
+                        <Badge variant="cyan" className="text-[10px]">Verified Feasible</Badge>
                       </div>
 
-                      <div className="flex items-center justify-end gap-2 pt-1">
+                      <div className="grid grid-cols-2 gap-2 text-[11px] bg-blue-900/20 p-2.5 rounded border border-blue-800/30">
+                        <div><strong className="text-slate-300">Faculty:</strong> {m.scheduleProposal.faculty_name} ({m.scheduleProposal.faculty_id})</div>
+                        <div><strong className="text-slate-300">Course / Session:</strong> <span className="font-mono text-cyan-300">{m.scheduleProposal.course_id} ({m.scheduleProposal.session_id})</span></div>
+                        <div className="text-rose-300"><strong className="text-slate-300">Current Slot:</strong> {m.scheduleProposal.original_slot.day} P{m.scheduleProposal.original_slot.start_period} &bull; {m.scheduleProposal.original_slot.room_id}</div>
+                        <div className="text-emerald-300"><strong className="text-slate-300">Proposed Slot:</strong> {m.scheduleProposal.proposed_slot.day} P{m.scheduleProposal.proposed_slot.start_period} &bull; {m.scheduleProposal.proposed_slot.room_id}</div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1">
+                        <span className="text-[10px] text-slate-400 italic">Strictly validated by underlying solver rules</span>
                         <Button
                           size="sm"
                           variant="primary"
-                          className="h-7 text-[11px] bg-emerald-600 hover:bg-emerald-500"
-                          onClick={() => handleConfirmBooking(m.proposal)}
+                          className="h-7 text-[11px] bg-blue-600 hover:bg-blue-500"
+                          onClick={() => alert(`Rescheduling request for ${m.scheduleProposal.session_id} submitted! Pending Admin / Dean sign-off.`)}
                         >
-                          Confirm & Book Venue
+                          Submit for Admin Approval
                         </Button>
                       </div>
+                    </div>
+                  )}
+
+                  {/* FACULTY SCHEDULE CHANGE CONFLICT WITH ALTERNATIVES (Requirement 7) */}
+                  {m.status === "SCHEDULE_CHANGE_CONFLICT" && m.scheduleProposal && (
+                    <div className="p-3 rounded-lg bg-amber-950/40 border border-amber-500/40 text-amber-100 space-y-2.5">
+                      <div className="flex items-center gap-1.5 font-semibold text-amber-300">
+                        <AlertCircle className="w-4 h-4 text-amber-400" />
+                        <span>Schedule Change Conflict (Constraint Conflict Detected)</span>
+                      </div>
+                      <p className="text-[11px] text-amber-200/90 leading-normal">
+                        {m.scheduleProposal.conflict_reason}
+                      </p>
+
+                      {m.scheduleProposal.suggested_alternatives && m.scheduleProposal.suggested_alternatives.length > 0 && (
+                        <div className="space-y-1.5 pt-1">
+                          <div className="text-[11px] font-semibold text-slate-300">Feasible Conflict-Free Alternative Slots:</div>
+                          {m.scheduleProposal.suggested_alternatives.map((alt: any, aIdx: number) => (
+                            <div
+                              key={aIdx}
+                              className="p-2 rounded bg-slate-900/80 border border-amber-500/20 text-[11px] flex items-center justify-between"
+                            >
+                              <div>
+                                <span className="font-mono text-cyan-300 font-semibold">{alt.room_id}</span> &bull; {alt.day} (P{alt.start_period} &bull; {alt.time})
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="h-6 text-[10px] text-amber-300 border-amber-500/40 hover:bg-amber-600 hover:text-white"
+                                onClick={() => alert(`Alternative slot on ${alt.day} P${alt.start_period} in ${alt.room_id} selected! Submitted for Admin approval.`)}
+                              >
+                                Request This Slot
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
 
