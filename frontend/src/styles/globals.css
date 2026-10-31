@@ -47,3 +47,38 @@ body {
 .border-subtle {
   border-color: #E8DFD5;
 }
+
+/* Editorial typography stroke utilities matching Dribbble reference */
+.text-stroke-gold {
+  -webkit-text-stroke: 1.5px #B08401;
+  color: transparent;
+}
+
+.text-stroke-gold-thick {
+  -webkit-text-stroke: 2.5px #B08401;
+  color: transparent;
+}
+
+.text-stroke-cream {
+  -webkit-text-stroke: 1.5px #FAF6F2;
+  color: transparent;
+}
+
+.text-stroke-none {
+  -webkit-text-stroke: 0px transparent;
+}
+
+/* Crumple & paper texture animation effects */
+@keyframes paperFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+.animate-paper-float {
+  animation: paperFloat 6s ease-in-out infinite;
+}
+
