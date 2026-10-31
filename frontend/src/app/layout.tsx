@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
+import { AuthProvider } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "CIT Venue Manager & Timetable System — Chilika Institute of Technology",
@@ -15,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-[#F0F4F8] text-slate-800 min-h-screen antialiased selection:bg-[#236B8E]/20 selection:text-[#17445C]">
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

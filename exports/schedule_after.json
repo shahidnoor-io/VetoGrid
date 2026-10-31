@@ -1117,22 +1117,22 @@
       "room_id": "LH-105"
     },
     {
-      "session_id": "SES-LEC-095",
-      "day": "Monday",
-      "start_period": 5,
-      "room_id": "LT-101"
-    },
-    {
       "session_id": "SES-LEC-047",
       "day": "Monday",
       "start_period": 5,
-      "room_id": "AUD-01"
+      "room_id": "LT-101"
     },
     {
       "session_id": "SES-LEC-129",
       "day": "Thursday",
       "start_period": 2,
       "room_id": "LH-104"
+    },
+    {
+      "session_id": "SES-LEC-095",
+      "day": "Monday",
+      "start_period": 5,
+      "room_id": "AUD-01"
     },
     {
       "session_id": "SES-NEW-01",
@@ -1715,20 +1715,6 @@
   ],
   "rescheduling_diff": [
     {
-      "session_id": "SES-LEC-095",
-      "old_slot": {
-        "day": "Thursday",
-        "period": 1,
-        "room": "LH-104"
-      },
-      "new_slot": {
-        "day": "Monday",
-        "period": 5,
-        "room": "LT-101"
-      },
-      "reason": "Rescheduled due to disruption"
-    },
-    {
       "session_id": "SES-LEC-047",
       "old_slot": {
         "day": "Wednesday",
@@ -1738,7 +1724,7 @@
       "new_slot": {
         "day": "Monday",
         "period": 5,
-        "room": "AUD-01"
+        "room": "LT-101"
       },
       "reason": "Rescheduled due to disruption"
     },
@@ -1753,6 +1739,20 @@
         "day": "Thursday",
         "period": 2,
         "room": "LH-104"
+      },
+      "reason": "Rescheduled due to disruption"
+    },
+    {
+      "session_id": "SES-LEC-095",
+      "old_slot": {
+        "day": "Thursday",
+        "period": 1,
+        "room": "LH-104"
+      },
+      "new_slot": {
+        "day": "Monday",
+        "period": 5,
+        "room": "AUD-01"
       },
       "reason": "Rescheduled due to disruption"
     }

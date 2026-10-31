@@ -17,12 +17,16 @@ import {
   GraduationCap,
   BarChart3,
   Settings,
-  HelpCircle
+  HelpCircle,
+  ShieldCheck,
+  UserCheck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/auth";
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { user } = useAuth();
   const [spectraOpen, setSpectraOpen] = useState(true);
   const [adminOpen, setAdminOpen] = useState(true);
 
@@ -221,12 +225,37 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Bottom AI Chat Assistance Link */}
-      <div className="p-3 border-t border-[#DCE5EE]">
+      {/* Bottom User Persona & AI Chat Assistance */}
+      <div className="p-3 border-t border-[#DCE5EE] space-y-2">
+        {/* Active Role Card */}
+        <Link
+          href="/login"
+          title="Click to switch persona or view Section 4 RBAC rules"
+          className="flex items-center justify-between p-2 rounded-xl bg-white/70 hover:bg-white border border-[#D5E1EC] shadow-2xs transition-all group"
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-7 h-7 rounded-lg bg-[#1B5270] text-white flex items-center justify-center text-[10px] font-bold shrink-0 shadow-xs">
+              {user.avatar}
+            </div>
+            <div className="min-w-0">
+              <span className="text-[11px] font-bold text-slate-900 block truncate group-hover:text-[#1B5270]">
+                {user.name}
+              </span>
+              <span className="text-[10px] text-slate-500 block truncate">
+                {user.role}
+              </span>
+            </div>
+          </div>
+          <span className="text-[10px] font-semibold text-[#1B5270] bg-[#EBF2F7] px-1.5 py-0.5 rounded group-hover:bg-[#1B5270] group-hover:text-white transition-colors">
+            Switch
+          </span>
+        </Link>
+
+        {/* AI Chat Assistance Link */}
         <Link
           href="/assistant"
           className={cn(
-            "flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-xl text-xs font-semibold transition-all shadow-sm",
+            "flex items-center justify-center gap-2 w-full py-2 px-3 rounded-xl text-xs font-semibold transition-all shadow-sm",
             pathname === "/assistant"
               ? "bg-[#1B5270] text-white"
               : "bg-[#DDE9F2] text-[#1B5270] hover:bg-[#D0E0EC]"

@@ -8,11 +8,13 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Calendar, Filter, Sparkles, Download, Layers, Users, MapPin, CheckCircle2, HelpCircle, X, ShieldCheck, CornerDownRight } from "lucide-react";
 import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 
 import citData from "@/data/cit_public.json";
 import scheduleData from "@/data/schedule.json";
 
 export default function TimetablePage() {
+  const { user } = useAuth();
   const [activeView, setActiveView] = useState<"group" | "faculty" | "room">("group");
   const [selectedDay, setSelectedDay] = useState("Monday");
   const [selectedFilter, setSelectedFilter] = useState("Y1-SecA");
@@ -78,12 +80,20 @@ export default function TimetablePage() {
     }
   }, [activeView]);
 
+  // Auto-align when logged in as Faculty
+  React.useEffect(() => {
+    if (user.role === "Faculty") {
+      setActiveView("faculty");
+      setSelectedFilter(user.id);
+    }
+  }, [user]);
+
   // Adjust default filter when view changes
   React.useEffect(() => {
     if (activeView === "group") setSelectedFilter("Y1-SecA");
-    else if (activeView === "faculty") setSelectedFilter("FAC-01");
+    else if (activeView === "faculty") setSelectedFilter(user.role === "Faculty" ? user.id : "FAC-01");
     else setSelectedFilter("LT-101");
-  }, [activeView]);
+  }, [activeView, user]);
 
   // Active schedule slots for the selected day and entity
   const daySchedule = useMemo(() => {
@@ -174,6 +184,20 @@ export default function TimetablePage() {
           </>
         }
       />
+
+      {/* Role Authority Indicator matching Section 4 */}
+      <div className="p-3 rounded-xl bg-white border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs shadow-sm">
+        <div className="flex items-center gap-2.5">
+          <ShieldCheck className="w-4 h-4 text-[#236B8E] shrink-0" />
+          <div>
+            <span className="font-bold text-slate-900">Signed In As: {user.name} ({user.role})</span>
+            <span className="text-slate-500 ml-1.5">• {user.whatTheyCanDo}</span>
+          </div>
+        </div>
+        <Badge variant={user.badgeVariant} className="text-[10px] shrink-0 font-semibold">
+          {user.badge}
+        </Badge>
+      </div>
 
       {/* Filter Ribbon */}
       <Card className="p-3 bg-surface/60 space-y-3">

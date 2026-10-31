@@ -23,21 +23,7 @@ import {
   Info
 } from "lucide-react";
 import { api } from "@/lib/api";
-
-interface Persona {
-  id: string;
-  name: string;
-  role: string;
-  department: string;
-  can_approve: boolean;
-}
-
-const PERSONAS: Persona[] = [
-  { id: "DEAN-01", name: "Prof. S. Mohapatra", role: "Admin (Dean's office)", department: "Dean's Office", can_approve: true },
-  { id: "COORD-CSE", name: "Dr. A. Verma", role: "Department coordinator", department: "Computer Science", can_approve: true },
-  { id: "FAC-01", name: "Dr. Rajesh Sharma", role: "Faculty", department: "Computer Science", can_approve: false },
-  { id: "CLUB-LIT-01", name: "Aarav Patel", role: "Club representative", department: "Literary Society", can_approve: false },
-];
+import { useAuth, OFFICIAL_PERSONAS, Persona } from "@/lib/auth";
 
 const DEFAULT_PRIORITY_ORDER = [
   "1. Exams",
@@ -76,7 +62,7 @@ const ROLE_DEFINITIONS = [
 ];
 
 export default function ApprovalsPage() {
-  const [activePersona, setActivePersona] = useState<Persona>(PERSONAS[0]);
+  const { user, switchPersona, personas } = useAuth();
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [priorityOrder, setPriorityOrder] = useState<string[]>(DEFAULT_PRIORITY_ORDER);
@@ -102,7 +88,7 @@ export default function ApprovalsPage() {
   }, []);
 
   const movePriority = (index: number, direction: "up" | "down") => {
-    if (activePersona.role !== "Admin (Dean's office)") return;
+    if (user.role !== "Admin (Dean's office)") return;
     const newOrder = [...priorityOrder];
     const targetIdx = direction === "up" ? index - 1 : index + 1;
     if (targetIdx < 0 || targetIdx >= newOrder.length) return;
@@ -117,18 +103,18 @@ export default function ApprovalsPage() {
     setActionAlert(null);
 
     // 1. CRITICAL RULE: Check self-approval ban
-    if (activePersona.id.toLowerCase() === (booking.requested_by || "").toLowerCase()) {
+    if (user.id.toLowerCase() === (booking.requested_by || "").toLowerCase()) {
       setActionAlert({
-        text: `Self-Approval Violation: Nobody can approve their own request. (Requester: ${booking.requested_by}, Approver: ${activePersona.id}). HTTP 403 Forbidden.`,
+        text: `Self-Approval Violation: Nobody can approve their own request. (Requester: ${booking.requested_by}, Approver: ${user.id}). HTTP 403 Forbidden.`,
         type: "error",
       });
       return;
     }
 
     // 2. Check role permission
-    if (!activePersona.can_approve) {
+    if (!user.canApprove) {
       setActionAlert({
-        text: `Unauthorized: Role '${activePersona.role}' does not have governance approval rights. Only Admin (Dean's office) or Department coordinator can sign off.`,
+        text: `Unauthorized: Role '${user.role}' does not have governance approval rights. Only Admin (Dean's office) or Department coordinator can sign off.`,
         type: "error",
       });
       return;
@@ -137,9 +123,9 @@ export default function ApprovalsPage() {
     try {
       await api.actionBooking(booking.id, {
         action,
-        approver_id: activePersona.id,
-        approver_role: activePersona.role,
-        notes: `Action taken via Governance Gate by ${activePersona.name} (${activePersona.role})`,
+        approver_id: user.id,
+        approver_role: user.role,
+        notes: `Action taken via Governance Gate by ${user.name} (${user.role})`,
       });
 
       setActionAlert({
@@ -176,24 +162,24 @@ export default function ApprovalsPage() {
           </div>
 
           <div className="flex items-center gap-1.5 overflow-x-auto">
-            {PERSONAS.map((p) => (
+            {personas.map((p) => (
               <button
                 key={p.id}
                 onClick={() => {
-                  setActivePersona(p);
+                  switchPersona(p.id);
                   setActionAlert(null);
                 }}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                  activePersona.id === p.id
+                  user.id === p.id
                     ? "bg-[#236B8E] text-white shadow-sm"
                     : "bg-[#F0F4F8] text-slate-700 hover:bg-slate-200"
                 }`}
               >
                 <span>{p.name}</span>
                 <span className={`text-[10px] px-1.5 py-0.2 rounded font-medium ${
-                  activePersona.id === p.id
+                  user.id === p.id
                     ? "bg-white/20 text-white"
-                    : p.can_approve
+                    : p.canApprove
                     ? "bg-emerald-100 text-emerald-800"
                     : "bg-slate-200 text-slate-600"
                 }`}>
@@ -304,7 +290,7 @@ export default function ApprovalsPage() {
               Venue Reservations Queue
             </CardTitle>
             <span className="text-[11px] font-semibold text-slate-600">
-              Acting as: <strong className="text-slate-900">{activePersona.name}</strong> ({activePersona.role})
+              Acting as: <strong className="text-slate-900">{user.name}</strong> ({user.role})
             </span>
           </CardHeader>
           <CardContent className="p-0 overflow-x-auto">
@@ -321,7 +307,7 @@ export default function ApprovalsPage() {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {bookings.slice(0, 15).map((b) => {
-                  const isSelf = activePersona.id.toLowerCase() === (b.requested_by || "").toLowerCase();
+                  const isSelf = user.id.toLowerCase() === (b.requested_by || "").toLowerCase();
                   return (
                     <tr key={b.id} className="hover:bg-slate-50 transition-colors">
                       <td className="py-2.5 px-3 font-mono font-bold text-[#1B5270]">{b.id}</td>
@@ -357,8 +343,8 @@ export default function ApprovalsPage() {
                           variant="cit"
                           className="h-7 text-[10px] px-2.5 bg-emerald-700 hover:bg-emerald-600"
                           onClick={() => handleAction(b, "APPROVE")}
-                          disabled={isSelf || !activePersona.can_approve}
-                          title={isSelf ? "Self-approval prohibited" : !activePersona.can_approve ? "Unauthorized" : "Approve request"}
+                          disabled={isSelf || !user.canApprove}
+                          title={isSelf ? "Self-approval prohibited" : !user.canApprove ? "Unauthorized" : "Approve request"}
                         >
                           Approve
                         </Button>
@@ -367,8 +353,8 @@ export default function ApprovalsPage() {
                           variant="outline"
                           className="h-7 text-[10px] px-2.5 text-rose-700 border-rose-200 hover:bg-rose-50"
                           onClick={() => handleAction(b, "REJECT")}
-                          disabled={isSelf || !activePersona.can_approve}
-                          title={isSelf ? "Self-approval prohibited" : !activePersona.can_approve ? "Unauthorized" : "Reject request"}
+                          disabled={isSelf || !user.canApprove}
+                          title={isSelf ? "Self-approval prohibited" : !user.canApprove ? "Unauthorized" : "Reject request"}
                         >
                           Reject
                         </Button>
@@ -390,7 +376,7 @@ export default function ApprovalsPage() {
                   <Sliders className="w-4 h-4 text-[#236B8E]" />
                   Conflict Priority Order
                 </span>
-                {activePersona.role === "Admin (Dean's office)" && (
+                {user.role === "Admin (Dean's office)" && (
                   <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 font-semibold">
                     Admin Configurable
                   </span>
@@ -411,7 +397,7 @@ export default function ApprovalsPage() {
                     <span className="font-semibold text-slate-900">{item}</span>
                     <div className="flex items-center gap-1">
                       <span className="text-[10px] text-slate-500 font-mono mr-1">Rank {idx + 1}</span>
-                      {activePersona.role === "Admin (Dean's office)" && (
+                      {user.role === "Admin (Dean's office)" && (
                         <div className="flex items-center gap-0.5">
                           <button
                             type="button"
@@ -438,7 +424,7 @@ export default function ApprovalsPage() {
                 ))}
               </div>
 
-              {activePersona.role === "Admin (Dean's office)" ? (
+              {user.role === "Admin (Dean's office)" ? (
                 <div className="pt-2 space-y-2">
                   <Button
                     size="sm"

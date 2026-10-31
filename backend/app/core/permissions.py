@@ -15,6 +15,10 @@ class Role(str, Enum):
     FACULTY = "faculty"
     STUDENT_REP = "student_representative"
     VENUE_MANAGER = "venue_manager"
+    # Section 4 Official Campus Roles
+    ADMIN_DEAN = "Admin (Dean's office)"
+    DEPT_COORDINATOR = "Department coordinator"
+    CLUB_REP = "Club representative"
 
 
 class Permission(str, Enum):
@@ -49,6 +53,7 @@ class Permission(str, Enum):
 # Mapping roles to permission sets (Foundational RBAC matrix)
 ROLE_PERMISSIONS: dict[Role, Set[Permission]] = {
     Role.SUPER_ADMIN: set(Permission),
+    Role.ADMIN_DEAN: set(Permission),
     Role.ACADEMIC_DEAN: {
         Permission.VIEW_TIMETABLE,
         Permission.PUBLISH_TIMETABLE,
@@ -69,6 +74,17 @@ ROLE_PERMISSIONS: dict[Role, Set[Permission]] = {
         Permission.REPORT_DISRUPTION,
         Permission.VIEW_ANALYTICS,
     },
+    Role.DEPT_COORDINATOR: {
+        Permission.VIEW_TIMETABLE,
+        Permission.EDIT_TIMETABLE,
+        Permission.VIEW_EXAMS,
+        Permission.VIEW_ROOMS,
+        Permission.REQUEST_BOOKING,
+        Permission.APPROVE_BOOKING,
+        Permission.REJECT_BOOKING,
+        Permission.REPORT_DISRUPTION,
+        Permission.VIEW_ANALYTICS,
+    },
     Role.VENUE_MANAGER: {
         Permission.VIEW_ROOMS,
         Permission.MANAGE_ROOMS,
@@ -84,6 +100,12 @@ ROLE_PERMISSIONS: dict[Role, Set[Permission]] = {
         Permission.REPORT_DISRUPTION,
     },
     Role.STUDENT_REP: {
+        Permission.VIEW_TIMETABLE,
+        Permission.VIEW_EXAMS,
+        Permission.VIEW_ROOMS,
+        Permission.REQUEST_BOOKING,
+    },
+    Role.CLUB_REP: {
         Permission.VIEW_TIMETABLE,
         Permission.VIEW_EXAMS,
         Permission.VIEW_ROOMS,

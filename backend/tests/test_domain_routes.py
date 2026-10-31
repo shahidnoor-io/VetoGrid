@@ -171,10 +171,10 @@ async def test_admin_reset_demo_and_roles():
         assert res_roles.status_code == 200
         roles_data = res_roles.json()["roles"]
         assert len(roles_data) == 4
-        assert any(r["role"] == "Admin" for r in roles_data)
-        assert any(r["role"] == "Department Coordinator" for r in roles_data)
-        assert any(r["role"] == "Faculty" for r in roles_data)
-        assert any(r["role"] == "Club Representative" for r in roles_data)
+        assert any("Admin" in r["role"] for r in roles_data)
+        assert any("coordinator" in r["role"].lower() for r in roles_data)
+        assert any("Faculty" in r["role"] for r in roles_data)
+        assert any("Club" in r["role"] for r in roles_data)
 
         # Trigger demo reset
         res_reset = await client.post("/api/v1/admin/reset-demo")

@@ -21,6 +21,7 @@ import {
   Info
 } from "lucide-react";
 import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 
 interface Booking {
   id: string;
@@ -37,23 +38,8 @@ interface Booking {
   is_official?: boolean;
 }
 
-interface Persona {
-  id: string;
-  name: string;
-  role: string;
-  department: string;
-  can_approve: boolean;
-}
-
-const PERSONAS: Persona[] = [
-  { id: "DEAN-01", name: "Prof. S. Mohapatra", role: "Admin", department: "Dean's Office", can_approve: true },
-  { id: "COORD-CSE", name: "Dr. A. Verma", role: "Department Coordinator", department: "Computer Science", can_approve: true },
-  { id: "FAC-01", name: "Dr. Rajesh Sharma", role: "Faculty", department: "Computer Science", can_approve: false },
-  { id: "CLUB-LIT-01", name: "Aarav Patel", role: "Club Representative", department: "Literary Society", can_approve: false },
-];
-
 export default function VenueBookingsPage() {
-  const [activePersona, setActivePersona] = useState<Persona>(PERSONAS[0]);
+  const { user, switchPersona, personas } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "approved" | "rejected" | "pending">("all");
@@ -110,17 +96,17 @@ export default function VenueBookingsPage() {
 
   const handleAction = async (bookingId: string, action: "APPROVE" | "REJECT", requesterId: string) => {
     // Check Self-Approval Ban on UI client
-    if (activePersona.id.toLowerCase() === requesterId.toLowerCase()) {
+    if (user.id.toLowerCase() === requesterId.toLowerCase()) {
       setActionMessage({
-        text: `Self-Approval Violation: You cannot approve or reject your own request (${requesterId}).`,
+        text: `Self-Approval Violation: Nobody can approve their own request. (Requester: ${requesterId}, Approver: ${user.id}). HTTP 403 Forbidden.`,
         type: "error",
       });
       return;
     }
 
-    if (!activePersona.can_approve) {
+    if (!user.canApprove) {
       setActionMessage({
-        text: `RBAC Violation: Role '${activePersona.role}' does not have approval rights. Approvals require Admin or Department Coordinator authority.`,
+        text: `RBAC Violation: Role '${user.role}' does not have approval rights. Approvals require Admin (Dean's office) or Department coordinator authority.`,
         type: "error",
       });
       return;
@@ -129,9 +115,9 @@ export default function VenueBookingsPage() {
     try {
       const res = await api.actionBooking(bookingId, {
         action,
-        approver_id: activePersona.id,
-        approver_role: activePersona.role,
-        notes: `Actioned by ${activePersona.name} (${activePersona.role})`,
+        approver_id: user.id,
+        approver_role: user.role,
+        notes: `Actioned by ${user.name} (${user.role})`,
       });
       setActionMessage({
         text: `Booking ${bookingId} successfully marked as ${action}D.`,
@@ -157,9 +143,9 @@ export default function VenueBookingsPage() {
         start_period: Number(formStartPeriod),
         end_period: Number(formEndPeriod),
         attendees: Number(formAttendees),
-        requested_by: activePersona.id,
-        requester_role: activePersona.role,
-        priority_tier: activePersona.role === "Admin" ? 3 : activePersona.role === "Department Coordinator" ? 5 : 6,
+        requested_by: user.id,
+        requester_role: user.role,
+        priority_tier: user.role === "Admin (Dean's office)" ? 3 : user.role === "Department coordinator" ? 5 : 6,
       });
       setIsModalOpen(false);
       setFormEventName("");
@@ -205,31 +191,31 @@ export default function VenueBookingsPage() {
       />
 
       {/* RBAC Persona Switcher Bar */}
-      <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-3 shadow-lg backdrop-blur">
+      <div className="p-3.5 rounded-xl bg-white border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-3 shadow-sm">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-blue-600/20 text-blue-400">
+          <div className="p-2 rounded-lg bg-[#236B8E]/10 text-[#1B4D68]">
             <UserCheck className="w-4 h-4" />
           </div>
           <div>
-            <div className="text-xs font-semibold text-slate-200">Active Judge Persona (RBAC Simulation):</div>
-            <div className="text-[11px] text-slate-400">
-              Current: <span className="text-blue-300 font-medium">{activePersona.name}</span> ({activePersona.role} &bull; {activePersona.department})
+            <div className="text-xs font-bold text-slate-900">Active Persona (RBAC Simulation):</div>
+            <div className="text-[11px] text-slate-500">
+              Current: <span className="text-[#1B4D68] font-bold">{user.name}</span> ({user.role} &bull; {user.department})
             </div>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5">
-          {PERSONAS.map((p) => (
+          {personas.map((p) => (
             <button
               key={p.id}
               onClick={() => {
-                setActivePersona(p);
+                switchPersona(p.id);
                 setActionMessage(null);
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                activePersona.id === p.id
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30 font-semibold"
-                  : "bg-slate-800/80 text-slate-300 hover:bg-slate-700/80 border border-slate-700/50"
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                user.id === p.id
+                  ? "bg-[#236B8E] text-white shadow-sm font-bold"
+                  : "bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200"
               }`}
             >
               {p.role}
@@ -243,21 +229,21 @@ export default function VenueBookingsPage() {
         <div
           className={`p-3.5 rounded-xl border flex items-center justify-between text-xs animate-fadeIn ${
             actionMessage.type === "success"
-              ? "bg-emerald-950/40 border-emerald-500/40 text-emerald-300"
-              : "bg-rose-950/40 border-rose-500/40 text-rose-300"
+              ? "bg-emerald-50 border-emerald-200 text-emerald-800 font-semibold"
+              : "bg-rose-50 border-rose-200 text-rose-800 font-semibold"
           }`}
         >
           <div className="flex items-center gap-2">
             {actionMessage.type === "success" ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
             ) : (
-              <AlertTriangle className="w-4 h-4 text-rose-400 flex-shrink-0" />
+              <AlertTriangle className="w-4 h-4 text-rose-600 flex-shrink-0" />
             )}
             <span>{actionMessage.text}</span>
           </div>
           <button
             onClick={() => setActionMessage(null)}
-            className="text-slate-400 hover:text-white text-xs underline ml-4"
+            className="text-slate-600 hover:text-slate-900 text-xs underline ml-4 font-semibold"
           >
             Dismiss
           </button>
@@ -270,58 +256,58 @@ export default function VenueBookingsPage() {
           label="Total Bookings"
           value={`${bookings.length}`}
           subtext="25 Official Spectra + Ad-hoc"
-          icon={<DoorClosed className="w-4 h-4 text-blue-400" />}
+          icon={<DoorClosed className="w-4 h-4 text-[#236B8E]" />}
         />
         <StatCard
           label="Approved Venues"
           value={`${approvedCount}`}
           subtext="0 academic clashes"
-          icon={<CheckCircle2 className="w-4 h-4 text-emerald-400" />}
+          icon={<CheckCircle2 className="w-4 h-4 text-emerald-600" />}
         />
         <StatCard
           label="Rejected / Conflicted"
           value={`${rejectedCount}`}
           subtext="Overlaps with timetable/maint"
-          icon={<XCircle className="w-4 h-4 text-rose-400" />}
+          icon={<XCircle className="w-4 h-4 text-rose-600" />}
         />
         <StatCard
           label="RBAC Status"
-          value={activePersona.can_approve ? "Can Approve" : "View Only"}
-          subtext={activePersona.can_approve ? "Dean/Coord authority" : "Self-approval blocked"}
-          icon={<ShieldCheck className="w-4 h-4 text-cyan-400" />}
+          value={user.canApprove ? "Can Approve" : "View Only"}
+          subtext={user.canApprove ? "Dean/Coord authority" : "Self-approval blocked"}
+          icon={<ShieldCheck className="w-4 h-4 text-[#1B4D68]" />}
         />
       </div>
 
       {/* Bookings Table Registry */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-surface-border/50">
+        <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-slate-100">
           <div>
             <CardTitle className="text-sm font-semibold">Spectra & Venue Booking Registry</CardTitle>
-            <p className="text-[11px] text-slate-400 mt-0.5">
+            <p className="text-[11px] text-slate-500 mt-0.5">
               Verified deterministically by Google OR-Tools CP-SAT engine.
             </p>
           </div>
-          <div className="flex items-center gap-1.5 bg-surface-muted p-1 rounded-lg border border-surface-border">
+          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-lg border border-slate-200">
             <button
               onClick={() => setFilter("all")}
-              className={`px-2.5 py-1 rounded text-xs font-medium transition ${
-                filter === "all" ? "bg-blue-600 text-white" : "text-slate-400 hover:text-white"
+              className={`px-2.5 py-1 rounded text-xs font-semibold transition ${
+                filter === "all" ? "bg-[#236B8E] text-white" : "text-slate-600 hover:text-slate-900"
               }`}
             >
               All ({bookings.length})
             </button>
             <button
               onClick={() => setFilter("approved")}
-              className={`px-2.5 py-1 rounded text-xs font-medium transition ${
-                filter === "approved" ? "bg-emerald-600 text-white" : "text-slate-400 hover:text-white"
+              className={`px-2.5 py-1 rounded text-xs font-semibold transition ${
+                filter === "approved" ? "bg-emerald-600 text-white" : "text-slate-600 hover:text-slate-900"
               }`}
             >
               Approved ({approvedCount})
             </button>
             <button
               onClick={() => setFilter("rejected")}
-              className={`px-2.5 py-1 rounded text-xs font-medium transition ${
-                filter === "rejected" ? "bg-rose-600 text-white" : "text-slate-400 hover:text-white"
+              className={`px-2.5 py-1 rounded text-xs font-semibold transition ${
+                filter === "rejected" ? "bg-rose-600 text-white" : "text-slate-600 hover:text-slate-900"
               }`}
             >
               Rejected ({rejectedCount})
@@ -333,8 +319,8 @@ export default function VenueBookingsPage() {
           {loading ? (
             <div className="p-8 text-center text-xs text-slate-400">Loading booking registry...</div>
           ) : (
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-900/60 text-slate-400 border-b border-surface-border uppercase tracking-wider text-[10px]">
+            <table className="w-full text-left text-xs text-slate-700">
+              <thead className="bg-[#F0F4F8] text-slate-600 border-b border-slate-200 uppercase tracking-wider text-[10px] font-bold">
                 <tr>
                   <th className="py-3 px-4">Request ID</th>
                   <th className="py-3 px-4">Event & Requester</th>
@@ -345,28 +331,28 @@ export default function VenueBookingsPage() {
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-surface-border/40">
+              <tbody className="divide-y divide-slate-100">
                 {filteredBookings.map((b) => {
-                  const isRequesterSelf = activePersona.id.toLowerCase() === (b.requested_by || "").toLowerCase();
+                  const isRequesterSelf = user.id.toLowerCase() === (b.requested_by || "").toLowerCase();
 
                   return (
-                    <tr key={b.id} className="hover:bg-slate-800/30 transition-colors">
-                      <td className="py-3 px-4 font-mono font-medium text-blue-400">{b.id}</td>
+                    <tr key={b.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-3 px-4 font-mono font-bold text-[#1B5270]">{b.id}</td>
                       <td className="py-3 px-4">
-                        <div className="font-semibold text-slate-100">{b.event_name}</div>
-                        <div className="text-[11px] text-slate-400">Req by: {b.requested_by}</div>
+                        <div className="font-semibold text-slate-900">{b.event_name}</div>
+                        <div className="text-[11px] text-slate-500">Req by: <span className="font-semibold text-slate-700">{b.requested_by}</span></div>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-mono text-cyan-300 bg-cyan-950/30 px-2 py-0.5 rounded border border-cyan-800/40">
+                        <span className="font-mono text-[#1B5270] bg-[#F0F4F8] px-2 py-0.5 rounded border border-slate-200 font-bold">
                           {b.room_id}
                         </span>
                       </td>
                       <td className="py-3 px-4">
-                        <div>{b.day}</div>
-                        <div className="text-[11px] text-slate-400">P{b.start_period}-P{b.end_period}</div>
+                        <div className="font-medium text-slate-800">{b.day}</div>
+                        <div className="text-[11px] text-slate-500">P{b.start_period}-P{b.end_period}</div>
                       </td>
                       <td className="py-3 px-4">
-                        <Badge variant={b.priority_tier <= 3 ? "purple" : b.priority_tier <= 5 ? "blue" : "outline"}>
+                        <Badge variant={b.priority_tier <= 3 ? "purple" : b.priority_tier <= 5 ? "secondary" : "outline"} className="text-[10px]">
                           Tier {b.priority_tier}
                         </Badge>
                       </td>
@@ -379,11 +365,12 @@ export default function VenueBookingsPage() {
                               ? "danger"
                               : "warning"
                           }
+                          className="text-[10px]"
                         >
                           {b.status}
                         </Badge>
                         {b.conflict_reason && (
-                          <div className="text-[10px] text-rose-400 mt-1 max-w-xs truncate" title={b.conflict_reason}>
+                          <div className="text-[10px] text-rose-600 font-medium mt-1 max-w-xs truncate" title={b.conflict_reason}>
                             {b.conflict_reason}
                           </div>
                         )}
@@ -391,26 +378,28 @@ export default function VenueBookingsPage() {
                       <td className="py-3 px-4 text-right">
                         <div className="flex items-center justify-end gap-1.5">
                           {isRequesterSelf ? (
-                            <span className="text-[10px] text-amber-400 bg-amber-950/40 px-2 py-1 rounded border border-amber-800/40" title="Self-approval ban: You cannot approve your own request">
+                            <span className="text-[10px] text-amber-800 bg-amber-50 px-2 py-1 rounded border border-amber-300 font-bold" title="Self-approval ban: You cannot approve your own request">
                               Self-Approval Blocked
                             </span>
                           ) : (
                             <>
                               <Button
                                 size="sm"
-                                variant="outline"
-                                className="h-7 px-2 text-[11px] hover:bg-emerald-600 hover:text-white"
+                                variant="cit"
+                                className="h-7 px-2.5 text-[10px] bg-emerald-700 hover:bg-emerald-600 font-semibold"
                                 onClick={() => handleAction(b.id, "APPROVE", b.requested_by)}
-                                disabled={b.status === "APPROVED"}
+                                disabled={b.status === "APPROVED" || !user.canApprove}
+                                title={!user.canApprove ? "Unauthorized: Requires Admin or Coordinator" : "Approve booking"}
                               >
                                 Approve
                               </Button>
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="h-7 px-2 text-[11px] hover:bg-rose-600 hover:text-white"
+                                className="h-7 px-2.5 text-[10px] text-rose-700 border-rose-200 hover:bg-rose-50 font-semibold"
                                 onClick={() => handleAction(b.id, "REJECT", b.requested_by)}
-                                disabled={b.status === "REJECTED"}
+                                disabled={b.status === "REJECTED" || !user.canApprove}
+                                title={!user.canApprove ? "Unauthorized: Requires Admin or Coordinator" : "Reject booking"}
                               >
                                 Reject
                               </Button>

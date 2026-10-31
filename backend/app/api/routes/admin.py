@@ -26,48 +26,56 @@ VALIDATOR_PATH = os.path.join(settings.PROJECT_ROOT, "validator.py")
 
 @router.get("/roles")
 def get_demo_roles() -> Dict[str, Any]:
-    """Returns available RBAC personas for rapid demo switching and role testing."""
+    """Returns available RBAC personas for rapid demo switching and role testing matching Section 4."""
     return {
         "roles": [
             {
                 "id": "DEAN-01",
                 "name": "Prof. S. Mohapatra",
-                "role": "Admin",
-                "department": "Dean's Office",
+                "role": "Admin (Dean's office)",
+                "email": "dean@cit.edu.in",
+                "department": "Dean's Office (Academic Affairs)",
                 "can_approve_bookings": True,
                 "can_modify_schedule": True,
                 "can_upload_datasets": True,
-                "badge": "Dean / Academic Admin"
+                "what_they_can_do": "Everything. Generates the timetable, approves timetable changes and any booking that moves a class, can change the priority order.",
+                "badge": "Super Admin"
             },
             {
                 "id": "COORD-CSE",
                 "name": "Dr. A. Verma",
-                "role": "Department Coordinator",
+                "role": "Department coordinator",
+                "email": "coordinator.cse@cit.edu.in",
                 "department": "Computer Science & Engineering",
                 "can_approve_bookings": True,
                 "can_modify_schedule": False,
                 "can_upload_datasets": False,
-                "badge": "CSE Coordinator"
+                "what_they_can_do": "Requests changes to their department's sessions, books rooms for department events, approves bookings of their department's labs.",
+                "badge": "Dept Level"
             },
             {
                 "id": "FAC-01",
                 "name": "Dr. Rajesh Sharma",
                 "role": "Faculty",
+                "email": "fac01@cit.edu.in",
                 "department": "Computer Science & Engineering",
                 "can_approve_bookings": False,
                 "can_modify_schedule": False,
                 "can_upload_datasets": False,
-                "badge": "Senior Faculty"
+                "what_they_can_do": "Views their own timetable, marks unavailability, requests extra or moved sessions.",
+                "badge": "Instructor"
             },
             {
                 "id": "CLUB-LIT-01",
                 "name": "Aarav Patel",
-                "role": "Club Representative",
+                "role": "Club representative",
+                "email": "club.lit@cit.edu.in",
                 "department": "Literary & Cultural Society",
                 "can_approve_bookings": False,
                 "can_modify_schedule": False,
                 "can_upload_datasets": False,
-                "badge": "Club President"
+                "what_they_can_do": "Submits and cancels venue requests, and sees the status and reason for each.",
+                "badge": "Student Club"
             }
         ]
     }

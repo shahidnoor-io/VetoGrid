@@ -159,12 +159,13 @@ def perform_booking_action(booking_id: str, act: BookingActionRequest) -> Dict[s
     """
     Approves or rejects a booking request with strict RBAC and Self-Approval Ban.
     """
-    # 1. RBAC Check: Only Admin or Department Coordinator can approve/reject
-    allowed_roles = ["Admin", "Dean's Office", "Department Coordinator"]
-    if act.approver_role not in allowed_roles:
+    # 1. RBAC Check: Only Admin (Dean's office) or Department coordinator can approve/reject
+    role_lower = (act.approver_role or "").lower()
+    is_authorized = any(k in role_lower for k in ["admin", "dean", "coordinator"])
+    if not is_authorized:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"RBAC Authorization Failure: Role '{act.approver_role}' cannot approve or reject bookings. Required role: Admin, Dean's Office, or Department Coordinator."
+            detail=f"RBAC Authorization Failure: Role '{act.approver_role}' cannot approve or reject bookings. Required role: Admin (Dean's office) or Department coordinator."
         )
 
     # 2. Find booking
