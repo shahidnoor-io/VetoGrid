@@ -4,3 +4,4 @@ import scheduleData from "@/data/schedule.json";
 export async function GET() {
   return NextResponse.json(scheduleData);
 }
+

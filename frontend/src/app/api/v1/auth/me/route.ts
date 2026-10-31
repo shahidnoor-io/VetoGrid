@@ -1,13 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { DEMO_ROLES } from "@/lib/auth";
+import { DEMO_ROLES } from "@/lib/auth-constants";
 
 export async function GET(req: NextRequest) {
   const cookie = req.cookies.get("campusos_session");
   if (!cookie?.value) {
-    return NextResponse.json(
-      { success: false, message: "Authentication required." },
-      { status: 401 }
-    );
+    // Return default first role info if unauthenticated so client can gracefully display preview
+    return NextResponse.json({
+      success: true,
+      authenticated: false,
+      user: {
+        userId: DEMO_ROLES[0].id,
+        email: DEMO_ROLES[0].email,
+        name: DEMO_ROLES[0].name,
+        role: DEMO_ROLES[0].role,
+        department: DEMO_ROLES[0].department,
+      },
+    });
   }
 
   try {
@@ -15,6 +23,7 @@ export async function GET(req: NextRequest) {
     const user = JSON.parse(raw);
     return NextResponse.json({
       success: true,
+      authenticated: true,
       user,
     });
   } catch {

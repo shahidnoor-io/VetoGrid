@@ -32,11 +32,15 @@ export default function RootHomePage() {
   const [phase, setPhase] = useState<"intro" | "login" | "authenticating">("intro");
   const [progress, setProgress] = useState(0);
 
-  const [selectedRole, setSelectedRole] = useState<Persona>(DEMO_ROLES[0]);
-  const [email, setEmail] = useState("coordinator@chitkara.edu.in");
-  const [password, setPassword] = useState("Coord@2026");
+  // Primary 4 Roles from Section 4
+  const primaryFourRoles = DEMO_ROLES.slice(0, 4);
+
+  const [selectedRole, setSelectedRole] = useState<Persona>(primaryFourRoles[0]);
+  const [email, setEmail] = useState(primaryFourRoles[0].email);
+  const [password, setPassword] = useState(primaryFourRoles[0].password || "Dean@2026");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showMoreRoles, setShowMoreRoles] = useState(false);
 
   // Professional Intro Animation Sequence (~1.6 seconds)
   useEffect(() => {
@@ -95,9 +99,16 @@ export default function RootHomePage() {
 
       // Target route based on role for optimal user experience
       let targetRoute = "/dashboard";
-      if (selectedRole.id === "FAC-01" || selectedRole.role === "faculty") targetRoute = "/timetable";
-      else if (selectedRole.id === "CLUB-LIT-01" || selectedRole.role === "student_representative") targetRoute = "/venue-bookings";
-      else if (selectedRole.id === "COORD-CSE" || selectedRole.role === "timetable_coordinator") targetRoute = "/dashboard";
+      if (selectedRole.role === "Faculty" || selectedRole.role === "faculty") {
+        targetRoute = "/timetable";
+      } else if (
+        selectedRole.role === "Club representative" ||
+        selectedRole.role === "student_representative"
+      ) {
+        targetRoute = "/venue-bookings";
+      } else {
+        targetRoute = "/dashboard";
+      }
 
       setTimeout(() => {
         router.push(targetRoute);
@@ -302,13 +313,16 @@ export default function RootHomePage() {
 
             <form onSubmit={handleLoginSubmit}>
               <CardContent className="space-y-4 pt-4">
-                {/* Quick Demo Access (RBAC Simulation) */}
+                {/* 4 Section 4 Institutional Roles */}
                 <div>
-                  <label className="text-xs font-semibold text-[#683B2B] block mb-1.5">
-                    Quick Demo Access (RBAC Simulation)
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-48 overflow-y-auto pr-1 scrollbar-thin">
-                    {DEMO_ROLES.slice(0, 6).map((role) => {
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs font-bold text-[#683B2B]">
+                      4 Institutional Roles (Click to Select)
+                    </label>
+                    <span className="text-[10px] text-[#B08401] font-semibold">Section 4 RBAC</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {primaryFourRoles.map((role) => {
                       const isSelected = selectedRole.id === role.id;
                       return (
                         <button
@@ -316,9 +330,9 @@ export default function RootHomePage() {
                           key={role.id}
                           onClick={() => handleSelectRole(role)}
                           className={cn(
-                            "flex items-center justify-between p-2 rounded-xl text-xs font-medium border text-left transition-all",
+                            "flex items-center justify-between p-2.5 rounded-xl text-xs font-medium border text-left transition-all",
                             isSelected
-                              ? "bg-[#FAF3F1] border-[#B08401] text-[#683B2B] ring-1 ring-[#B08401] shadow-2xs font-semibold"
+                              ? "bg-[#FAF3F1] border-[#B08401] text-[#683B2B] ring-2 ring-[#B08401]/50 shadow-xs font-semibold"
                               : "bg-[#FAF6F2] border-[#DED1BD] text-[#8B5E4B] hover:bg-[#F3EFE7] hover:text-[#683B2B]"
                           )}
                         >

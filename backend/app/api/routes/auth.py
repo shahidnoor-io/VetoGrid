@@ -214,14 +214,14 @@ def login(req: LoginRequest, response: Response):
 
     matched = None
     for u in DEMO_USERS:
-        if u["email"].lower() == clean_email:
-            # Check password if configured, or allow demo access
-            if u["password"] == clean_password or clean_password in ("Coord@2026", "Dean@2026", "Venue@2026", "Faculty@2026", "Student@2026", "Admin@2026", "••••••••••••", "demo"):
-                matched = u
-                break
-            else:
-                matched = u  # allow demo login convenience
-                break
+        if (
+            u["email"].lower() == clean_email
+            or u["userId"].lower() == clean_email
+            or u.get("role", "").lower() == clean_email
+            or u.get("label", "").lower() == clean_email
+        ):
+            matched = u
+            break
 
     if not matched:
         # Default fallback to coordinator

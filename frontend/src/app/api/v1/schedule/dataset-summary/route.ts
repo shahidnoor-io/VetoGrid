@@ -15,3 +15,4 @@ export async function GET() {
     venue_requests_count: d.venue_requests?.length || 25,
   });
 }
+

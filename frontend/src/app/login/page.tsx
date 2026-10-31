@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, Suspense } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -9,11 +9,8 @@ import {
   ArrowRight,
   AlertCircle,
   ShieldCheck,
-  Building2,
-  GraduationCap,
-  Sparkles,
-  UserCheck,
   CheckCircle2,
+  ChevronDown,
 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -25,13 +22,17 @@ import { cn } from "@/lib/utils";
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, login, refresh } = useAuth();
+  const { login, refresh } = useAuth();
 
-  const [email, setEmail] = useState<string>("coordinator@chitkara.edu.in");
-  const [password, setPassword] = useState<string>("Coord@2026");
-  const [selectedRole, setSelectedRole] = useState<string>("timetable_coordinator");
+  // Primary 4 roles from Section 4
+  const primaryFourRoles = DEMO_ROLES.slice(0, 4);
+
+  const [selectedRole, setSelectedRole] = useState<string>(primaryFourRoles[0].id);
+  const [email, setEmail] = useState<string>(primaryFourRoles[0].email);
+  const [password, setPassword] = useState<string>(primaryFourRoles[0].password || "Dean@2026");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [showMoreRoles, setShowMoreRoles] = useState<boolean>(false);
 
   const handleSelectRole = (role: Persona) => {
     setSelectedRole(role.id);
@@ -61,7 +62,6 @@ function LoginForm() {
       }
 
       await login(email, password);
-      await refresh();
 
       const nextUrl = searchParams.get("next") || data.redirectTo || "/dashboard";
       router.push(nextUrl);
@@ -102,26 +102,29 @@ function LoginForm() {
           </p>
         </div>
 
-        {/* Card Component matching routinetable.vercel.app */}
+        {/* Card Component with 4 Roles & Institutional Authentication */}
         <Card className="border-[#DED1BD] shadow-xl bg-white/95 backdrop-blur-md">
           <CardHeader className="pb-3 border-b border-[#FAF6F2]">
             <CardTitle className="text-base text-[#683B2B] font-bold">
               Sign In to Campus Portal
             </CardTitle>
             <CardDescription className="text-xs text-[#8B5E4B]">
-              Select a demo role or enter your institutional credentials
+              Choose one of the 4 Section 4 roles or enter institutional credentials
             </CardDescription>
           </CardHeader>
 
           <form onSubmit={handleLogin}>
             <CardContent className="space-y-4 pt-4">
-              {/* Quick Demo Access (RBAC Simulation) */}
+              {/* 4 Primary Roles Selector */}
               <div>
-                <label className="text-xs font-semibold text-[#683B2B] block mb-1.5">
-                  Quick Demo Access (RBAC Simulation)
-                </label>
-                <div className="grid grid-cols-1 gap-1.5 max-h-48 overflow-y-auto pr-1">
-                  {DEMO_ROLES.slice(0, 6).map((role) => (
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-bold text-[#683B2B]">
+                    4 Institutional Roles (Click to Select)
+                  </label>
+                  <span className="text-[10px] text-[#B08401] font-semibold">Section 4 RBAC</span>
+                </div>
+                <div className="grid grid-cols-1 gap-1.5">
+                  {primaryFourRoles.map((role) => (
                     <button
                       type="button"
                       key={role.id}
@@ -145,6 +148,39 @@ function LoginForm() {
                     </button>
                   ))}
                 </div>
+
+                {/* Optional toggle for other test personas */}
+                <div className="mt-2 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setShowMoreRoles(!showMoreRoles)}
+                    className="text-[11px] text-[#8B5E4B] hover:text-[#683B2B] inline-flex items-center gap-1 font-medium underline underline-offset-2"
+                  >
+                    <span>{showMoreRoles ? "Hide additional personas" : "Show more demo personas"}</span>
+                    <ChevronDown className={cn("w-3 h-3 transition-transform", showMoreRoles && "rotate-180")} />
+                  </button>
+                </div>
+
+                {showMoreRoles && (
+                  <div className="grid grid-cols-1 gap-1 mt-2 max-h-36 overflow-y-auto pr-1">
+                    {DEMO_ROLES.slice(4).map((role) => (
+                      <button
+                        type="button"
+                        key={role.id}
+                        onClick={() => handleSelectRole(role)}
+                        className={cn(
+                          "flex items-center justify-between p-1.5 rounded-lg text-xs font-medium border text-left transition-all",
+                          selectedRole === role.id
+                            ? "bg-[#FAF3F1] border-[#B08401] text-[#683B2B] ring-1 ring-[#B08401]"
+                            : "bg-[#FAF6F2] border-[#DED1BD] text-[#8B5E4B] hover:bg-[#F3EFE7]"
+                        )}
+                      >
+                        <span className="font-medium text-[#683B2B] truncate">{role.label}</span>
+                        <span className="text-[10px] text-[#8B5E4B] font-mono">{role.email}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Institutional Email */}
@@ -162,7 +198,7 @@ function LoginForm() {
                       setError("");
                     }}
                     className="pl-9 text-xs bg-[#FAF6F2] border-[#DED1BD] text-[#683B2B] focus:border-[#B08401]"
-                    placeholder="user@chitkara.edu.in"
+                    placeholder="user@cit.edu.in"
                     required
                   />
                 </div>
