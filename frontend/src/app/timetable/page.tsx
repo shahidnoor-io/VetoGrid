@@ -186,12 +186,12 @@ export default function TimetablePage() {
       />
 
       {/* Role Authority Indicator matching Section 4 */}
-      <div className="p-3 rounded-xl bg-white border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs shadow-sm">
+      <div className="p-3 rounded-xl bg-white border border-[#DED1BD] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs shadow-xs">
         <div className="flex items-center gap-2.5">
-          <ShieldCheck className="w-4 h-4 text-[#236B8E] shrink-0" />
+          <ShieldCheck className="w-4 h-4 text-[#B08401] shrink-0" />
           <div>
-            <span className="font-bold text-slate-900">Signed In As: {user.name} ({user.role})</span>
-            <span className="text-slate-500 ml-1.5">• {user.whatTheyCanDo}</span>
+            <span className="font-bold text-[#683B2B]">Signed In As: {user.name} ({user.role})</span>
+            <span className="text-[#8B5E4B] ml-1.5">• {user.whatTheyCanDo}</span>
           </div>
         </div>
         <Badge variant={user.badgeVariant} className="text-[10px] shrink-0 font-semibold">

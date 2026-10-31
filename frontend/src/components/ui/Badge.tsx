@@ -2,22 +2,25 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "secondary" | "success" | "warning" | "danger" | "cyan" | "purple" | "blue" | "outline" | "cit" | "accessible";
+  variant?: "default" | "secondary" | "success" | "warning" | "danger" | "cyan" | "purple" | "blue" | "outline" | "cit" | "accessible" | "gold" | "rose" | "brown";
 }
 
 export function Badge({ className, variant = "default", ...props }: BadgeProps) {
   const variantStyles = {
-    default: "bg-slate-100 text-slate-700 border-slate-200",
-    secondary: "bg-[#E2EEF5] text-[#1B5270] border-[#C5DDEB]",
-    cit: "bg-[#E2EEF5] text-[#1B5270] border-[#C5DDEB]",
-    accessible: "bg-[#E8F5E9] text-[#1B5E20] border-[#C8E6C9]",
-    success: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    warning: "bg-amber-50 text-amber-800 border-amber-200",
-    danger: "bg-rose-50 text-rose-700 border-rose-200",
-    cyan: "bg-cyan-50 text-cyan-700 border-cyan-200",
-    purple: "bg-purple-50 text-purple-700 border-purple-200",
-    blue: "bg-blue-50 text-blue-700 border-blue-200",
-    outline: "text-slate-600 border-slate-200 bg-white",
+    default: "bg-[#F3EFE7] text-[#683B2B] border-[#DED1BD]",
+    secondary: "bg-[#FAF3F1] text-[#683B2B] border-[#EAC8BF]",
+    cit: "bg-[#FBF6EA] text-[#745501] border-[#ECD693]",
+    gold: "bg-[#FBF6EA] text-[#745501] border-[#ECD693]",
+    rose: "bg-[#FAF3F1] text-[#683B2B] border-[#EAC8BF]",
+    brown: "bg-[#F7F2F0] text-[#683B2B] border-[#DCC4BB]",
+    accessible: "bg-[#F0FDF4] text-[#166534] border-[#BBF7D0]",
+    success: "bg-emerald-50 text-emerald-800 border-emerald-200",
+    warning: "bg-[#FBF6EA] text-[#745501] border-[#ECD693]",
+    danger: "bg-rose-50 text-rose-800 border-rose-200",
+    cyan: "bg-[#FBF6EA] text-[#745501] border-[#ECD693]",
+    purple: "bg-[#FAF3F1] text-[#683B2B] border-[#EAC8BF]",
+    blue: "bg-[#F3EFE7] text-[#683B2B] border-[#DED1BD]",
+    outline: "text-[#683B2B] border-[#DED1BD] bg-[#FAF6F2]",
   };
 
   return (

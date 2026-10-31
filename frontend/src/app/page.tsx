@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   ShieldCheck,
@@ -41,7 +42,7 @@ export default function RootHomePage() {
     "Loading Section 4 Four-Role Access Matrix (Admin, Coordinator, Faculty, Club Rep)...",
     "Enforcing Zero Self-Approval Mandate (HTTP 403 Forbidden)...",
     "Calibrating 6-Tier Conflict Resolution Hierarchy...",
-    "CIT Venue Manager & Timetable Optimization Gateway Ready.",
+    "VetoGrid Autonomous Governance & Timetable Gateway Ready.",
   ];
 
   // Professional Intro Animation Sequence (~1.8 seconds)
@@ -110,79 +111,85 @@ export default function RootHomePage() {
   const getRoleIcon = (roleId: string, className = "w-6 h-6") => {
     switch (roleId) {
       case "DEAN-01":
-        return <ShieldCheck className={`${className} text-[#1B4D68]`} />;
+        return <ShieldCheck className={`${className} text-[#B08401]`} />;
       case "COORD-CSE":
-        return <Building2 className={`${className} text-emerald-700`} />;
+        return <Building2 className={`${className} text-[#683B2B]`} />;
       case "FAC-01":
-        return <GraduationCap className={`${className} text-indigo-700`} />;
+        return <GraduationCap className={`${className} text-[#D49E8D]`} />;
       case "CLUB-LIT-01":
-        return <Sparkles className={`${className} text-amber-700`} />;
+        return <Sparkles className={`${className} text-[#B08401]`} />;
       default:
-        return <UserCheck className={`${className} text-slate-700`} />;
+        return <UserCheck className={`${className} text-[#683B2B]`} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#F0F4F8] text-slate-800 font-sans relative overflow-hidden flex flex-col justify-between selection:bg-[#236B8E]/20">
+    <div className="min-h-screen bg-[#FAF6F2] text-[#683B2B] font-sans relative overflow-hidden flex flex-col justify-between selection:bg-[#B08401]/20">
       {/* Dynamic Background Pattern */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(#CBD5E1_1px,transparent_1px)] [background-size:24px_24px] opacity-40" />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(#DED1BD_1px,transparent_1px)] [background-size:24px_24px] opacity-60" />
 
       {/* ============================================================== */}
       {/* 1. PROFESSIONAL INSTITUTIONAL INTRO SPLASH ANIMATION           */}
       {/* ============================================================== */}
       {phase === "intro" && (
-        <div className="fixed inset-0 z-50 bg-[#0F1E2E] text-white flex flex-col items-center justify-center p-6 transition-all duration-700 ease-out">
-          {/* Subtle Ambient Glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#236B8E]/25 rounded-full blur-[120px] pointer-events-none" />
+        <div className="fixed inset-0 z-50 bg-[#351B12] text-[#FAF6F2] flex flex-col items-center justify-center p-6 transition-all duration-700 ease-out">
+          {/* Subtle Warm Ambient Glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-[#B08401]/20 rounded-full blur-[130px] pointer-events-none" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-[#D49E8D]/15 rounded-full blur-[100px] pointer-events-none" />
 
           <div className="relative z-10 w-full max-w-lg text-center space-y-8 animate-in fade-in zoom-in-95 duration-500">
-            {/* Pulsing CIT Insignia */}
-            <div className="relative mx-auto w-24 h-24 flex items-center justify-center">
-              <div className="absolute inset-0 rounded-3xl bg-[#236B8E]/30 animate-ping opacity-30" />
-              <div className="absolute inset-[-6px] rounded-3xl border border-[#5B93B5]/40 animate-spin [animation-duration:8s]" />
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-[#1B4D68] to-[#2B7A9E] shadow-2xl flex items-center justify-center border border-[#5B93B5]/50">
-                <span className="text-2xl font-black tracking-widest text-white drop-shadow-md">
-                  CIT
-                </span>
+            {/* Glowing VetoGrid Eagle Insignia */}
+            <div className="relative mx-auto w-28 h-28 flex items-center justify-center">
+              <div className="absolute inset-0 rounded-3xl bg-[#B08401]/30 animate-ping opacity-30" />
+              <div className="absolute inset-[-8px] rounded-3xl border-2 border-[#B08401]/40 animate-spin [animation-duration:9s]" />
+              <div className="w-24 h-24 rounded-2xl bg-white shadow-2xl flex items-center justify-center border-2 border-[#DED1BD] p-2 overflow-hidden">
+                <Image
+                  src="/logo.png"
+                  alt="VetoGrid Logo"
+                  width={80}
+                  height={80}
+                  priority
+                  className="object-contain"
+                />
               </div>
             </div>
 
-            {/* Institution Header */}
+            {/* Platform Brand Header */}
             <div className="space-y-2">
-              <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
-                Chilika Institute of Technology
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#FAF6F2] drop-shadow-sm">
+                VetoGrid
               </h1>
-              <p className="text-xs sm:text-sm text-slate-300 font-medium tracking-wide">
-                Venue Manager &amp; Timetable Optimization System
+              <p className="text-xs sm:text-sm text-[#DED1BD] font-medium tracking-wide">
+                Autonomous Campus Scheduling &amp; Venue Governance Platform
               </p>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-slate-200 text-[11px] font-mono border border-white/15">
-                <Cpu className="w-3.5 h-3.5 text-cyan-400" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[#FAF6F2] text-[11px] font-mono border border-white/20">
+                <Cpu className="w-3.5 h-3.5 text-[#B08401]" />
                 <span>Google OR-Tools CP-SAT Engine · Section 4 RBAC</span>
               </div>
             </div>
 
             {/* Terminal Live Initialization Sequence */}
-            <div className="bg-black/40 border border-slate-700/60 rounded-xl p-4 text-left font-mono text-xs space-y-2.5 backdrop-blur-md shadow-inner">
-              <div className="flex items-center justify-between text-[11px] text-slate-400 border-b border-slate-800 pb-2">
-                <span className="flex items-center gap-1.5 text-cyan-400 font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            <div className="bg-[#24120C]/80 border border-[#683B2B]/70 rounded-xl p-4 text-left font-mono text-xs space-y-2.5 backdrop-blur-md shadow-2xl">
+              <div className="flex items-center justify-between text-[11px] text-[#DED1BD] border-b border-[#683B2B]/50 pb-2">
+                <span className="flex items-center gap-1.5 text-[#B08401] font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-[#B08401] animate-pulse" />
                   System Initialization
                 </span>
-                <span>{progress}%</span>
+                <span className="font-bold text-[#FAF6F2]">{progress}%</span>
               </div>
 
               {/* Progress Bar */}
-              <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+              <div className="w-full h-1.5 bg-[#4A2619] rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-cyan-500 to-[#5B93B5] transition-all duration-150 ease-out"
+                  className="h-full bg-gradient-to-r from-[#B08401] via-[#D49E8D] to-[#FAF6F2] transition-all duration-150 ease-out"
                   style={{ width: `${progress}%` }}
                 />
               </div>
 
               {/* Status Line */}
-              <div className="text-[11px] text-slate-300 truncate h-4 flex items-center gap-2">
-                <span className="text-emerald-400">›</span>
-                <span>{introSteps[stepIndex]}</span>
+              <div className="text-[11px] text-[#FAF6F2] truncate h-4 flex items-center gap-2">
+                <span className="text-[#B08401]">›</span>
+                <span className="text-[#DED1BD]">{introSteps[stepIndex]}</span>
               </div>
             </div>
 
@@ -191,7 +198,7 @@ export default function RootHomePage() {
               <button
                 type="button"
                 onClick={handleSkipIntro}
-                className="text-xs text-slate-400 hover:text-white transition-colors underline underline-offset-4 flex items-center gap-1 mx-auto"
+                className="text-xs text-[#DED1BD]/80 hover:text-[#FAF6F2] transition-colors underline underline-offset-4 flex items-center gap-1 mx-auto"
               >
                 <span>Skip Intro &amp; Go to Login</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -205,20 +212,20 @@ export default function RootHomePage() {
       {/* 2. AUTHENTICATING TRANSITION OVERLAY                           */}
       {/* ============================================================== */}
       {phase === "authenticating" && (
-        <div className="fixed inset-0 z-50 bg-[#0F1E2E]/90 backdrop-blur-md text-white flex flex-col items-center justify-center p-6 animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-50 bg-[#351B12]/95 backdrop-blur-md text-[#FAF6F2] flex flex-col items-center justify-center p-6 animate-in fade-in duration-300">
           <div className="text-center space-y-4 max-w-sm">
-            <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 mx-auto flex items-center justify-center shadow-lg animate-bounce">
+            <div className="w-16 h-16 rounded-2xl bg-[#B08401]/20 border border-[#B08401]/50 text-[#B08401] mx-auto flex items-center justify-center shadow-lg animate-bounce">
               <CheckCircle2 className="w-8 h-8" />
             </div>
-            <h2 className="text-xl font-bold text-white">Access Granted</h2>
-            <div className="text-xs text-slate-300 space-y-1">
+            <h2 className="text-xl font-bold text-[#FAF6F2]">Access Granted</h2>
+            <div className="text-xs text-[#DED1BD] space-y-1">
               <p>
                 Authenticated as: <strong className="text-white">{selectedRole.name}</strong>
               </p>
-              <p className="text-[11px] text-slate-400 font-mono">
+              <p className="text-[11px] text-[#DED1BD]/80 font-mono">
                 Role: {selectedRole.role} ({selectedRole.badge})
               </p>
-              <p className="text-emerald-400 font-semibold pt-1">
+              <p className="text-[#B08401] font-semibold pt-1">
                 Applying role permissions &amp; opening workspace...
               </p>
             </div>
@@ -231,22 +238,29 @@ export default function RootHomePage() {
       {/* ============================================================== */}
       <header className="w-full max-w-6xl mx-auto p-4 sm:p-6 flex items-center justify-between z-10">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-[#1B4D68] flex items-center justify-center text-white font-bold text-sm tracking-wider shadow-sm">
-            CIT
+          <div className="h-11 w-11 rounded-2xl bg-white border border-[#DED1BD] shadow-xs flex items-center justify-center p-1.5 overflow-hidden">
+            <Image
+              src="/logo.png"
+              alt="VetoGrid Logo"
+              width={36}
+              height={36}
+              priority
+              className="object-contain"
+            />
           </div>
           <div>
-            <h1 className="font-bold text-sm text-slate-900 leading-tight">
-              Chilika Institute of Technology
+            <h1 className="font-extrabold text-base text-[#683B2B] leading-tight flex items-center gap-2">
+              <span>VetoGrid</span>
             </h1>
-            <p className="text-xs text-slate-500 font-medium">
-              CIT Venue Manager &amp; Timetable System · Section 4 Governance Portal
+            <p className="text-xs text-[#8B5E4B] font-medium">
+              Autonomous Venue &amp; Timetable Governance · Section 4 Role Portal
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
-            <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+          <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FAF3F1] text-[#683B2B] border border-[#EAC8BF]">
+            <span className="w-2 h-2 rounded-full bg-[#B08401] animate-pulse" />
             Week 7 Active (Spectra &amp; Midsems)
           </span>
         </div>
@@ -256,41 +270,41 @@ export default function RootHomePage() {
       <main className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-2 my-auto space-y-6 z-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {/* Title & Section 4 Mandate */}
         <div className="text-center space-y-2 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E2EAF1] border border-[#CBD9E5] text-[#1B4D68] text-xs font-bold shadow-2xs">
-            <KeyRound className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F3EFE7] border border-[#DED1BD] text-[#683B2B] text-xs font-bold shadow-2xs">
+            <KeyRound className="w-3.5 h-3.5 text-[#B08401]" />
             <span>Section 4: Four Roles &amp; Conflict Priority Gate</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-[#683B2B] tracking-tight">
             Institutional Role Sign-In
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600">
+          <p className="text-xs sm:text-sm text-[#8B5E4B]">
             Select your assigned campus role below. Each role unlocks exact operational authorities
             and editing permissions across timetabling, venue bookings, and conflict governance.
           </p>
         </div>
 
         {/* Section 4 Strict Self-Approval Ban Alert */}
-        <div className="bg-gradient-to-r from-purple-50 via-white to-purple-50 border border-purple-200 rounded-2xl p-4 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+        <div className="bg-[#FAF3F1] border border-[#EAC8BF] rounded-2xl p-4 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
           <div className="flex items-start md:items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-purple-100 text-purple-700 shrink-0">
-              <ShieldCheck className="w-5 h-5" />
+            <div className="p-2.5 rounded-xl bg-[#F0DBD4] text-[#683B2B] shrink-0">
+              <ShieldCheck className="w-5 h-5 text-[#B08401]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-purple-950 uppercase tracking-wide">
+                <span className="text-xs font-bold text-[#683B2B] uppercase tracking-wide">
                   Section 4 Mandatory Governance Rule:
                 </span>
-                <span className="bg-purple-200 text-purple-900 text-[10px] px-2 py-0.5 rounded-full font-bold">
+                <span className="bg-[#EAC8BF] text-[#683B2B] text-[10px] px-2 py-0.5 rounded-full font-bold">
                   Zero Self-Approval
                 </span>
               </div>
-              <p className="text-xs text-purple-800 mt-0.5">
+              <p className="text-xs text-[#7A4B3A] mt-0.5">
                 <strong>&ldquo;Nobody can approve their own request.&rdquo;</strong> If an approver attempts to sign off on a venue booking they submitted, the system halts with HTTP 403 Forbidden.
               </p>
             </div>
           </div>
           <div className="shrink-0 flex items-center gap-2">
-            <span className="text-[11px] font-semibold text-purple-900 bg-purple-100 px-3 py-1.5 rounded-xl border border-purple-200">
+            <span className="text-[11px] font-semibold text-[#683B2B] bg-[#F7EBE7] px-3 py-1.5 rounded-xl border border-[#EAC8BF]">
               6 Conflict Tiers Enforced
             </span>
           </div>
@@ -298,14 +312,14 @@ export default function RootHomePage() {
 
         {/* Mode Switcher */}
         <div className="flex items-center justify-center">
-          <div className="inline-flex p-1 rounded-xl bg-slate-200/90 border border-slate-300 shadow-inner">
+          <div className="inline-flex p-1 rounded-xl bg-[#EFE8DF] border border-[#DED1BD] shadow-inner">
             <button
               type="button"
               onClick={() => setActiveTab("quick")}
               className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeTab === "quick"
-                  ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-[#B08401] text-white shadow-xs"
+                  : "text-[#683B2B] hover:text-[#B08401]"
               }`}
             >
               1-Click Role Access (4 Section 4 Roles)
@@ -315,8 +329,8 @@ export default function RootHomePage() {
               onClick={() => setActiveTab("manual")}
               className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeTab === "manual"
-                  ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-[#B08401] text-white shadow-xs"
+                  : "text-[#683B2B] hover:text-[#B08401]"
               }`}
             >
               Institutional Email &amp; Password SSO
@@ -332,20 +346,20 @@ export default function RootHomePage() {
                 <div
                   key={persona.id}
                   onClick={() => handleSelectAndLogin(persona)}
-                  className="group relative bg-white border border-slate-200/90 hover:border-[#236B8E] hover:ring-2 hover:ring-[#236B8E]/20 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
+                  className="group relative bg-white border border-[#DED1BD] hover:border-[#B08401] hover:ring-2 hover:ring-[#B08401]/25 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
                 >
                   <div>
                     {/* Header: Avatar, Name & Badge */}
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-[#F0F4F8] border border-slate-200 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
+                        <div className="w-12 h-12 rounded-xl bg-[#FAF6F2] border border-[#DED1BD] flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
                           {getRoleIcon(persona.id)}
                         </div>
                         <div>
-                          <h3 className="text-sm font-bold text-slate-900 group-hover:text-[#1B4D68] transition-colors flex items-center gap-1.5">
+                          <h3 className="text-sm font-bold text-[#683B2B] group-hover:text-[#B08401] transition-colors flex items-center gap-1.5">
                             <span>{persona.name}</span>
                           </h3>
-                          <div className="text-xs text-slate-500 font-medium">{persona.department}</div>
+                          <div className="text-xs text-[#8B5E4B] font-medium">{persona.department}</div>
                         </div>
                       </div>
                       <Badge variant={persona.badgeVariant} className="text-[11px] font-bold shrink-0">
@@ -354,23 +368,23 @@ export default function RootHomePage() {
                     </div>
 
                     {/* Section 4 Authority Box */}
-                    <div className="bg-[#F8FAFC] rounded-xl p-3 border border-slate-100 mb-3">
-                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center justify-between">
+                    <div className="bg-[#FAF6F2] rounded-xl p-3 border border-[#E8DFD5] mb-3">
+                      <div className="text-[10px] font-bold text-[#8B5E4B] uppercase tracking-wider mb-1 flex items-center justify-between">
                         <span>Role: {persona.role}</span>
-                        <span className="font-mono text-slate-400">{persona.id}</span>
+                        <span className="font-mono text-[#B08401]">{persona.id}</span>
                       </div>
-                      <p className="text-xs text-slate-700 leading-relaxed font-normal">
+                      <p className="text-xs text-[#683B2B] leading-relaxed font-normal">
                         <strong>Authority:</strong> {persona.whatTheyCanDo}
                       </p>
                     </div>
                   </div>
 
                   {/* Footer CTA */}
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                    <span className="text-slate-400 font-mono text-[11px]">{persona.email}</span>
+                  <div className="pt-3 border-t border-[#E8DFD5] flex items-center justify-between text-xs">
+                    <span className="text-[#8B5E4B] font-mono text-[11px]">{persona.email}</span>
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-[#1B5270] hover:bg-[#153e55] group-hover:bg-[#236B8E] transition-all shadow-xs"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-[#B08401] hover:bg-[#8F6B01] group-hover:shadow-sm transition-all shadow-xs"
                     >
                       <span>Sign In as {persona.role.split(" ")[0]}</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -385,17 +399,17 @@ export default function RootHomePage() {
         {/* TAB 2: MANUAL CREDENTIALS SSO */}
         {activeTab === "manual" && (
           <div className="max-w-md mx-auto">
-            <Card className="border-slate-200 shadow-md bg-white">
+            <Card className="border-[#DED1BD] shadow-md bg-white">
               <CardHeader className="pb-3">
-                <CardTitle className="text-base text-slate-900">Institutional Single Sign-On</CardTitle>
-                <CardDescription className="text-xs text-slate-500">
+                <CardTitle className="text-base text-[#683B2B]">Institutional Single Sign-On</CardTitle>
+                <CardDescription className="text-xs text-[#8B5E4B]">
                   Select a role preset or enter your official institutional credentials
                 </CardDescription>
               </CardHeader>
               <form onSubmit={handleManualLogin}>
                 <CardContent className="space-y-4">
                   <div>
-                    <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+                    <label className="text-xs font-semibold text-[#683B2B] block mb-1.5">
                       Autofill Persona
                     </label>
                     <div className="grid grid-cols-2 gap-1.5">
@@ -409,44 +423,44 @@ export default function RootHomePage() {
                           }}
                           className={`p-2 rounded-lg text-left text-xs border transition-all ${
                             authEmail === p.email
-                              ? "bg-[#236B8E]/10 border-[#236B8E] text-[#1B4D68] font-bold"
-                              : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
+                              ? "bg-[#FAF3F1] border-[#B08401] text-[#683B2B] font-bold ring-1 ring-[#B08401]"
+                              : "bg-[#FAF6F2] border-[#DED1BD] text-[#8B5E4B] hover:bg-[#F3EFE7]"
                           }`}
                         >
                           <div className="truncate font-semibold">{p.name}</div>
-                          <div className="text-[10px] text-slate-500 truncate">{p.role}</div>
+                          <div className="text-[10px] text-[#8B5E4B] truncate">{p.role}</div>
                         </button>
                       ))}
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+                    <label className="text-xs font-semibold text-[#683B2B] block mb-1.5">
                       Institutional Email Address
                     </label>
                     <div className="relative">
-                      <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Mail className="w-4 h-4 text-[#8B5E4B] absolute left-3 top-1/2 -translate-y-1/2" />
                       <Input
                         type="email"
                         value={authEmail}
                         onChange={(e) => setAuthEmail(e.target.value)}
-                        className="pl-9 text-xs bg-slate-50 border-slate-200 text-slate-800"
+                        className="pl-9 text-xs bg-[#FAF6F2] border-[#DED1BD] text-[#683B2B] focus:border-[#B08401]"
                         required
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-xs font-semibold text-slate-700 block mb-1.5">
+                    <label className="text-xs font-semibold text-[#683B2B] block mb-1.5">
                       Campus Password
                     </label>
                     <div className="relative">
-                      <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Lock className="w-4 h-4 text-[#8B5E4B] absolute left-3 top-1/2 -translate-y-1/2" />
                       <Input
                         type="password"
                         value={authPassword}
                         onChange={(e) => setAuthPassword(e.target.value)}
-                        className="pl-9 text-xs bg-slate-50 border-slate-200 text-slate-800"
+                        className="pl-9 text-xs bg-[#FAF6F2] border-[#DED1BD] text-[#683B2B] focus:border-[#B08401]"
                         required
                       />
                     </div>
@@ -457,7 +471,7 @@ export default function RootHomePage() {
                   <Button
                     variant="primary"
                     size="md"
-                    className="w-full text-xs font-bold bg-[#1B5270] hover:bg-[#153e55]"
+                    className="w-full text-xs font-bold bg-[#B08401] hover:bg-[#8F6B01] text-white"
                     type="submit"
                   >
                     <span>Sign In to Platform</span>
@@ -470,33 +484,33 @@ export default function RootHomePage() {
         )}
 
         {/* Section 4 Conflict Resolution Hierarchy Bar */}
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs">
+        <div className="bg-white border border-[#DED1BD] rounded-2xl p-4 shadow-xs">
           <div className="flex items-center justify-between mb-2.5">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#236B8E]" />
-              <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wide">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#B08401]" />
+              <h4 className="text-xs font-bold text-[#683B2B] uppercase tracking-wide">
                 Section 4 Conflict Resolution Hierarchy
               </h4>
             </div>
-            <span className="text-[11px] text-slate-500 font-medium">
+            <span className="text-[11px] text-[#8B5E4B] font-medium hidden sm:inline">
               &ldquo;When two requests want the same room at the same time, this order decides who gets it&rdquo;
             </span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
             {[
-              { rank: "1", title: "Exams", color: "border-red-200 bg-red-50 text-red-900" },
-              { rank: "2", title: "Regular classes", color: "border-blue-200 bg-blue-50 text-blue-900" },
-              { rank: "3", title: "Institute events", color: "border-purple-200 bg-purple-50 text-purple-900" },
-              { rank: "4", title: "Guest lectures", color: "border-teal-200 bg-teal-50 text-teal-900" },
-              { rank: "5", title: "Department events", color: "border-indigo-200 bg-indigo-50 text-indigo-900" },
-              { rank: "6", title: "Club events", color: "border-amber-200 bg-amber-50 text-amber-900" },
+              { rank: "1", title: "Exams", color: "border-[#EAC8BF] bg-[#FAF3F1] text-[#683B2B]" },
+              { rank: "2", title: "Regular classes", color: "border-[#DED1BD] bg-[#FAF6F2] text-[#683B2B]" },
+              { rank: "3", title: "Institute events", color: "border-[#ECD693] bg-[#FBF6EA] text-[#745501]" },
+              { rank: "4", title: "Guest lectures", color: "border-[#DED1BD] bg-[#F3EFE7] text-[#683B2B]" },
+              { rank: "5", title: "Department events", color: "border-[#EAC8BF] bg-[#FAF3F1] text-[#683B2B]" },
+              { rank: "6", title: "Club events", color: "border-[#ECD693] bg-[#FBF6EA] text-[#745501]" },
             ].map((item) => (
               <div
                 key={item.rank}
                 className={`p-2 rounded-xl border text-center font-medium ${item.color} shadow-2xs`}
               >
-                <div className="text-[10px] font-bold opacity-60">Priority {item.rank}</div>
+                <div className="text-[10px] font-bold opacity-75">Priority {item.rank}</div>
                 <div className="text-xs font-bold truncate mt-0.5">{item.title}</div>
               </div>
             ))}
@@ -505,13 +519,13 @@ export default function RootHomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full max-w-6xl mx-auto p-4 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-2 z-10">
+      <footer className="w-full max-w-6xl mx-auto p-4 border-t border-[#DED1BD] flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#8B5E4B] gap-2 z-10">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <ShieldCheck className="w-4 h-4 text-[#B08401]" />
           <span>Role-Based Access Control Enforced · Zero Self-Approval Mandate Active</span>
         </div>
         <div className="flex items-center gap-3">
-          <span>Chilika Institute of Technology © 2026</span>
+          <span>VetoGrid © 2026</span>
           <span>•</span>
           <span className="font-mono">CP-SAT Deterministic Solver v1.0.1</span>
         </div>

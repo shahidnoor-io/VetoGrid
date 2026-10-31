@@ -86,20 +86,20 @@ export default function DashboardPage() {
       />
 
       {/* Section 4 Four-Role Quick Switcher Banner */}
-      <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-3 font-sans">
+      <div className="p-3.5 rounded-2xl bg-white border border-[#DED1BD] shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3 font-sans">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#236B8E]/10 border border-[#236B8E]/20 text-[#1B4D68] flex items-center justify-center shrink-0">
-            <KeyRound className="w-5 h-5 text-[#236B8E]" />
+          <div className="w-10 h-10 rounded-xl bg-[#FAF6F2] border border-[#DED1BD] text-[#B08401] flex items-center justify-center shrink-0">
+            <KeyRound className="w-5 h-5 text-[#B08401]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-slate-900">Section 4 Four-Role Access:</span>
+              <span className="text-xs font-bold text-[#683B2B]">Section 4 Four-Role Access:</span>
               <Badge variant={user.badgeVariant} className="text-[10px] font-semibold">
                 Active: {user.role}
               </Badge>
             </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              Signed in as <strong className="text-slate-800">{user.name}</strong> ({user.email}). Self-approval ban strictly enforced.
+            <p className="text-[11px] text-[#8B5E4B] mt-0.5">
+              Signed in as <strong className="text-[#683B2B]">{user.name}</strong> ({user.email}). Self-approval ban strictly enforced.
             </p>
           </div>
         </div>
@@ -111,8 +111,8 @@ export default function DashboardPage() {
               onClick={() => switchPersona(p.id)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 user.id === p.id
-                  ? "bg-[#1B5270] text-white shadow-xs font-bold"
-                  : "bg-[#F0F4F8] text-slate-700 hover:bg-slate-200 border border-slate-200"
+                  ? "bg-[#B08401] text-white shadow-xs font-bold"
+                  : "bg-[#FAF6F2] text-[#683B2B] hover:bg-[#F3EFE7] border border-[#DED1BD]"
               }`}
             >
               {p.role.split(" ")[0]} ({p.id})
@@ -120,7 +120,7 @@ export default function DashboardPage() {
           ))}
           <Link
             href="/login"
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-[#1B5270] bg-[#E2EAF1] hover:bg-[#D5E2EC] border border-[#CBD9E5] transition-colors ml-auto md:ml-1"
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-[#683B2B] bg-[#FAF3F1] hover:bg-[#F3DBD4] border border-[#EAC8BF] transition-colors ml-auto md:ml-1"
           >
             <span>Full Login Portal</span>
             <span>&rarr;</span>
@@ -144,7 +144,7 @@ export default function DashboardPage() {
           label="Campus Venues"
           value="27 Rooms"
           subtext="Lecture halls, labs & auditoriums"
-          icon={<Building2 className="w-4 h-4 text-[#236B8E]" />}
+          icon={<Building2 className="w-4 h-4 text-[#B08401]" />}
         />
         <StatCard
           label="Faculty Members"
@@ -194,34 +194,34 @@ export default function DashboardPage() {
                 <div className="text-xl font-bold text-slate-900">189 / 189</div>
                 <span className="text-[10px] font-semibold text-emerald-600">100% Curricular Coverage</span>
               </div>
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
-                <span className="text-[11px] font-semibold text-slate-500">Soft Penalty Score</span>
-                <div className="text-xl font-bold text-[#1B5270]">82 Points</div>
-                <span className="text-[10px] font-semibold text-slate-600">Zero Student Group Gaps</span>
+              <div className="p-3.5 rounded-xl bg-[#FAF6F2] border border-[#DED1BD] space-y-1">
+                <span className="text-[11px] font-semibold text-[#8B5E4B]">Soft Penalty Score</span>
+                <div className="text-xl font-bold text-[#683B2B]">82 Points</div>
+                <span className="text-[10px] font-semibold text-[#8B5E4B]">Zero Student Group Gaps</span>
               </div>
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
-                <span className="text-[11px] font-semibold text-slate-500">Booking Score</span>
-                <div className="text-xl font-bold text-emerald-700">138 Points</div>
-                <span className="text-[10px] font-semibold text-emerald-600">23 Approved (Zero Overlaps)</span>
+              <div className="p-3.5 rounded-xl bg-[#FAF6F2] border border-[#DED1BD] space-y-1">
+                <span className="text-[11px] font-semibold text-[#8B5E4B]">Booking Score</span>
+                <div className="text-xl font-bold text-[#745501]">138 Points</div>
+                <span className="text-[10px] font-semibold text-[#745501]">23 Approved (Zero Overlaps)</span>
               </div>
             </div>
 
             {/* Quick Action Navigator */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
-              <Link href="/timetable" className="p-3 rounded-xl bg-[#F0F4F8] hover:bg-[#E2EEF5] border border-slate-200 text-xs text-slate-800 transition-colors flex flex-col items-center justify-center gap-1.5 text-center group">
-                <Calendar className="w-4 h-4 text-[#236B8E] group-hover:scale-110 transition-transform" />
+              <Link href="/timetable" className="p-3 rounded-xl bg-[#FAF6F2] hover:bg-[#F3EFE7] border border-[#DED1BD] text-xs text-[#683B2B] transition-colors flex flex-col items-center justify-center gap-1.5 text-center group">
+                <Calendar className="w-4 h-4 text-[#B08401] group-hover:scale-110 transition-transform" />
                 <span className="font-semibold">Timetable Matrix</span>
               </Link>
-              <Link href="/examinations" className="p-3 rounded-xl bg-[#F0F4F8] hover:bg-[#E2EEF5] border border-slate-200 text-xs text-slate-800 transition-colors flex flex-col items-center justify-center gap-1.5 text-center group">
-                <GraduationCap className="w-4 h-4 text-amber-600 group-hover:scale-110 transition-transform" />
+              <Link href="/examinations" className="p-3 rounded-xl bg-[#FAF6F2] hover:bg-[#F3EFE7] border border-[#DED1BD] text-xs text-[#683B2B] transition-colors flex flex-col items-center justify-center gap-1.5 text-center group">
+                <GraduationCap className="w-4 h-4 text-[#B08401] group-hover:scale-110 transition-transform" />
                 <span className="font-semibold">Midsem Exams</span>
               </Link>
-              <Link href="/venue-bookings" className="p-3 rounded-xl bg-[#F0F4F8] hover:bg-[#E2EEF5] border border-slate-200 text-xs text-slate-800 transition-colors flex flex-col items-center justify-center gap-1.5 text-center group">
-                <DoorClosed className="w-4 h-4 text-cyan-700 group-hover:scale-110 transition-transform" />
+              <Link href="/venue-bookings" className="p-3 rounded-xl bg-[#FAF6F2] hover:bg-[#F3EFE7] border border-[#DED1BD] text-xs text-[#683B2B] transition-colors flex flex-col items-center justify-center gap-1.5 text-center group">
+                <DoorClosed className="w-4 h-4 text-[#683B2B] group-hover:scale-110 transition-transform" />
                 <span className="font-semibold">Spectra Bookings</span>
               </Link>
-              <Link href="/rescheduling" className="p-3 rounded-xl bg-[#F0F4F8] hover:bg-[#E2EEF5] border border-slate-200 text-xs text-slate-800 transition-colors flex flex-col items-center justify-center gap-1.5 text-center group">
-                <TrendingDown className="w-4 h-4 text-purple-600 group-hover:scale-110 transition-transform" />
+              <Link href="/rescheduling" className="p-3 rounded-xl bg-[#FAF6F2] hover:bg-[#F3EFE7] border border-[#DED1BD] text-xs text-[#683B2B] transition-colors flex flex-col items-center justify-center gap-1.5 text-center group">
+                <TrendingDown className="w-4 h-4 text-[#D49E8D] group-hover:scale-110 transition-transform" />
                 <span className="font-semibold">Rescheduling Diff</span>
               </Link>
             </div>
@@ -255,32 +255,32 @@ export default function DashboardPage() {
                 </span>
               </div>
 
-              <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#FAF6F2] border border-[#DED1BD]">
                 <div className="flex items-center gap-2">
-                  <Bot className="w-4 h-4 text-[#236B8E]" />
-                  <span className="text-xs font-semibold text-slate-800">AI Assistant Defense</span>
+                  <Bot className="w-4 h-4 text-[#B08401]" />
+                  <span className="text-xs font-semibold text-[#683B2B]">AI Assistant Defense</span>
                 </div>
-                <span className="text-[10px] font-bold text-[#1B5270] px-2 py-0.5 rounded bg-[#E2EEF5]">
+                <span className="text-[10px] font-bold text-[#745501] px-2 py-0.5 rounded bg-[#FBF6EA] border border-[#ECD693]">
                   Red-Team Guarded
                 </span>
               </div>
 
-              <div className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#FAF6F2] border border-[#DED1BD]">
                 <div className="flex items-center gap-2">
-                  <RefreshCw className="w-4 h-4 text-blue-600" />
-                  <span className="text-xs font-semibold text-slate-800">Disruption Engine</span>
+                  <RefreshCw className="w-4 h-4 text-[#B08401]" />
+                  <span className="text-xs font-semibold text-[#683B2B]">Disruption Engine</span>
                 </div>
-                <span className="text-[10px] font-bold text-blue-700 px-2 py-0.5 rounded bg-blue-100">
+                <span className="text-[10px] font-bold text-[#683B2B] px-2 py-0.5 rounded bg-[#FAF3F1] border border-[#EAC8BF]">
                   Minimal Displacement
                 </span>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-[#C5DDEB] bg-[#EBF4FA]">
+          <Card className="border-[#DED1BD] bg-[#FAF3F1]">
             <CardContent className="p-4 space-y-2">
-              <div className="text-xs font-bold text-[#1B5270] flex items-center gap-1.5">
-                <Bot className="w-4 h-4 text-[#236B8E]" />
+              <div className="text-xs font-bold text-[#683B2B] flex items-center gap-1.5">
+                <Bot className="w-4 h-4 text-[#B08401]" />
                 <span>Multilingual AI Assistant Ready</span>
               </div>
               <p className="text-[11px] text-slate-700 leading-normal">

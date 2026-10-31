@@ -191,15 +191,15 @@ export default function VenueBookingsPage() {
       />
 
       {/* RBAC Persona Switcher Bar */}
-      <div className="p-3.5 rounded-xl bg-white border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-3 shadow-sm">
+      <div className="p-3.5 rounded-xl bg-white border border-[#DED1BD] flex flex-col md:flex-row items-center justify-between gap-3 shadow-xs">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-[#236B8E]/10 text-[#1B4D68]">
+          <div className="p-2 rounded-lg bg-[#FAF6F2] border border-[#DED1BD] text-[#B08401]">
             <UserCheck className="w-4 h-4" />
           </div>
           <div>
-            <div className="text-xs font-bold text-slate-900">Active Persona (RBAC Simulation):</div>
-            <div className="text-[11px] text-slate-500">
-              Current: <span className="text-[#1B4D68] font-bold">{user.name}</span> ({user.role} &bull; {user.department})
+            <div className="text-xs font-bold text-[#683B2B]">Active Persona (RBAC Simulation):</div>
+            <div className="text-[11px] text-[#8B5E4B]">
+              Current: <span className="text-[#683B2B] font-bold">{user.name}</span> ({user.role} &bull; {user.department})
             </div>
           </div>
         </div>
@@ -214,8 +214,8 @@ export default function VenueBookingsPage() {
               }}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 user.id === p.id
-                  ? "bg-[#236B8E] text-white shadow-sm font-bold"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200"
+                  ? "bg-[#B08401] text-white shadow-xs font-bold"
+                  : "bg-[#FAF6F2] text-[#683B2B] hover:bg-[#F3EFE7] border border-[#DED1BD]"
               }`}
             >
               {p.role}
@@ -256,7 +256,7 @@ export default function VenueBookingsPage() {
           label="Total Bookings"
           value={`${bookings.length}`}
           subtext="25 Official Spectra + Ad-hoc"
-          icon={<DoorClosed className="w-4 h-4 text-[#236B8E]" />}
+          icon={<DoorClosed className="w-4 h-4 text-[#B08401]" />}
         />
         <StatCard
           label="Approved Venues"
@@ -274,24 +274,24 @@ export default function VenueBookingsPage() {
           label="RBAC Status"
           value={user.canApprove ? "Can Approve" : "View Only"}
           subtext={user.canApprove ? "Dean/Coord authority" : "Self-approval blocked"}
-          icon={<ShieldCheck className="w-4 h-4 text-[#1B4D68]" />}
+          icon={<ShieldCheck className="w-4 h-4 text-[#B08401]" />}
         />
       </div>
 
       {/* Bookings Table Registry */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-slate-100">
+        <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-[#DED1BD]">
           <div>
-            <CardTitle className="text-sm font-semibold">Spectra & Venue Booking Registry</CardTitle>
-            <p className="text-[11px] text-slate-500 mt-0.5">
+            <CardTitle className="text-sm font-semibold text-[#683B2B]">Spectra &amp; Venue Booking Registry</CardTitle>
+            <p className="text-[11px] text-[#8B5E4B] mt-0.5">
               Verified deterministically by Google OR-Tools CP-SAT engine.
             </p>
           </div>
-          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-lg border border-slate-200">
+          <div className="flex items-center gap-1.5 bg-[#FAF6F2] p-1 rounded-lg border border-[#DED1BD]">
             <button
               onClick={() => setFilter("all")}
               className={`px-2.5 py-1 rounded text-xs font-semibold transition ${
-                filter === "all" ? "bg-[#236B8E] text-white" : "text-slate-600 hover:text-slate-900"
+                filter === "all" ? "bg-[#B08401] text-white" : "text-[#8B5E4B] hover:text-[#683B2B]"
               }`}
             >
               All ({bookings.length})
@@ -337,13 +337,13 @@ export default function VenueBookingsPage() {
 
                   return (
                     <tr key={b.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="py-3 px-4 font-mono font-bold text-[#1B5270]">{b.id}</td>
+                      <td className="py-3 px-4 font-mono font-bold text-[#B08401]">{b.id}</td>
                       <td className="py-3 px-4">
-                        <div className="font-semibold text-slate-900">{b.event_name}</div>
-                        <div className="text-[11px] text-slate-500">Req by: <span className="font-semibold text-slate-700">{b.requested_by}</span></div>
+                        <div className="font-semibold text-[#683B2B]">{b.event_name}</div>
+                        <div className="text-[11px] text-[#8B5E4B]">Req by: <span className="font-semibold text-[#683B2B]">{b.requested_by}</span></div>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-mono text-[#1B5270] bg-[#F0F4F8] px-2 py-0.5 rounded border border-slate-200 font-bold">
+                        <span className="font-mono text-[#683B2B] bg-[#FAF6F2] px-2 py-0.5 rounded border border-[#DED1BD] font-bold">
                           {b.room_id}
                         </span>
                       </td>

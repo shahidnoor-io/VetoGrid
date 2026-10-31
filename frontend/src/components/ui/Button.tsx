@@ -2,31 +2,33 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "cyan" | "cit";
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "cyan" | "cit" | "brown";
   size?: "sm" | "md" | "lg" | "icon";
   isLoading?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "cit", size = "md", isLoading = false, children, disabled, ...props }, ref) => {
+  ({ className, variant = "primary", size = "md", isLoading = false, children, disabled, ...props }, ref) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#236B8E] disabled:pointer-events-none disabled:opacity-50 select-none rounded-lg";
+      "inline-flex items-center justify-center font-semibold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B08401] disabled:pointer-events-none disabled:opacity-50 select-none rounded-xl";
 
     const variantStyles = {
       cit:
-        "bg-[#236B8E] hover:bg-[#1B5270] text-white shadow-sm active:bg-[#143E55]",
+        "bg-[#B08401] hover:bg-[#966F01] text-white shadow-sm active:bg-[#745501]",
       primary:
-        "bg-[#236B8E] hover:bg-[#1B5270] text-white shadow-sm active:bg-[#143E55]",
+        "bg-[#B08401] hover:bg-[#966F01] text-white shadow-sm active:bg-[#745501]",
+      brown:
+        "bg-[#683B2B] hover:bg-[#563124] text-white shadow-sm active:bg-[#42261C]",
       secondary:
-        "bg-[#F1F5F9] hover:bg-[#E2E8F0] text-slate-700 border border-slate-200",
+        "bg-[#FAF3F1] hover:bg-[#F3E5E0] text-[#683B2B] border border-[#EAC8BF]",
       outline:
-        "border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-sm",
+        "border border-[#DED1BD] bg-white hover:bg-[#FAF6F2] text-[#683B2B] shadow-2xs",
       ghost:
-        "bg-transparent hover:bg-slate-100 text-slate-600 hover:text-slate-900",
+        "bg-transparent hover:bg-[#FAF6F2] text-[#683B2B]",
       danger:
         "bg-rose-600 hover:bg-rose-500 text-white shadow-sm active:bg-rose-700",
       cyan:
-        "bg-cyan-600 hover:bg-cyan-500 text-white shadow-sm active:bg-cyan-700",
+        "bg-[#B08401] hover:bg-[#966F01] text-white shadow-sm active:bg-[#745501]",
     };
 
     const sizeStyles = {
@@ -58,5 +60,4 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
   }
 );
-
 Button.displayName = "Button";

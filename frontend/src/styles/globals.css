@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --background: #F0F4F8;
-  --foreground: #0F172A;
-  --muted: #64748B;
-  --muted-foreground: #475569;
-  --border: #E2E8F0;
-  --ring: #236B8E;
+  --background: #FAF6F2;
+  --foreground: #683B2B;
+  --muted: #8C6556;
+  --muted-foreground: #683B2B;
+  --border: #E8DFD5;
+  --ring: #B08401;
 }
 
 * {
@@ -31,19 +31,19 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #F0F4F8;
+  background: #FAF6F2;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #DED1BD;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #B08401;
 }
 
 /* Subtle border utility */
 .border-subtle {
-  border-color: #E2E8F0;
+  border-color: #E8DFD5;
 }

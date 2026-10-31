@@ -154,11 +154,11 @@ export default function ApprovalsPage() {
       />
 
       {/* Role Switcher Toolbar */}
-      <Card className="p-3 bg-white border border-slate-200 shadow-sm">
+      <Card className="p-3 bg-white border border-[#DED1BD] shadow-xs">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <UserCheck className="w-4 h-4 text-[#236B8E]" />
-            <span className="text-xs font-bold text-slate-800">Simulate Active Persona:</span>
+            <UserCheck className="w-4 h-4 text-[#B08401]" />
+            <span className="text-xs font-bold text-[#683B2B]">Simulate Active Persona:</span>
           </div>
 
           <div className="flex items-center gap-1.5 overflow-x-auto">
@@ -171,8 +171,8 @@ export default function ApprovalsPage() {
                 }}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
                   user.id === p.id
-                    ? "bg-[#236B8E] text-white shadow-sm"
-                    : "bg-[#F0F4F8] text-slate-700 hover:bg-slate-200"
+                    ? "bg-[#B08401] text-white shadow-xs font-bold"
+                    : "bg-[#FAF6F2] text-[#683B2B] hover:bg-[#F3EFE7] border border-[#DED1BD]"
                 }`}
               >
                 <span>{p.name}</span>
@@ -181,7 +181,7 @@ export default function ApprovalsPage() {
                     ? "bg-white/20 text-white"
                     : p.canApprove
                     ? "bg-emerald-100 text-emerald-800"
-                    : "bg-slate-200 text-slate-600"
+                    : "bg-stone-200 text-stone-600"
                 }`}>
                   {p.role}
                 </span>
@@ -249,27 +249,27 @@ export default function ApprovalsPage() {
       </div>
 
       {/* Official Section 4 Roles Specification Table */}
-      <Card className="border-slate-200 shadow-sm overflow-hidden">
-        <CardHeader className="py-3 px-4 bg-[#F8FAFC] border-b border-slate-200 flex flex-row items-center justify-between">
-          <CardTitle className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-            <Info className="w-4 h-4 text-[#236B8E]" />
+      <Card className="border-[#DED1BD] shadow-xs overflow-hidden">
+        <CardHeader className="py-3 px-4 bg-[#FAF6F2] border-b border-[#DED1BD] flex flex-row items-center justify-between">
+          <CardTitle className="text-xs font-bold text-[#683B2B] flex items-center gap-1.5">
+            <Info className="w-4 h-4 text-[#B08401]" />
             Official Section 4 Roles &amp; Capabilities Matrix
           </CardTitle>
-          <span className="text-[11px] text-slate-500 font-medium">Chilika Institute of Technology</span>
+          <span className="text-[11px] text-[#8B5E4B] font-medium">VetoGrid Governance</span>
         </CardHeader>
         <CardContent className="p-0 overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#F0F4F8] text-slate-600 uppercase text-[10px] font-bold border-b border-slate-200">
+            <thead className="bg-[#FAF6F2] text-[#683B2B] uppercase text-[10px] font-bold border-b border-[#DED1BD]">
               <tr>
                 <th className="py-2.5 px-4 w-1/4">Role</th>
                 <th className="py-2.5 px-4">What they can do</th>
                 <th className="py-2.5 px-4 text-right w-36">Permission Scope</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tbody className="divide-y divide-[#E8DFD5] text-[#683B2B]">
               {ROLE_DEFINITIONS.map((r, i) => (
-                <tr key={i} className="hover:bg-slate-50/80 transition-colors">
-                  <td className="py-2.5 px-4 font-bold text-slate-900">{r.role}</td>
+                <tr key={i} className="hover:bg-[#FAF6F2]/80 transition-colors">
+                  <td className="py-2.5 px-4 font-bold text-[#683B2B]">{r.role}</td>
                   <td className="py-2.5 px-4 leading-relaxed">{r.canDo}</td>
                   <td className="py-2.5 px-4 text-right">
                     <Badge variant={r.badgeVariant} className="text-[10px]">{r.badge}</Badge>
@@ -283,19 +283,19 @@ export default function ApprovalsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Approvals Table */}
-        <Card className="lg:col-span-2 border-slate-200 shadow-sm">
-          <CardHeader className="py-3 px-4 border-b border-slate-100 flex flex-row items-center justify-between">
-            <CardTitle className="text-xs font-bold text-slate-800 flex items-center gap-2">
-              <CheckSquare className="w-4 h-4 text-[#236B8E]" />
+        <Card className="lg:col-span-2 border-[#DED1BD] shadow-xs">
+          <CardHeader className="py-3 px-4 border-b border-[#E8DFD5] flex flex-row items-center justify-between">
+            <CardTitle className="text-xs font-bold text-[#683B2B] flex items-center gap-2">
+              <CheckSquare className="w-4 h-4 text-[#B08401]" />
               Venue Reservations Queue
             </CardTitle>
-            <span className="text-[11px] font-semibold text-slate-600">
-              Acting as: <strong className="text-slate-900">{user.name}</strong> ({user.role})
+            <span className="text-[11px] font-semibold text-[#8B5E4B]">
+              Acting as: <strong className="text-[#683B2B]">{user.name}</strong> ({user.role})
             </span>
           </CardHeader>
           <CardContent className="p-0 overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-700">
-              <thead className="bg-[#F0F4F8] text-slate-600 uppercase text-[10px] font-bold border-b border-slate-200">
+            <table className="w-full text-left text-xs text-[#683B2B]">
+              <thead className="bg-[#FAF6F2] text-[#683B2B] uppercase text-[10px] font-bold border-b border-[#DED1BD]">
                 <tr>
                   <th className="py-2.5 px-3">Booking ID</th>
                   <th className="py-2.5 px-3">Event Name</th>
@@ -305,12 +305,12 @@ export default function ApprovalsPage() {
                   <th className="py-2.5 px-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#E8DFD5]">
                 {bookings.slice(0, 15).map((b) => {
                   const isSelf = user.id.toLowerCase() === (b.requested_by || "").toLowerCase();
                   return (
-                    <tr key={b.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="py-2.5 px-3 font-mono font-bold text-[#1B5270]">{b.id}</td>
+                    <tr key={b.id} className="hover:bg-[#FAF6F2] transition-colors">
+                      <td className="py-2.5 px-3 font-mono font-bold text-[#B08401]">{b.id}</td>
                       <td className="py-2.5 px-3 font-semibold text-slate-900">{b.event_name}</td>
                       <td className="py-2.5 px-3 text-slate-600">
                         <span className="font-semibold text-slate-800">{b.room_id}</span> • {b.day} (P{b.start_period}-P{b.end_period})
@@ -369,22 +369,22 @@ export default function ApprovalsPage() {
 
         {/* Section 4 Conflict Priority Order Configuration */}
         <div className="space-y-4">
-          <Card className="border-slate-200 shadow-sm">
-            <CardHeader className="py-3 px-4 border-b border-slate-100">
-              <CardTitle className="text-xs font-bold text-slate-800 flex items-center justify-between">
+          <Card className="border-[#DED1BD] shadow-xs">
+            <CardHeader className="py-3 px-4 border-b border-[#E8DFD5]">
+              <CardTitle className="text-xs font-bold text-[#683B2B] flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
-                  <Sliders className="w-4 h-4 text-[#236B8E]" />
+                  <Sliders className="w-4 h-4 text-[#B08401]" />
                   Conflict Priority Order
                 </span>
                 {user.role === "Admin (Dean's office)" && (
-                  <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 font-semibold">
+                  <span className="text-[10px] text-[#745501] bg-[#FBF6EA] px-2 py-0.5 rounded border border-[#ECD693] font-semibold">
                     Admin Configurable
                   </span>
                 )}
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-3 text-xs">
-              <p className="text-[11px] text-slate-600 leading-normal">
+              <p className="text-[11px] text-[#8B5E4B] leading-normal">
                 When two requests want the same room at the same time, this order decides who gets it:
               </p>
 
@@ -392,11 +392,11 @@ export default function ApprovalsPage() {
                 {priorityOrder.map((item, idx) => (
                   <div
                     key={idx}
-                    className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 font-medium flex items-center justify-between shadow-xs"
+                    className="p-2.5 rounded-lg bg-[#FAF6F2] border border-[#DED1BD] text-xs text-[#683B2B] font-medium flex items-center justify-between shadow-2xs"
                   >
-                    <span className="font-semibold text-slate-900">{item}</span>
+                    <span className="font-semibold text-[#683B2B]">{item}</span>
                     <div className="flex items-center gap-1">
-                      <span className="text-[10px] text-slate-500 font-mono mr-1">Rank {idx + 1}</span>
+                      <span className="text-[10px] text-[#8B5E4B] font-mono mr-1">Rank {idx + 1}</span>
                       {user.role === "Admin (Dean's office)" && (
                         <div className="flex items-center gap-0.5">
                           <button

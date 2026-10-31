@@ -204,35 +204,35 @@ export default function ManualSchedulingPage() {
       </div>
 
       {/* Role Authority Indicator matching Section 4 */}
-      <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-sans">
+      <div className="p-3.5 rounded-2xl bg-white border border-[#DED1BD] shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-sans">
         <div className="flex items-center gap-2.5">
-          <ShieldCheck className="w-5 h-5 text-[#236B8E] shrink-0" />
+          <ShieldCheck className="w-5 h-5 text-[#B08401] shrink-0" />
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-slate-900">Active Actor: {user.name}</span>
+              <span className="font-bold text-[#683B2B]">Active Actor: {user.name}</span>
               <Badge variant={user.badgeVariant} className="text-[10px] font-bold">
                 {user.role}
               </Badge>
             </div>
-            <p className="text-slate-500 mt-0.5">{user.whatTheyCanDo}</p>
+            <p className="text-[#8B5E4B] mt-0.5">{user.whatTheyCanDo}</p>
           </div>
         </div>
         <Link
           href="/login"
-          className="text-xs text-[#1B5270] font-bold bg-[#E2EAF1] hover:bg-[#D5E2EC] px-3 py-1.5 rounded-lg border border-[#CBD9E5] transition-colors shrink-0"
+          className="text-xs text-[#683B2B] font-bold bg-[#FAF3F1] hover:bg-[#F3DBD4] px-3 py-1.5 rounded-lg border border-[#EAC8BF] transition-colors shrink-0"
         >
           Switch Role &rarr;
         </Link>
       </div>
 
       {user.role === "Club representative" ? (
-        <Card className="p-8 bg-amber-50 border border-amber-200 text-center space-y-4">
-          <ShieldAlert className="w-10 h-10 text-amber-600 mx-auto" />
+        <Card className="p-8 bg-[#FAF3F1] border border-[#EAC8BF] text-center space-y-4">
+          <ShieldAlert className="w-10 h-10 text-[#B08401] mx-auto" />
           <div className="space-y-1">
-            <h3 className="text-sm font-bold text-amber-950">
+            <h3 className="text-sm font-bold text-[#683B2B]">
               Role Authority: Club Representative (Read-Only on Academic Master Schedule)
             </h3>
-            <p className="text-xs text-amber-800 max-w-xl mx-auto leading-relaxed">
+            <p className="text-xs text-[#8B5E4B] max-w-xl mx-auto leading-relaxed">
               Per Section 4 specifications, Club Representatives submit and cancel venue requests for
               Spectra fest and student societies through the dedicated <strong>Venue Bookings</strong> portal. Direct
               insertion into the academic timetable is restricted to Admin, Department Coordinators, and Faculty.
@@ -240,7 +240,7 @@ export default function ManualSchedulingPage() {
           </div>
           <Link
             href="/venue-bookings"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#1B5270] hover:bg-[#153e55] shadow-sm transition-all"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#B08401] hover:bg-[#8F6B01] shadow-xs transition-all"
           >
             <span>Go to Venue Bookings Portal</span>
             <ArrowRight className="w-4 h-4" />
@@ -249,10 +249,10 @@ export default function ManualSchedulingPage() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Manual Scheduling Form */}
-          <Card className="lg:col-span-2 border-slate-200 shadow-sm bg-white">
-            <CardHeader className="pb-3 border-b border-slate-100">
-              <CardTitle className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Plus className="w-4 h-4 text-[#236B8E]" />
+          <Card className="lg:col-span-2 border-[#DED1BD] shadow-xs bg-white">
+            <CardHeader className="pb-3 border-b border-[#E8DFD5]">
+              <CardTitle className="text-sm font-bold text-[#683B2B] flex items-center gap-2">
+                <Plus className="w-4 h-4 text-[#B08401]" />
                 Manual Event Allocation Form
               </CardTitle>
             </CardHeader>

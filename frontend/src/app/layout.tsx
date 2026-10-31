@@ -3,9 +3,13 @@ import "@/styles/globals.css";
 import { AuthProvider } from "@/lib/auth";
 
 export const metadata: Metadata = {
-  title: "CIT Venue Manager & Timetable System — Chilika Institute of Technology",
+  title: "VetoGrid — Intelligent Campus Scheduling & Venue Governance",
   description:
-    "Intelligent campus scheduling, automated clash-free timetable generation, and venue management platform for Chilika Institute of Technology (CIT).",
+    "Autonomous clash-free timetable optimization, venue management, and Section 4 RBAC governance platform.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
@@ -15,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-[#F0F4F8] text-slate-800 min-h-screen antialiased selection:bg-[#236B8E]/20 selection:text-[#17445C]">
+      <body className="bg-[#FAF6F2] text-[#683B2B] min-h-screen antialiased selection:bg-[#B08401]/25 selection:text-[#683B2B]">
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
