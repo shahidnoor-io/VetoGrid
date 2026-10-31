@@ -300,3 +300,4 @@ def logout(response: Response):
         "success": True,
         "message": "Logged out successfully.",
     }
+

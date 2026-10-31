@@ -1480,7 +1480,10 @@
       "start_period": 10,
       "end_period": 13,
       "room_id": "AUD-01",
-      "reason": "Approved for institute_event. Venue AUD-01 confirmed with adequate capacity."
+      "reason": "Approved for institute_event. Venue AUD-01 confirmed with adequate capacity.",
+      "status": "APPROVED",
+      "reviewed_by": "COORD-CSE",
+      "review_role": "Department coordinator"
     },
     {
       "booking_id": "REQ-02",
