@@ -69,13 +69,14 @@ export function Header() {
     <header className="sticky top-0 z-30 h-14 border-b border-[#E8DFD5] bg-[#FAF6F2]/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between font-sans">
       {/* Left breadcrumb info with VetoGrid eagle touch */}
       <div className="flex items-center gap-2.5">
-        <div className="w-6 h-6 rounded-md bg-white border border-[#DED1BD] p-0.5 shadow-2xs flex items-center justify-center shrink-0">
+        <div className="w-7 h-7 rounded-lg bg-white border border-[#DED1BD] p-0.5 shadow-2xs flex items-center justify-center shrink-0 overflow-hidden">
           <Image
             src="/logo.png"
             alt="VetoGrid Logo"
-            width={20}
-            height={20}
-            className="object-contain"
+            width={28}
+            height={28}
+            unoptimized
+            className="w-full h-full object-contain"
           />
         </div>
         <span className="text-xs font-extrabold text-[#683B2B] hidden sm:inline">

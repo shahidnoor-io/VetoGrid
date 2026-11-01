@@ -154,15 +154,16 @@ export default function ProfessionalLandingPage() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#B08401]/15 rounded-full blur-[120px] pointer-events-none" />
 
             <div className="relative z-10 w-full max-w-xs text-center space-y-6">
-              {/* VetoGrid Emblem */}
-              <div className="w-20 h-20 mx-auto rounded-2xl bg-white shadow-xl flex items-center justify-center border border-[#DED1BD] p-2">
+              {/* VetoGrid Emblem in Full Fitting Frame */}
+              <div className="w-20 h-20 mx-auto rounded-2xl bg-white shadow-xl flex items-center justify-center border border-[#DED1BD] p-1.5 overflow-hidden">
                 <Image
                   src="/logo.png"
                   alt="VetoGrid Logo"
-                  width={64}
-                  height={64}
+                  width={80}
+                  height={80}
+                  unoptimized
                   priority
-                  className="object-contain"
+                  className="w-full h-full object-contain"
                 />
               </div>
 
@@ -202,14 +203,15 @@ export default function ProfessionalLandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Brand Mark */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white border border-[#DED1BD] shadow-2xs flex items-center justify-center p-1 overflow-hidden">
+            <div className="w-10 h-10 rounded-xl bg-white border border-[#DED1BD] shadow-2xs flex items-center justify-center p-1 overflow-hidden shrink-0">
               <Image
                 src="/logo.png"
                 alt="VetoGrid Logo"
-                width={32}
-                height={32}
+                width={40}
+                height={40}
+                unoptimized
                 priority
-                className="object-contain"
+                className="w-full h-full object-contain"
               />
             </div>
             <div>

@@ -144,9 +144,10 @@ export function Sidebar() {
             <Image
               src="/logo.png"
               alt="VetoGrid Logo"
-              width={36}
-              height={36}
-              className="object-contain"
+              width={40}
+              height={40}
+              unoptimized
+              className="w-full h-full object-contain"
               priority
             />
           </div>

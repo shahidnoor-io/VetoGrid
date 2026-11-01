@@ -84,14 +84,15 @@ function LoginForm() {
       <div className="w-full max-w-md space-y-6 relative z-10 animate-in fade-in zoom-in-95 duration-400">
         {/* Brand Header with VetoGrid Origami Eagle Logo */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white border border-[#DED1BD] p-1.5 shadow-xs mb-1">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white border border-[#DED1BD] p-1.5 shadow-xs mb-1 overflow-hidden">
             <Image
               src="/logo.png"
               alt="VetoGrid Logo"
-              width={46}
-              height={46}
+              width={56}
+              height={56}
+              unoptimized
               priority
-              className="object-contain"
+              className="w-full h-full object-contain"
             />
           </div>
           <h1 className="text-2xl font-extrabold text-[#683B2B] tracking-tight">
